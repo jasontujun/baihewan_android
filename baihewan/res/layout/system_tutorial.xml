@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res/com.morln.app.lbstask"
+                android:id="@+id/frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/black_translucent">
+    <!--教程，拖动图层-->
+    <com.morln.app.lbstask.controls.viewflow.ViewFlow
+            android:id="@+id/tutorials_viewflow"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            app:sidebuffer="3"/>
+
+    <Button
+            android:id="@+id/tutorial_end_btn"
+            android:layout_width="130dp"
+            android:layout_height="83dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="15dp"
+            android:background="@drawable/btn_tutorial_end"/>
+
+    <com.morln.app.lbstask.controls.viewflow.CircleFlowIndicator
+            android:id="@+id/tutorials_viewflow_indic"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            android:layout_gravity="center_horizontal"
+            app:inactiveType="fill"/>
+</RelativeLayout>

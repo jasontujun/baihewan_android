@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <RelativeLayout
+            android:id="@+id/frame"
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/frame_white">
+        <!--装饰-->
+        <ImageView
+                android:id="@+id/decoration"
+                android:layout_width="5dp"
+                android:layout_height="fill_parent"
+                android:src="@color/light_red"/>
+        <!--标题-->
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="12dp"
+                android:text="我的订阅 "
+                android:textSize="22sp"
+                android:textColor="@color/black"/>
+        <!--内容-->
+        <TextView
+                android:id="@+id/content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="6dp"
+                android:layout_below="@+id/title"
+                android:maxLines="2"
+                android:text="包含: 软件学院、南大校园生活、女生天地等 "
+                android:textSize="15sp"
+                android:textColor="@color/gray"/>
+        <!--按钮-->
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center_vertical">
+            <TextView
+                    android:id="@+id/btn_word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="13dp"
+                    android:text="查看详情 "
+                    android:textSize="15sp"
+                    android:textColor="@color/light_red"/>
+            <ImageView
+                    android:id="@+id/btn_img"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@color/light_red"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

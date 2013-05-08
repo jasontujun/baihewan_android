@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="5dp"
+            android:background="@drawable/frame_white">
+        <ImageView
+                android:id="@+id/zone_icon_bg"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_alignParentRight="true"/>
+        <RelativeLayout
+                android:id="@+id/board_list_top_frame"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+            <ImageView
+                    android:id="@+id/zone_name_decoration"
+                    android:layout_width="5dp"
+                    android:layout_height="35dp"
+                    android:src="@color/light_green"/>
+            <TextView
+                    android:id="@+id/zone_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/zone_name_decoration"
+                    android:layout_marginLeft="10dp"
+                    android:text="我的收藏 "
+                    android:textSize="30sp"/>
+            <ImageView
+                    android:id="@+id/back_to_zone_btn"
+                    android:layout_width="37dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@color/gray"/>
+        </RelativeLayout>
+        <ListView
+                style="@style/listview"
+                android:id="@+id/board_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/board_list_top_frame"
+                android:paddingBottom="10dp"
+                android:dividerHeight="10dp"
+                android:fadeScrollbars="true"/>
+    </RelativeLayout>
+</RelativeLayout>

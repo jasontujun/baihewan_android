@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/bg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/frame_system_bg">
+
+
+    <!--工作室-->
+    <TextView
+            android:id="@+id/studio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="by morln (魔韵)"
+            android:textSize="12sp"
+            android:textColor="@color/dark_green"/>
+
+    <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+        <!--标题-->
+        <ImageView
+                android:id="@+id/title"
+                android:layout_width="169dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:src="@color/light_green"/>
+
+        <!--内容-->
+        <FrameLayout
+                android:id="@+id/content_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

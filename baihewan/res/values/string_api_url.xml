@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主机地址-->
+    <string name="host">http://58.215.56.159:8080/BaiHeWan5/</string>
+    <!--<string name="host">http://192.168.53.28:8080/BaiHeWan/</string>-->
+
+
+    <!--登陆接口-->
+    <string name="login">login</string>
+
+    <!--根据索引获取十大-->
+    <string name="top10_by_index">bbstop10</string>
+
+    <!--根据日期获取十大-->
+    <string name="top10_by_day">bbstop10/specificDay</string>
+
+    <!--获取十大内容-->
+    <string name="top10_content">top10Content</string>
+
+    <!--同步好友数据接口-->
+    <string name="friend_sync">syncBBS</string>
+
+    <!--版面数据更新-->
+    <string name="board_update">boardUpdate</string>
+
+    <!--上传个人收藏-->
+    <string name="collection_upload">myArticle/uploadMyArticle</string>
+
+</resources>

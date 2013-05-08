@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content">
+
+    <RelativeLayout
+            a:layout_width="fill_parent"
+            a:layout_height="wrap_content"
+            a:padding="10dp">
+
+        <!-- 箭头图像、进度条 -->
+        <FrameLayout
+                a:layout_width="wrap_content"
+                a:layout_height="wrap_content"
+                a:layout_marginLeft="20dp"
+                a:layout_centerVertical="true">
+            <!-- 箭头 -->
+            <ImageView
+                    a:id="@+id/head_arrowImageView"
+                    a:layout_width="30dp"
+                    a:layout_height="30dp"
+                    a:scaleType="fitCenter"
+                    a:src="@drawable/controls_listview_arrow"/>
+            <!-- 进度条 -->
+            <ProgressBar
+                    a:id="@+id/head_progressBar"
+                    style="?android:attr/progressBarStyleSmall"
+                    a:layout_width="wrap_content"
+                    a:layout_height="wrap_content"
+                    a:layout_gravity="center"
+                    a:visibility="gone" />
+        </FrameLayout>
+
+        <!-- 提示、最近更新 -->
+        <LinearLayout
+                a:layout_width="wrap_content"
+                a:layout_height="wrap_content"
+                a:layout_centerHorizontal="true"
+                a:gravity="center_horizontal"
+                a:orientation="vertical">
+            <!-- 提示 -->
+            <TextView
+                    a:id="@+id/head_tipsTextView"
+                    a:layout_width="wrap_content"
+                    a:layout_height="wrap_content"
+                    a:text="下拉刷新 "
+                    a:textColor="@color/gray"
+                    a:textSize="18sp"/>
+
+            <!-- 最近更新 -->
+            <TextView
+                    a:id="@+id/head_lastUpdatedTextView"
+                    a:layout_width="wrap_content"
+                    a:layout_height="wrap_content"
+                    a:text="上次更新 "
+                    a:textColor="@color/gray"
+                    a:textSize="10sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+    <!--顶栏（十大顶栏）-->
+    <RelativeLayout
+            android:id="@+id/top_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/frame_white">
+            <RelativeLayout
+                    android:id="@+id/title_frame"
+                    android:layout_width="210dp"
+                    android:layout_height="32dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/frame_green_rectangle">
+                <TextView
+                        android:id="@+id/title"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:text="今日十大 "
+                        android:textColor="@color/light_green"
+                        android:textSize="20sp"/>
+            </RelativeLayout>
+    </RelativeLayout>
+
+    <!--帖子列表-->
+    <com.morln.app.lbstask.controls.XListView
+            style="@style/listview"
+            android:id="@+id/content_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/top_frame"
+            android:dividerHeight="6dp"
+            android:fadeScrollbars="true"/>
+
+</RelativeLayout>

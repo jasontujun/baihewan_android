@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="35dp"
+                android:padding="5dp">
+    <!--上一页按钮-->
+    <LinearLayout
+            android:id="@+id/frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+        <ImageView
+                android:id="@+id/pre_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@color/light_green"
+                android:visibility="gone"/>
+        <TextView
+                android:id="@+id/pre_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center_vertical"
+                android:text="上页 "
+                android:textColor="@color/gray"
+                android:textSize="20sp"/>
+    </LinearLayout>
+</RelativeLayout>

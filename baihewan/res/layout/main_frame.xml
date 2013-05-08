@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res/com.morln.app.lbstask"
+                android:id="@+id/frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <!--内容，拖动图层-->
+    <com.morln.app.lbstask.controls.DragLayer
+            android:id="@+id/drag_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            app:sidebuffer="3"/>
+</RelativeLayout>

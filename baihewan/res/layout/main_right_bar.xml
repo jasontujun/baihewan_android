@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingRight="50dp"
+                android:background="@color/light_black">
+
+    <!--阴影-->
+    <RelativeLayout
+            android:id="@+id/shadow"
+            android:layout_width="6dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@color/black"/>
+
+    <!--顶栏-->
+    <RelativeLayout
+            android:id="@+id/top_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="52dp"
+            android:background="@color/gray">
+        <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:singleLine="true"
+                android:text="百合圈 "
+                android:textSize="20sp"
+                android:textColor="@color/dark_gray"/>
+        <!--分隔符-->
+        <ImageView
+                android:layout_width="1.4dp"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@+id/top_btn"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/separator_vertical"/>
+        <!--添加好友按钮-->
+        <Button
+                android:id="@+id/top_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:background="@color/dark_gray"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/top_frame">
+
+        <!--好友列表-->
+        <com.morln.app.lbstask.controls.XListView
+                style="@style/listview"
+                android:id="@+id/friend_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fadeScrollbars="true"/>
+
+        <!--无内容提示-->
+        <TextView
+                android:id="@+id/nothing_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="下拉刷新或添加好友 "
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:visibility="gone"/>
+
+        <!--未登陆提示-->
+        <TextView
+                android:id="@+id/no_login_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="游客请登陆后刷新好友哦 "
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>

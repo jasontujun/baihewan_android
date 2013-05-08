@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <!--顶栏-->
+    <RelativeLayout
+            android:id="@+id/top_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/frame_white">
+            <!--搜索过滤栏-->
+            <EditText
+                    android:id="@+id/search_input"
+                    android:layout_width="210dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:hint="搜索版面"
+                    android:textColorHint="@color/gray"
+                    android:textColor="@color/light_green"
+                    android:textSize="20sp"
+                    android:background="@drawable/frame_input"/>
+    </RelativeLayout>
+
+
+    <!--内容-->
+    <ViewFlipper
+            android:id="@+id/content_flipper"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/top_frame"/>
+
+</RelativeLayout>

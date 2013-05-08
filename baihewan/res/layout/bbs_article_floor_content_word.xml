@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+    <!--文字-->
+    <TextView
+            android:id="@+id/word"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="MiniCatty(asfsdssgg"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:autoLink="web"/>
+</RelativeLayout>

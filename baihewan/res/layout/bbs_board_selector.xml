@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/select_board_frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <!--区选择-->
+    <ListView
+            style="@style/listview"
+            android:id="@+id/zone_list"
+            android:layout_width="100dp"
+            android:layout_height="fill_parent"
+            android:scrollbars="none"/>
+    <!--版选择-->
+    <ListView
+            style="@style/listview"
+            android:id="@+id/board_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@+id/zone_list"
+            android:fadeScrollbars="true"/>
+</RelativeLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+    <!--时间-->
+    <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:text="2012.10.3"
+            android:textSize="12sp"
+            android:textColor="@color/gray"/>
+    <!--回复-->
+    <ImageView
+            android:id="@+id/reply_btn"
+            android:layout_width="64dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@color/light_green"/>
+    <!--分隔符-->
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@+id/reply_btn"
+            android:layout_marginTop="10dp"
+            android:src="@color/light_green"/>
+</RelativeLayout>

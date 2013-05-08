@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+    <com.morln.app.lbstask.controls.XZoomHolder
+            android:id="@+id/zoom_holder"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        <ImageSwitcher
+                android:id="@+id/switcher"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"/>
+    </com.morln.app.lbstask.controls.XZoomHolder>
+
+    <Gallery android:id="@+id/gallery"
+             android:background="#55000000"
+             android:layout_width="fill_parent"
+             android:layout_height="60dp"
+             android:layout_alignParentBottom="true"
+             android:layout_alignParentLeft="true"
+
+             android:gravity="center_vertical"
+             android:spacing="16dp"/>
+
+</RelativeLayout>
+   
