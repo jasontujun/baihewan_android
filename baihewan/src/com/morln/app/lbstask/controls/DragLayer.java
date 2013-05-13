@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.*;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.utils.XLog;
+import com.xengine.android.utils.XLog;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

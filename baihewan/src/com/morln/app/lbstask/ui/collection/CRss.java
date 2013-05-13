@@ -4,7 +4,6 @@ import android.os.*;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.morln.app.data.cache.XDataChangeListener;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.bbs.cache.CollectBoardSource;
 import com.morln.app.lbstask.bbs.model.Board;
@@ -18,9 +17,10 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.data.cache.XDataChangeListener;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,13 +88,13 @@ public class CRss extends XBaseComponent {
             @Override
             public void onClick(View view) {
                 // 删除订阅
-                if(boardListAdapter.getCount() == 0) {
+                if (boardListAdapter.getCount() == 0) {
                     Toast.makeText(getContext(), "没有可以删除的了", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(mgrBtn, getContext());
-                }else {
-                    if(deletedList == null) {
+                } else {
+                    if (deletedList == null) {
                         deletedList = new ArrayList<String>();
-                    }else {
+                    } else {
                         deletedList.clear();
                     }
 
@@ -199,13 +199,13 @@ public class CRss extends XBaseComponent {
 
     @Override
     public int back() {
-        if(mState == STATE_ADD) {
+        if (mState == STATE_ADD) {
             contentFrame.removeView(boardSelector.getContent());
             mState = STATE_NORMAL;
             refresh();
             return XBackType.CHILD_BACK;
         }
-        if(mState == STATE_DELETE) {
+        if (mState == STATE_DELETE) {
             mState = STATE_NORMAL;
             refresh();
             return XBackType.CHILD_BACK;
@@ -219,8 +219,8 @@ public class CRss extends XBaseComponent {
     @Override
     public void onLayerUnCovered() {
         super.onLayerUnCovered();
-        if(state != null) {
-            if(mState == STATE_NORMAL) {
+        if (state != null) {
+            if (mState == STATE_NORMAL) {
                 contentList.onRestoreInstanceState(state);
             }
         }
@@ -229,7 +229,7 @@ public class CRss extends XBaseComponent {
     @Override
     public void onLayerCovered() {
         super.onLayerCovered();
-        if(mState == STATE_NORMAL) {
+        if (mState == STATE_NORMAL) {
             state = contentList.onSaveInstanceState();
         }
     }
@@ -243,16 +243,16 @@ public class CRss extends XBaseComponent {
         private List<Board> zoneBoardList = new ArrayList<Board>();
 
         public void setBoardList(List<Board> boardList1) {
-            if(boardList1 == null) {
+            if (boardList1 == null) {
                 zoneBoardList = new ArrayList<Board>();
-            }else {
+            } else {
                 zoneBoardList = new ArrayList<Board>(boardList1);
             }
             notifyDataSetChanged();
             // 无内容的提示
-            if(getCount() == 0) {
+            if (getCount() == 0) {
                 nothingTip.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 nothingTip.setVisibility(View.GONE);
             }
         }
@@ -286,7 +286,7 @@ public class CRss extends XBaseComponent {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_rss_list_item, null);
                 holder = new ViewHolder();
                 holder.frame = (RelativeLayout) convertView.findViewById(R.id.frame);
@@ -294,7 +294,7 @@ public class CRss extends XBaseComponent {
                 holder.boardChineseName = (TextView) convertView.findViewById(R.id.board_chinese_name);
                 holder.deleteFrame = (LinearLayout) convertView.findViewById(R.id.delete_frame);
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
@@ -304,7 +304,7 @@ public class CRss extends XBaseComponent {
             // 设置版块中文名
             holder.boardChineseName.setText(board.getChinesName());
             // 删除按钮
-            if(mState == STATE_DELETE) {
+            if (mState == STATE_DELETE) {
                 holder.deleteFrame.setVisibility(View.VISIBLE);
                 holder.deleteFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -314,12 +314,12 @@ public class CRss extends XBaseComponent {
                         notifyDataSetChanged();
                     }
                 });
-            }else {
+            } else {
                 holder.deleteFrame.setVisibility(View.GONE);
             }
 
             // 设置监听
-            if(mState == STATE_NORMAL) {
+            if (mState == STATE_NORMAL) {
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -333,7 +333,7 @@ public class CRss extends XBaseComponent {
                     }
                 });
                 holder.deleteFrame.setVisibility(View.GONE);
-            }else {
+            } else {
                 convertView.setOnClickListener(null);
                 holder.deleteFrame.setVisibility(View.VISIBLE);
             }
@@ -440,7 +440,7 @@ public class CRss extends XBaseComponent {
                 refreshList();
                 Toast.makeText(getContext(), "同步成功！", Toast.LENGTH_SHORT).show();
             } else {
-                switch(resultCode){
+                switch (resultCode){
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦");
                         Toast.makeText(getContext(), "BBS登录失效,请重新登录！", Toast.LENGTH_SHORT).show();

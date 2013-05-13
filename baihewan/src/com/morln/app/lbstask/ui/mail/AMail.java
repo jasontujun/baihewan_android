@@ -24,12 +24,12 @@ import com.morln.app.lbstask.utils.img.ImageLoader;
 import com.morln.app.lbstask.utils.img.ImageUrlType;
 import com.morln.app.lbstask.utils.img.ImageUtil;
 import com.morln.app.lbstask.utils.img.ImgMgrHolder;
-import com.morln.app.media.image.XImageDownloadListener;
-import com.morln.app.media.image.XImageLocalMgr;
-import com.morln.app.session.http.XNetworkUtil;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.media.image.XImageDownloadListener;
+import com.xengine.android.media.image.XImageLocalMgr;
+import com.xengine.android.session.http.XNetworkUtil;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,10 +81,10 @@ public class AMail extends BaseAdapter {
         SystemSettingSource systemSettingSource = (SystemSettingSource) DataRepo.
                 getInstance().getSource(SourceName.SYSTEM_SETTING);
         int isAutoDownLoad = systemSettingSource.getAutoDownloadImg();
-        if(isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_CLOSE) {
+        if (isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_CLOSE) {
             return;
         }
-        if((isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_WIFI &&
+        if ((isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_WIFI &&
                 XNetworkUtil.isWifiConnected()) ||
                 isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_ALWAYS)
             ImageUtil.serialDownloadImage(imgUrlList, listenerList);
@@ -97,7 +97,7 @@ public class AMail extends BaseAdapter {
         ImgMgrHolder.getSerialDownloadMgr().stopAndReset();// 清空后台线程
 
         // 还原帖子图片
-        if(mail != null)
+        if (mail != null)
             mail.resetImg();
     }
 
@@ -117,7 +117,7 @@ public class AMail extends BaseAdapter {
 
         // 初始化articleFloors
         mail= BbsMailMgr.getInstance().getMailDetailFromLocal(mailId);
-        if(mail == null) {
+        if (mail == null) {
             return;
         }
 
@@ -132,13 +132,13 @@ public class AMail extends BaseAdapter {
         int itemIndex = 0;
         itemTypeArray[itemIndex] = HEAD_VIEW;
         itemIndex++;
-        for(int j = 0; j < mail.getWordBlockSize(); j++) {
+        for (int j = 0; j < mail.getWordBlockSize(); j++) {
             // 文字
             itemTypeArray[itemIndex] = CONTENT_WORD_VIEW;
             itemIndexArray[itemIndex] = j;
             itemIndex++;
             // 图片
-            if(j < mail.getImgSize()) {
+            if (j < mail.getImgSize()) {
                 itemTypeArray[itemIndex] = CONTENT_IMAGE_VIEW;
                 itemIndexArray[itemIndex] = j;
                 itemIndex++;
@@ -149,7 +149,7 @@ public class AMail extends BaseAdapter {
         // 初始化imageUrlList和listenerList
         List<String> urlList = mail.getImgUrls();
         imgUrlList.addAll(urlList);
-        for(int j = 0; j < urlList.size(); j++) {
+        for (int j = 0; j < urlList.size(); j++) {
             listenerList.add(new ListImageDownloadListener(host, urlList, j));
         }
 
@@ -206,7 +206,7 @@ public class AMail extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
-        if(getItem(position) == null) {
+        if (getItem(position) == null) {
             return null;
         }
 
@@ -217,7 +217,7 @@ public class AMail extends BaseAdapter {
             // 头部（标题、作者、楼层等）
             case HEAD_VIEW: {
                 HeadViewHolder holderHead = null;
-                if(convertView == null) {
+                if (convertView == null) {
                     convertView = View.inflate(layer.getContext(), R.layout.bbs_article_floor_head, null);
                     holderHead = new HeadViewHolder();
                     holderHead.author = (TextView) convertView.findViewById(R.id.author);
@@ -242,16 +242,16 @@ public class AMail extends BaseAdapter {
                     public void onClick(View view) {
                         // 弹出对话框
                         UserBase user = BbsPersonMgr.getInstance().getBbsUserInfoFromLocal(floorAuthor);
-                        if(user != null) {
+                        if (user != null) {
                             new DUser(layer, floorAuthor).show();
-                        }else {
+                        } else {
                             new TPersonInfo(layer.getUIFrame(), floorAuthor, true,
                                     new TPersonInfo.GetUserInfoListener() {
                                         @Override
                                         public void onGettingUserInfo(BbsUserBase userInfo) {
                                             if (userInfo != null) {
                                                 new DUser(layer, floorAuthor).show();
-                                            }else {
+                                            } else {
                                                 Toast.makeText(layer.getContext(), "找不到这个用户……", Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -263,10 +263,10 @@ public class AMail extends BaseAdapter {
                     }
                 });
                 // 标题
-                if(position == 0) {
+                if (position == 0) {
                     holderHead.title.setText(mail.getTitle());
                     holderHead.title.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     holderHead.title.setVisibility(View.GONE);
                 }
                 return convertView;
@@ -275,21 +275,21 @@ public class AMail extends BaseAdapter {
             // 一块文字内容
             case CONTENT_WORD_VIEW: {
                 ContentWordHolder holderWord = null;
-                if(convertView == null) {
+                if (convertView == null) {
                     convertView = View.inflate(layer.getContext(), R.layout.bbs_article_floor_content_word, null);
                     holderWord = new ContentWordHolder();
                     holderWord.wordView = (TextView) convertView.findViewById(R.id.word);
                     convertView.setTag(holderWord);
-                }else {
+                } else {
                     holderWord = (ContentWordHolder) convertView.getTag();
                 }
                 int wordBlockIndex = itemIndexArray[position];
                 String word = mail.getWordBlocks().get(wordBlockIndex);
-                if(!XStringUtil.isNullOrEmpty(word)) {
+                if (!XStringUtil.isNullOrEmpty(word)) {
                     // 把表情符替换为表情图片
                     CharSequence spannedWord = expressionMap.changeToSpanString(layer, word);
                     holderWord.wordView.setText(spannedWord);
-                }else {
+                } else {
                     holderWord.wordView.setText("");
                 }
                 return convertView;
@@ -298,12 +298,12 @@ public class AMail extends BaseAdapter {
             // 一块图片内容
             case CONTENT_IMAGE_VIEW: {
                 ContentImageHolder holderImage = null;
-                if(convertView == null) {
+                if (convertView == null) {
                     convertView = View.inflate(layer.getContext(), R.layout.bbs_article_floor_content_image, null);
                     holderImage = new ContentImageHolder();
                     holderImage.imageView = (ImageView) convertView.findViewById(R.id.image);
                     convertView.setTag(holderImage);
-                }else {
+                } else {
                     holderImage = (ContentImageHolder) convertView.getTag();
                 }
                 final int imgIndex = itemIndexArray[position];
@@ -338,12 +338,12 @@ public class AMail extends BaseAdapter {
                 });
                 // 设置图片大小
                 ViewGroup.LayoutParams params = holderImage.imageView.getLayoutParams();
-                if(XStringUtil.isNullOrEmpty(localImg) || localImg.equals(ImageUrlType.IMG_ERROR) ||
+                if (XStringUtil.isNullOrEmpty(localImg) || localImg.equals(ImageUrlType.IMG_ERROR) ||
                         localImg.equals(ImageUrlType.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
                     params.height = layer.screen().dp2px(88);
                     holderImage.imageView.setLayoutParams(params);
-                }else {
+                } else {
                     params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     holderImage.imageView.setLayoutParams(params);
@@ -359,7 +359,7 @@ public class AMail extends BaseAdapter {
             // 尾部（日期、回复）
             case FOOT_VIEW: {
                 FootViewHolder holderFoot = null;
-                if(convertView == null) {
+                if (convertView == null) {
                     convertView = View.inflate(layer.getContext(), R.layout.bbs_article_floor_bottom, null);
                     holderFoot = new FootViewHolder();
                     holderFoot.time = (TextView) convertView.findViewById(R.id.time);
@@ -430,12 +430,12 @@ public class AMail extends BaseAdapter {
                 });
                 // 设置图片大小
                 ViewGroup.LayoutParams params = imageViewByTag.getLayoutParams();
-                if(XStringUtil.isNullOrEmpty(localImg) || localImg.equals(ImageUrlType.IMG_ERROR) ||
+                if (XStringUtil.isNullOrEmpty(localImg) || localImg.equals(ImageUrlType.IMG_ERROR) ||
                         localImg.equals(ImageUrlType.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
                     params.height = layer.screen().dp2px(88);
                     imageViewByTag.setLayoutParams(params);
-                }else {
+                } else {
                     params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     imageViewByTag.setLayoutParams(params);

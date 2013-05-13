@@ -1,10 +1,10 @@
 package com.morln.app.lbstask.bbs.cache;
 
-import com.morln.app.data.cache.XBaseAdapterDataSource;
 import com.morln.app.lbstask.bbs.model.Board;
 import com.morln.app.lbstask.bbs.model.Zone;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.data.cache.XBaseAdapterDataSource;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * 存储所有区List<Zone>
@@ -54,12 +54,12 @@ public class ZoneSource extends XBaseAdapterDataSource<Zone> {
      * 将版面映射到区,并添加到Zone对象中
      */
     public void initBoardOfZone(BoardSource boardSource) {
-        for(int i = 0; i<size(); i++){
+        for (int i = 0; i < size(); i++){
             Zone zone = get(i);
             zone.getBoardList().clear();// 清空原有的版面数据
-            for(int j = 0; j<boardSource.size(); j++){
+            for (int j = 0; j < boardSource.size(); j++){
                 Board board = boardSource.get(j);
-                if(zone.getName().equals(board.getZoneBelong())) {
+                if (zone.getName().equals(board.getZoneBelong())) {
                     zone.addBoard(board);
                 }
             }
@@ -72,13 +72,13 @@ public class ZoneSource extends XBaseAdapterDataSource<Zone> {
      * @return
      */
     public int getZoneSecByName(String name) {
-        if(XStringUtil.isNullOrEmpty(name)) {
+        if (XStringUtil.isNullOrEmpty(name)) {
             return -1;
         }
 
-        for(int i = 0; i<size(); i++) {
+        for (int i = 0; i < size(); i++) {
             Zone zone = get(i);
-            if(zone.getName().equals(name)) {
+            if (zone.getName().equals(name)) {
                 return zone.getSec();
             }
         }
@@ -87,9 +87,9 @@ public class ZoneSource extends XBaseAdapterDataSource<Zone> {
 
 
     public String getZoneNameBySec(int sec) {
-        for(int i = 0; i<size(); i++) {
+        for (int i = 0; i<size(); i++) {
             Zone zone = get(i);
-            if(zone.getSec() == sec) {
+            if (zone.getSec() == sec) {
                 return zone.getName();
             }
         }
@@ -98,8 +98,8 @@ public class ZoneSource extends XBaseAdapterDataSource<Zone> {
 
 
     public Zone get(String name) {
-        for(int i = 0; i<size(); i++) {
-            if(get(i).getName().equals(name)) {
+        for (int i = 0; i<size(); i++) {
+            if (get(i).getName().equals(name)) {
                 return get(i);
             }
         }

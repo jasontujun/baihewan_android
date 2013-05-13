@@ -3,8 +3,8 @@ package com.morln.app.lbstask.utils.img;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.media.image.XImageDownloadListener;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.media.image.XImageDownloadListener;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +39,18 @@ public class ImageUtil {
                 new XImageDownloadListener() {
                     @Override
                     public void onBeforeDownload(String id) {
-                        if(listener != null)
+                        if (listener != null)
                             listener.onBeforeDownload(id);
                     }
 
                     @Override
                     public void onFinishDownload(String id, String result) {
-                        if(!XStringUtil.isNullOrEmpty(result)) {
+                        if (!XStringUtil.isNullOrEmpty(result)) {
                             imageSource.putImage(id, result);
-                        }else {
+                        } else {
                             imageSource.putImage(id, ImageUrlType.IMG_ERROR);
                         }
-                        if(listener != null)
+                        if (listener != null)
                             listener.onFinishDownload(id, result);
                     }
                 });
@@ -66,7 +66,7 @@ public class ImageUtil {
      */
     public static void serialDownloadImage(List<String> imgUrlList,
                                            final List<XImageDownloadListener> listenerList) {
-        if(imgUrlList == null || listenerList == null) {
+        if (imgUrlList == null || listenerList == null) {
             return;
         }
 
@@ -74,10 +74,10 @@ public class ImageUtil {
                 getInstance().getSource(SourceName.IMAGE);
 
         // 将每个imgUrl对应的本地图片设置成正在下载
-        for(int i = 0; i < imgUrlList.size(); i++) {
+        for (int i = 0; i < imgUrlList.size(); i++) {
             String imgUrl = imgUrlList.get(i);
             String localImgFile = imageSource.getLocalImage(imgUrl);
-            if(XStringUtil.isNullOrEmpty(localImgFile) ||
+            if (XStringUtil.isNullOrEmpty(localImgFile) ||
                     ImageUrlType.IMG_ERROR.equals(localImgFile))
                 imageSource.putImage(imgUrl, ImageUrlType.IMG_LOADING);
         }
@@ -85,12 +85,12 @@ public class ImageUtil {
         // 对每个listener再添加一层(将imgUrl添加进ImageSource)
         List<XImageDownloadListener> wrapperListenerList =
                 new ArrayList<XImageDownloadListener>();
-        for(int i = 0; i < listenerList.size(); i++) {
+        for (int i = 0; i < listenerList.size(); i++) {
             final XImageDownloadListener listener = listenerList.get(i);
             XImageDownloadListener wrapperListener = new XImageDownloadListener() {
                 @Override
                 public void onBeforeDownload(String id) {
-                    if(listener != null)
+                    if (listener != null)
                         listener.onBeforeDownload(id);
                 }
 
@@ -101,7 +101,7 @@ public class ImageUtil {
                     } else {
                         imageSource.putImage(id, ImageUrlType.IMG_ERROR);
                     }
-                    if(listener != null)
+                    if (listener != null)
                         listener.onFinishDownload(id, result);
                 }
             };

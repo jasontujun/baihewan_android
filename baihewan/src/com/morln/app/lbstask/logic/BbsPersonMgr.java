@@ -14,8 +14,8 @@ import com.morln.app.lbstask.session.apinew.CollectionAPINew;
 import com.morln.app.lbstask.session.apinew.FriendAPINew;
 import com.morln.app.lbstask.session.bean.CollectionArticle;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;

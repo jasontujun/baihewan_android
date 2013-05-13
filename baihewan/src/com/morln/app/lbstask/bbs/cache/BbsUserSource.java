@@ -1,8 +1,8 @@
 package com.morln.app.lbstask.bbs.cache;
 
-import com.morln.app.data.cache.XBaseAdapterIdDataSource;
 import com.morln.app.lbstask.bbs.model.BbsUserBase;
 import com.morln.app.lbstask.cache.SourceName;
+import com.xengine.android.data.cache.XBaseAdapterIdDataSource;
 
 /**
  * Created by jasontujun.

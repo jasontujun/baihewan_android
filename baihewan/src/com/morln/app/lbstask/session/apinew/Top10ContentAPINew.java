@@ -7,10 +7,10 @@ import com.morln.app.lbstask.session.HttpClientHolder;
 import com.morln.app.lbstask.session.bean.top10.Top10Content;
 import com.morln.app.lbstask.utils.GsonUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.session.http.XHttp;
-import com.morln.app.session.http.XURLBuilder;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.http.XURLBuilder;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 

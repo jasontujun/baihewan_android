@@ -9,8 +9,8 @@ import com.morln.app.lbstask.model.Friend;
 import com.morln.app.lbstask.model.UserBase;
 import com.morln.app.lbstask.session.HttpClientHolder;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
@@ -90,7 +90,7 @@ public class BbsAPI {
         try {
             GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
             Random random = new Random();
-            int code = random.nextInt(99999)%(90000) + 10000;
+            int code = random.nextInt(99999) % (90000) + 10000;
 
             String urlString = BbsUrlUtil.loginUrl(code, username, password);
             XLog.d("BBSAPI", "尝试登陆bbs url:" + urlString);

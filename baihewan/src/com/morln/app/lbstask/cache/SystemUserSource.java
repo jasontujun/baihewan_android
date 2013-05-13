@@ -1,9 +1,9 @@
 package com.morln.app.lbstask.cache;
 
-import com.morln.app.data.cache.XBaseAdapterIdDBDataSource;
-import com.morln.app.data.db.XDBTable;
 import com.morln.app.lbstask.bbs.db.UserTable;
 import com.morln.app.lbstask.model.UserBase;
+import com.xengine.android.data.cache.XBaseAdapterIdDBDataSource;
+import com.xengine.android.data.db.XDBTable;
 
 /**
  * Created by jasontujun.

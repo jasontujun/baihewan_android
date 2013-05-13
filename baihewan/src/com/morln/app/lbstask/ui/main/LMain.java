@@ -23,10 +23,10 @@ import com.morln.app.lbstask.ui.mail.CMail;
 import com.morln.app.lbstask.ui.person.CArticleAndInfo;
 import com.morln.app.lbstask.ui.setting.CSetting;
 import com.morln.app.lbstask.ui.top10.CTopAndHot;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
             public void onSwitched(View view, int position) {
                 currentScreen = position;
                 // 弹出左侧教程
-                if(position == 0) {
+                if (position == 0) {
                     showTutorial(CTutorial.TUTORIAL_TYPE_LEFT_BAR);
                 }
             }
@@ -133,7 +133,7 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
 
         refresh();
 
-        if(firstRefresh) {
+        if (firstRefresh) {
             firstRefresh = false;
             contentFrame.addView(componentList.get(currentComponentIndex).getContent());
             cTopAndHot.firstGetTop10();
@@ -154,23 +154,23 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
      * @param type
      */
     public void showTutorial(int type) {
-        if(tutorialVisible) {
+        if (tutorialVisible) {
             return;
         }
         // 已经读过。则退出。
         switch (type) {
             case CTutorial.TUTORIAL_TYPE_LEFT_BAR:
-                if(globalStateSource.getTutorialLeftBar()) {
+                if (globalStateSource.getTutorialLeftBar()) {
                     return;
                 }
                 break;
             case CTutorial.TUTORIAL_TYPE_TOP10:
-                if(globalStateSource.getTutorialTop10()) {
+                if (globalStateSource.getTutorialTop10()) {
                     return;
                 }
                 break;
             case CTutorial.TUTORIAL_TYPE_RSS:
-                if(globalStateSource.getTutorialRss()) {
+                if (globalStateSource.getTutorialRss()) {
                     return;
                 }
                 break;
@@ -185,7 +185,7 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
      * 隐藏教程
      */
     public void hideTutorial() {
-        if(!tutorialVisible) {
+        if (!tutorialVisible) {
             return;
         }
         tutorialVisible = false;
@@ -199,8 +199,8 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
      */
     public void switchBoardFromLeft(int index) {
         // 登陆权限检测
-        if(index == 1 || index == 3 || index == 5) {
-            if(!globalStateSource.isLogin()) {
+        if (index == 1 || index == 3 || index == 5) {
+            if (!globalStateSource.isLogin()) {
                 new DLogin(this, true).show();
                 return;
             }
@@ -214,20 +214,20 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
 
 
         // 对应主界面的切换
-        if(0 <= index && index < componentList.size() && index != currentComponentIndex) {
+        if (0 <= index && index < componentList.size() && index != currentComponentIndex) {
             contentFrame.removeView(componentList.get(currentComponentIndex).getContent());
             contentFrame.addView(componentList.get(index).getContent());
             currentComponentIndex = index;
-            if(index == 1) {
+            if (index == 1) {
                 showTutorial(CTutorial.TUTORIAL_TYPE_RSS);
             }
-            if(index == 3) {
+            if (index == 3) {
                 myArticleAndInfo.show(globalStateSource.getCurrentUserName());
             }
-            else if(index == 4) {
+            else if (index == 4) {
                 otherArticleAndInfo.show(otherUserId);
             }
-            else if(index == 5) {
+            else if (index == 5) {
                 cMail.initMailList();// 刷新站内信列表
             }
         }
@@ -317,23 +317,23 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
     @Override
     public int back() {
         // 隐藏教程
-        if(tutorialVisible) {
+        if (tutorialVisible) {
             hideTutorial();
             return XBackType.CHILD_BACK;
         }
         // 右侧栏返回
-        if(currentScreen == 2) {
+        if (currentScreen == 2) {
             dragFrame.snapToScreen(1);
             return XBackType.CHILD_BACK;
         }
         // 左侧栏退出
-        if(currentScreen == 0) {
+        if (currentScreen == 0) {
             return XBackType.NOTHING_TO_BACK;
         }
 
         // 中间模块某个模块
         int result = componentList.get(currentComponentIndex).back();
-        if(result != XBackType.NOTHING_TO_BACK) {
+        if (result != XBackType.NOTHING_TO_BACK) {
             return result;
         }
         // 左侧栏弹出
@@ -344,11 +344,11 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
 
     @Override
     public boolean onMenu() {
-        if(currentScreen == 1) {
+        if (currentScreen == 1) {
             dragFrame.snapToScreen(0);
             return true;
         }
-        if(currentScreen == 0 || currentScreen == 2) {
+        if (currentScreen == 0 || currentScreen == 2) {
             dragFrame.snapToScreen(1);
             return true;
         }
@@ -375,16 +375,16 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
                     break;
                 // 横屏切换
                 case BbsMsg.SWITCH_LEFT:
-                    if(currentScreen != 0) {
+                    if (currentScreen != 0) {
                         dragFrame.snapToScreen(0);
-                    }else {
+                    } else {
                         dragFrame.snapToScreen(1);
                     }
                     break;
                 case BbsMsg.SWITCH_RIGHT:
-                    if(currentScreen != 2) {
+                    if (currentScreen != 2) {
                         dragFrame.snapToScreen(2);
-                    }else {
+                    } else {
                         dragFrame.snapToScreen(1);
                     }
                     break;
@@ -396,7 +396,7 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
                 case BbsMsg.BBS_PERSON_INFO:{
                     Bundle bundle = msg.getData();
                     String userId = bundle.getString("id");
-                    if(userId != null){
+                    if (userId != null){
                         switchBoardFromRight(userId);
                     }
                     break;

@@ -10,8 +10,8 @@ import com.morln.app.lbstask.cache.GlobalStateSource;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.cache.SystemSettingSource;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +147,7 @@ public class BbsMailMgr {
         content = content + "\n" + "\n" + "-\n";
         String signature = systemSettingSource.getMobileSignature();
         content = content + BbsSignature.signature;// TIP 内容结尾填上产品签名
-        if(!XStringUtil.isNullOrEmpty(signature)) {
+        if (!XStringUtil.isNullOrEmpty(signature)) {
             content = content + ": " + signature + "\n";// 添加手机签名
         }
         return BbsAPI.sendMail(title, content, receiver);

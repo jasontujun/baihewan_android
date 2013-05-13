@@ -15,8 +15,8 @@ import com.morln.app.lbstask.cache.GlobalStateSource;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.session.apinew.BoardAPINew;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class BbsBoardMgr {
     private static BbsBoardMgr instance;
 
     public synchronized static BbsBoardMgr getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new BbsBoardMgr();
         }
         return instance;
@@ -94,7 +94,7 @@ public class BbsBoardMgr {
      */
     public List<ArticleBase> getLocalThemeArticleList(String boardId, int page) {
         Board board = getBoard(boardId);
-        if(board == null) {
+        if (board == null) {
             return new ArrayList<ArticleBase>();
         }
 
@@ -132,18 +132,18 @@ public class BbsBoardMgr {
     public List<Board> getFilteredBoardList(String currentZone, String input) {
         List<Board> resultList = new ArrayList<Board>();
         List<Board> sourceList;
-        if(XStringUtil.isNullOrEmpty(currentZone)) {
+        if (XStringUtil.isNullOrEmpty(currentZone)) {
             sourceList = boardSource.copyAll();
-        }else {
+        } else {
             Zone zone = zoneSource.get(currentZone);
             sourceList = zone.getBoardList();
         }
         // 将用户的输入转化为小写
         String inputLowerCase = input.toLowerCase();
-        for(int i =0; i<sourceList.size(); i++) {
+        for (int i =0; i<sourceList.size(); i++) {
             // 将版面的Id也转换为小写
             String boardIdLowerCase = sourceList.get(i).getBoardId().toLowerCase();
-            if(boardIdLowerCase.contains(inputLowerCase) ||
+            if (boardIdLowerCase.contains(inputLowerCase) ||
                     sourceList.get(i).getChinesName().contains(inputLowerCase)) {
                 resultList.add(sourceList.get(i));
             }
@@ -160,10 +160,10 @@ public class BbsBoardMgr {
     public List<Board> getCollectedBoards() {
         List<Board> result = new ArrayList<Board>();
         List<CollectedBoard> sourceList = collectBoardSource.getByUsername(globalStateSource.getCurrentUserName());
-        for(int i = 0; i<sourceList.size(); i++) {
+        for (int i = 0; i<sourceList.size(); i++) {
             String boardId = sourceList.get(i).getBoardId();
             Board board = boardSource.getById(boardId);
-            if(board != null) {
+            if (board != null) {
                 result.add(board);
             }
         }
@@ -177,7 +177,7 @@ public class BbsBoardMgr {
     public List<String> getCollectedBoardIds() {
         List<String> result = new ArrayList<String>();
         List<CollectedBoard> sourceList = collectBoardSource.getByUsername(globalStateSource.getCurrentUserName());
-        for(int i = 0; i<sourceList.size(); i++) {
+        for (int i = 0; i<sourceList.size(); i++) {
             result.add(sourceList.get(i).getBoardId());
         }
         return result;
@@ -189,7 +189,7 @@ public class BbsBoardMgr {
      * @return
      */
     public boolean containsCollectedBoard(String boardId) {
-        if(XStringUtil.isNullOrEmpty(boardId)) {
+        if (XStringUtil.isNullOrEmpty(boardId)) {
             return false;
         }
 
@@ -202,7 +202,7 @@ public class BbsBoardMgr {
      * @param boardId
      */
     public void addCollectedBoard(String boardId) {
-        if(XStringUtil.isNullOrEmpty(boardId)) {
+        if (XStringUtil.isNullOrEmpty(boardId)) {
             return;
         }
 
@@ -230,7 +230,7 @@ public class BbsBoardMgr {
      * @param boardId
      */
     public void deleteCollectedBoard(String boardId) {
-        if(XStringUtil.isNullOrEmpty(boardId)) {
+        if (XStringUtil.isNullOrEmpty(boardId)) {
             return;
         }
         CollectedBoard board = new CollectedBoard(globalStateSource.getCurrentUserName(), boardId);
@@ -273,7 +273,7 @@ public class BbsBoardMgr {
     public int getHotBoard() {
         List<Board> resultList = new ArrayList<Board>();
         int resultCode = BbsAPI.getHotBoard(resultList);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             todayHotBoardSource.clear();
             todayHotBoardSource.addAll(resultList);
         }
@@ -288,7 +288,7 @@ public class BbsBoardMgr {
     public int mergeRssBoard() {
         List<String> webBoardList = new ArrayList<String>();// 网上的版面数据
         int getRssResultCode = BbsAPI.getRssBoard(webBoardList);
-        if(StatusCode.isSuccess(getRssResultCode)) {
+        if (StatusCode.isSuccess(getRssResultCode)) {
             // 将抓取的版面合并到本地
             addAllCollectedBoards(webBoardList);
             collectBoardSource.saveToDatabase();
@@ -306,7 +306,7 @@ public class BbsBoardMgr {
     public int downloadRssBoard() {
         List<String> webBoardList = new ArrayList<String>();// 网上的版面数据
         int resultCode = BbsAPI.getRssBoard(webBoardList);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             collectBoardSource.deleteByUsername(globalStateSource.getCurrentUserName());
             addAllCollectedBoards(webBoardList);
             collectBoardSource.saveToDatabase();
@@ -322,7 +322,7 @@ public class BbsBoardMgr {
         String username = globalStateSource.getCurrentUserName();
         List<CollectedBoard> collectedBoardList = collectBoardSource.getByUsername(username);
         List<String> boardIds = new ArrayList<String>();
-        for(int i = 0; i<collectedBoardList.size(); i++) {
+        for (int i = 0; i < collectedBoardList.size(); i++) {
             boardIds.add(collectedBoardList.get(i).getBoardId());
         }
         int sendRssResultCode = BbsAPI.sendRssBoard(boardIds);
@@ -341,9 +341,9 @@ public class BbsBoardMgr {
         int resultCode = new BoardAPINew(context).downloadBoard(sessionList,
                 globalStateSource.getBoardTimeStamp());
         XLog.d("API", "更新版面数据的返回码：" + resultCode);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             List<Board> localList = new ArrayList<Board>();
-            for(com.morln.app.lbstask.session.bean.board.Board sessionBean : sessionList) {
+            for (com.morln.app.lbstask.session.bean.board.Board sessionBean : sessionList) {
                 localList.add(new Board(sessionBean));
             }
             XLog.d("API", "更新版面数据的数量：" + localList.size());

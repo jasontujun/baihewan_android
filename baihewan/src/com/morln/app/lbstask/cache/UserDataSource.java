@@ -2,8 +2,8 @@ package com.morln.app.lbstask.cache;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.morln.app.data.cache.XDataSource;
 import com.morln.app.lbstask.model.UserBase;
+import com.xengine.android.data.cache.XDataSource;
 
 /**
  * Created by jasontujun.

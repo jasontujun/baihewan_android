@@ -19,9 +19,9 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * Created by jasontujun.
@@ -112,9 +112,9 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         moreLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isGettingMore) {
+                if (!isGettingMore) {
                     int minMailNo = mailSource.getMinNo();
-                    if(minMailNo <= 0) {
+                    if (minMailNo <= 0) {
                         AnimationUtil.startShakeAnimation(moreLabel, getContext());
                         Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
                         return;
@@ -122,7 +122,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
 
                     refreshListBottom(true);
                     // 异步线程加载“更多”。如果失败说明没有更多了
-                    if(refreshTask != null) {
+                    if (refreshTask != null) {
                         // 取消刷新线程，防止冲突
                         refreshTask.cancel(true);
                     }
@@ -139,7 +139,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
 
     private void refreshListBottom(boolean gettingMore) {
         isGettingMore = gettingMore;
-        if(isGettingMore) {
+        if (isGettingMore) {
             moreLabel.setText("正在加载……");
         } else {
             moreLabel.setText("查看更多");
@@ -151,10 +151,10 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
      * 刷新邮件列表
      */
     public void initMailList() {
-        if(bbsMailMgr.getNewMailNumber() != mailSource.getNewMailNumber()
+        if (bbsMailMgr.getNewMailNumber() != mailSource.getNewMailNumber()
                 || mailSource.size() == 0) {
             new GetMailListTask(true).execute(null);
-        }else {
+        } else {
             mailListAdapter.notifyDataSetChanged();
             contentList.onRefreshComplete();
         }
@@ -197,7 +197,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
     @Override
     public void onLayerUnCovered() {
         super.onLayerUnCovered();
-        if(state != null) {
+        if (state != null) {
             contentList.onRestoreInstanceState(state);
         }
     }
@@ -218,14 +218,14 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
     public Mail getPre() {
         // 判断当前是哪一组的站内信
         int articleIndex = -1;
-        for(int i =0; i<mailSource.size(); i++) {
-            if(mailSource.get(i).getId().equals(currentMailUrl)) {
+        for (int i =0; i<mailSource.size(); i++) {
+            if (mailSource.get(i).getId().equals(currentMailUrl)) {
                 articleIndex = i;
                 break;
             }
         }
         // 返回下一篇站内信
-        if(articleIndex != -1 && articleIndex < mailSource.size()-1) {
+        if (articleIndex != -1 && articleIndex < mailSource.size()-1) {
             Mail mail = mailSource.get(articleIndex + 1);
             currentMailUrl = mail.getId();
             return mail;
@@ -241,14 +241,14 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
     public Mail getNext() {
         // 判断当前是哪一组的那封站内信
         int articleIndex = -1;
-        for(int i =0; i<mailSource.size(); i++) {
-            if(mailSource.get(i).getId().equals(currentMailUrl)) {
+        for (int i =0; i<mailSource.size(); i++) {
+            if (mailSource.get(i).getId().equals(currentMailUrl)) {
                 articleIndex = i;
                 break;
             }
         }
         // 返回上一篇站内信
-        if(articleIndex > 0) {
+        if (articleIndex > 0) {
             Mail mail = mailSource.get(articleIndex - 1);
             currentMailUrl = mail.getId();
             return mail;
@@ -279,9 +279,9 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         @Override
         public int getCount() {
             int count = mailSource.size();
-            if(count == 0) {
+            if (count == 0) {
                 nothingTip.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 nothingTip.setVisibility(View.INVISIBLE);
             }
             return count;
@@ -300,12 +300,12 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             Object item = getItem(i);
-            if(item == null){
+            if (item == null){
                 return null;
             }
 
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_article_list_item, null);
                 holder = new ViewHolder();
                 holder.frame = (RelativeLayout) convertView.findViewById(R.id.frame);
@@ -339,7 +339,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
                 }
             });
             // 装饰符
-            if(mail.getStatus() == Mail.NEW) {
+            if (mail.getStatus() == Mail.NEW) {
                 holder.decoration.setImageResource(R.color.light_red);
                 holder.label.setVisibility(View.VISIBLE);
                 setViewBackground(holder.label, BbsPic.LABEL_NEW);
@@ -389,7 +389,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
 
         @Override
         protected void onPreExecute() {
-            if(hasDialog) {
+            if (hasDialog) {
                 waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
                 waitingDialog.setAsyncTask(this);
                 waitingDialog.show();
@@ -402,15 +402,15 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         }
         @Override
         protected void onPostExecute(Integer resultCode) {
-            if(hasDialog) {
+            if (hasDialog) {
                 waitingDialog.dismiss();
             }
 
             mailListAdapter.notifyDataSetChanged();
             contentList.onRefreshComplete();
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 Toast.makeText(getContext(), "刷新站内信成功！", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 switch (resultCode){
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦");
@@ -424,7 +424,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         }
         @Override
         protected void onCancelled() {
-            if(hasDialog) {
+            if (hasDialog) {
                 waitingDialog.dismiss();
             }
             contentList.onRefreshComplete();
@@ -454,9 +454,9 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         protected void onPostExecute(Integer resultCode) {
             refreshListBottom(false);
             contentList.onRefreshComplete();
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 mailListAdapter.notifyDataSetChanged();
-            }else {
+            } else {
                 switch (resultCode) {
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦");
@@ -508,11 +508,11 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         protected void onPostExecute(Integer resultCode) {
             waitingDialog.dismiss();
             contentList.onRefreshComplete();
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 Toast.makeText(getContext(), "删除站内信成功！", Toast.LENGTH_SHORT).show();
                 mailListAdapter.notifyDataSetChanged();
                 AnimationUtil.startListAnimation(contentList);
-            }else {
+            } else {
                 switch (resultCode) {
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦");

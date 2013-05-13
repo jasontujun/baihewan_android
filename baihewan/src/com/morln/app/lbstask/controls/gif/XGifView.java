@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import com.morln.app.utils.XSafeAsyncTask;
+import com.xengine.android.utils.XSafeAsyncTask;
 
 import java.io.File;
 import java.io.FileInputStream;

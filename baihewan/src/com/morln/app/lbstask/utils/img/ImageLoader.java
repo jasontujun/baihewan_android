@@ -14,9 +14,9 @@ import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.media.image.XAndroidImageLocalMgr;
-import com.morln.app.media.image.XImageLocalMgr;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.media.image.XAndroidImageLocalMgr;
+import com.xengine.android.media.image.XImageLocalMgr;
+import com.xengine.android.utils.XStringUtil;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

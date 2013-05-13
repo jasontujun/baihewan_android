@@ -1,7 +1,7 @@
 package com.morln.app.lbstask.session;
 
 import android.content.Context;
-import com.morln.app.session.http.XAndroidHttpClient;
+import com.xengine.android.session.http.XAndroidHttpClient;
 
 /**
  * Created by jasontujun.

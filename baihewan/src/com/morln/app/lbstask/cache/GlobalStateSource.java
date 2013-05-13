@@ -2,8 +2,8 @@ package com.morln.app.lbstask.cache;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.morln.app.data.cache.XDataSource;
-import com.morln.app.utils.XLog;
+import com.xengine.android.data.cache.XDataSource;
+import com.xengine.android.utils.XLog;
 
 /**
  * 记录全局都要用到的状态。

@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.morln.app.data.cache.XDataChangeListener;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.GlobalStateSource;
@@ -27,9 +26,10 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.ui.person.TAddFriend;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.data.cache.XDataChangeListener;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class CFriendBar extends XBaseComponent {
         noLoginTip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!globalStateSource.isLogin()) {
+                if (!globalStateSource.isLogin()) {
                     new DLogin(parentLayer(), true).show();
                 }
             }
@@ -87,7 +87,7 @@ public class CFriendBar extends XBaseComponent {
             @Override
             public void onRefresh() {
                 // TIP 登陆权限检测
-                if(!globalStateSource.isLogin()) {
+                if (!globalStateSource.isLogin()) {
                     friendListView.onRefreshComplete();
                     new DLogin(parentLayer(), true).show();
                     return;
@@ -171,10 +171,10 @@ public class CFriendBar extends XBaseComponent {
     public void allRefresh() {
         friendListAdapter.refresh();
         friendListView.onRefreshComplete();
-        if(globalStateSource.isLogin()) {
+        if (globalStateSource.isLogin()) {
             noLoginTip.setVisibility(View.GONE);
             friendListView.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             noLoginTip.setVisibility(View.VISIBLE);
             nothingTip.setVisibility(View.GONE);
             friendListView.setVisibility(View.GONE);
@@ -203,12 +203,12 @@ public class CFriendBar extends XBaseComponent {
         public void refresh() {
             String currentUsername = globalStateSource.getCurrentUserName();
             friendList = bbsPersonMgr.getFriendList(currentUsername);
-            if(friendList == null) {
+            if (friendList == null) {
                 friendList = new ArrayList<Friend>();
             }
-            if(friendList.size() == 0) {
+            if (friendList.size() == 0) {
                 nothingTip.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 nothingTip.setVisibility(View.GONE);
             }
             notifyDataSetChanged();
@@ -240,17 +240,17 @@ public class CFriendBar extends XBaseComponent {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             Object item = getItem(i);
-            if(item == null) {
+            if (item == null) {
                 return null;
             }
             final Friend friend = (Friend) item;
-            if(friend.getUserInfo().getUsername() == null ||
+            if (friend.getUserInfo().getUsername() == null ||
                     friend.getUserInfo().getUsername().equals("")) {
                 return null;
             }
 
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_friend_list_item, null);
                 holder = new ViewHolder();
                 holder.itemFrame = (ChangeImageLayout) convertView.findViewById(R.id.frame);
@@ -261,7 +261,7 @@ public class CFriendBar extends XBaseComponent {
                 holder.itemFrame.setLayoutImage(parentLayer().getUIFrame(),
                         FuncBarPic.FRAME_TRANSPARENT, FuncBarPic.FRAME_PRESSED);
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             final String friendName = friend.getUserInfo().getUsername();
@@ -350,11 +350,11 @@ public class CFriendBar extends XBaseComponent {
         @Override
         protected Integer doInBackground(Void... para) {
             int resultCode1 = bbsPersonMgr.getFriendsFromWeb();
-            if(StatusCode.isSuccess(resultCode1) &&
+            if (StatusCode.isSuccess(resultCode1) &&
                     globalStateSource.getLoginStatus() == GlobalStateSource.LOGIN_STATUS_ALL_LOGIN){
                 int resultCode2 = bbsPersonMgr.uploadFriendList(getContext());// 把好友数据上传到服务器
                 return resultCode2;
-            }else {
+            } else {
                 return resultCode1;
             }
         }
@@ -363,9 +363,9 @@ public class CFriendBar extends XBaseComponent {
         protected void onPostExecute(Integer resultCode) {
             friendListView.onRefreshComplete();
 
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 Toast.makeText(getContext(), "刷新好友成功！", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 switch (resultCode){
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦");

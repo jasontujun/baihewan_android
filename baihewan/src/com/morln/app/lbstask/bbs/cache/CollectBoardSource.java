@@ -1,10 +1,10 @@
 package com.morln.app.lbstask.bbs.cache;
 
-import com.morln.app.data.cache.XBaseAdapterIdUsernameDBDataSource;
-import com.morln.app.data.db.XDBTable;
 import com.morln.app.lbstask.bbs.db.CollectedBoardTable;
 import com.morln.app.lbstask.bbs.model.CollectedBoard;
 import com.morln.app.lbstask.cache.SourceName;
+import com.xengine.android.data.cache.XBaseAdapterIdUsernameDBDataSource;
+import com.xengine.android.data.db.XDBTable;
 
 /**
  * 订阅版面的数据源。

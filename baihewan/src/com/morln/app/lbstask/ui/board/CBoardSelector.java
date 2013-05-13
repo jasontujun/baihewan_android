@@ -13,9 +13,9 @@ import com.morln.app.lbstask.bbs.model.Zone;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.utils.AnimationUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +79,9 @@ public class CBoardSelector extends XBaseComponent {
      */
     public void reset(List<String> boardList) {
         currentZoneIndex = 0;
-        if(boardList == null) {
+        if (boardList == null) {
             selectedBoardList = new ArrayList<String>();
-        }else {
+        } else {
             selectedBoardList = new ArrayList<String>(boardList);
         }
         refreshBoard();
@@ -134,19 +134,19 @@ public class CBoardSelector extends XBaseComponent {
         @Override
         public View getView(final int i, View convertView, ViewGroup viewGroup) {
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_board_selector_zone_item, null);
                 holder = new ViewHolder();
                 holder.zoneName = (TextView) convertView.findViewById(R.id.zone_name);
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             final Zone zone = (Zone) getItem(i);
             // 区名
             holder.zoneName.setText(zone.getName());
-            if(currentZoneIndex == i) {
+            if (currentZoneIndex == i) {
                 convertView.setBackgroundResource(R.color.light_green);
             } else {
                 convertView.setBackgroundResource(R.drawable.list_item_bg_gray);
@@ -176,7 +176,7 @@ public class CBoardSelector extends XBaseComponent {
 
         public void setBoardList(List<Board> boardList1){
             boardList = boardList1;
-            if(boardList == null){
+            if (boardList == null){
                 boardList = new ArrayList<Board>();
             }
             notifyDataSetChanged();
@@ -205,20 +205,20 @@ public class CBoardSelector extends XBaseComponent {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_board_selector_board_item, null);
                 holder = new ViewHolder();
                 holder.boardName = (TextView) convertView.findViewById(R.id.board_name);
                 holder.addFrame = (LinearLayout) convertView.findViewById(R.id.add_btn);
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             final Board board = (Board) getItem(i);
             // 版块中文名
             holder.boardName.setText(board.getChinesName());
-            if(contains(board.getBoardId())) {
+            if (contains(board.getBoardId())) {
                 holder.boardName.setTextColor(getContext().getResources().getColor(R.color.gray));
                 holder.addFrame.setVisibility(View.GONE);
                 // 添加按钮

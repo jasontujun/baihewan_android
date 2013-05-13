@@ -8,7 +8,7 @@ import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
-import com.morln.app.utils.XLog;
+import com.xengine.android.utils.XLog;
 
 import java.util.NoSuchElementException;
 

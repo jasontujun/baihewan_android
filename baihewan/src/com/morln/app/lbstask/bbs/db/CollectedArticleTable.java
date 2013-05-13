@@ -2,9 +2,9 @@ package com.morln.app.lbstask.bbs.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import com.morln.app.data.db.XBaseDBTable;
-import com.morln.app.data.db.XSQLiteDataType;
 import com.morln.app.lbstask.bbs.model.CollectedArticleBase;
+import com.xengine.android.data.db.XBaseDBTable;
+import com.xengine.android.data.db.XSQLiteDataType;
 
 /**
  * 帖子收藏类（只能收藏主题帖）

@@ -1,6 +1,5 @@
 package com.morln.app.lbstask.utils.img;
-
-import com.morln.app.media.image.XSerialDownloadMgr;
+import com.xengine.android.media.image.XSerialDownloadMgr;
 
 /**
  * 持有一个图片下载管理器对象和一个线性下载对象

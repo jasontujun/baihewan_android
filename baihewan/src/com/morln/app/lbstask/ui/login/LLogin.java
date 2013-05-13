@@ -14,10 +14,10 @@ import com.morln.app.lbstask.logic.LoginMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.res.SystemPic;
 import com.morln.app.lbstask.utils.AnimationUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.
@@ -145,23 +145,23 @@ public class LLogin extends XBaseLayer {
     }
 
     public void setVisibility(boolean visibility) {
-        if(visibility) {
+        if (visibility) {
             loginFrame.setVisibility(View.VISIBLE);
             title.setVisibility(View.VISIBLE);
             // 再初始化一下账号密码
             usernameInputView.setText(globalStateSource.getLastUserName());
-            if(loginMgr.isRememberPassword()) {
+            if (loginMgr.isRememberPassword()) {
                 rememberPasswordBox.setChecked(true);
                 passwordInputView.setText(globalStateSource.getLastUserPassword());
             }else {
                 rememberPasswordBox.setChecked(false);
             }
-            if(loginMgr.isAutoLogin()) {
+            if (loginMgr.isAutoLogin()) {
                 autoLoginBox.setChecked(true);
             }else {
                 autoLoginBox.setChecked(false);
             }
-        }else {
+        } else {
             loginFrame.setVisibility(View.INVISIBLE);
             title.setVisibility(View.INVISIBLE);
         }

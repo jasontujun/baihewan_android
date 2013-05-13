@@ -22,11 +22,11 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.io.File;
 
@@ -81,19 +81,19 @@ public class LWriteMail extends XBaseLayer {
         // 设置当前接受者
         receiverNameView.setText(receiver);
         // 初始化标题
-        if(!XStringUtil.isNullOrEmpty(title)) {
+        if (!XStringUtil.isNullOrEmpty(title)) {
             titleInput.setText(title);
         }
         // 初始化内容
-        if(!XStringUtil.isNullOrEmpty(content)) {
+        if (!XStringUtil.isNullOrEmpty(content)) {
             titleInput.setText(content);
         }
         // 设置签名
         String s = systemSettingSource.getMobileSignature();
-        if(XStringUtil.isNullOrEmpty(s)) {
+        if (XStringUtil.isNullOrEmpty(s)) {
             signature.setText("还没有手机签名哦~");
             signature.setTextColor(getContext().getResources().getColor(R.color.gray));
-        }else {
+        } else {
             signature.setText("from百荷湾: "+s);
             signature.setTextColor(getContext().getResources().getColor(R.color.light_purple));
         }
@@ -151,7 +151,7 @@ public class LWriteMail extends XBaseLayer {
      */
     public void addPhoto(String localPhotoUrl, String description, boolean isCompress) {
         // TODO 压缩！
-        if(isCompress) {
+        if (isCompress) {
 
         }
         File photoFile = new File(localPhotoUrl);
@@ -181,7 +181,7 @@ public class LWriteMail extends XBaseLayer {
                     int currentIndex = contentInput.getSelectionStart();//获取光标所在位置
                     Editable contentEditable = contentInput.getText();
                     XLog.d("ARTICLE", "光标位置：" + currentIndex + ",当前文本长度" + contentEditable.length());
-                    if(0 <= currentIndex && currentIndex <= contentEditable.length()){
+                    if (0 <= currentIndex && currentIndex <= contentEditable.length()) {
                         contentEditable.insert(currentIndex, bbsExpression);
                         // 把表情字符替换为图片
                         CharSequence str = expressionMap.changeToSpanString(LWriteMail.this, contentEditable.toString());
@@ -232,17 +232,17 @@ public class LWriteMail extends XBaseLayer {
         }
         @Override
         protected void onPostExecute(String resultString) {
-            if(resultString != null){
+            if (resultString != null){
                 Toast.makeText(getContext(), "上传图片成功！", Toast.LENGTH_SHORT).show();
 
                 int currentIndex = contentInput.getSelectionStart();//获取光标所在位置
                 Editable contentEditable = contentInput.getText();
                 XLog.d("ARTICLE", "光标位置：" + currentIndex + ",当前文本长度" + contentEditable.length());
-                if(0 <= currentIndex && currentIndex <= contentEditable.length()){
+                if (0 <= currentIndex && currentIndex <= contentEditable.length()) {
                     contentEditable.insert(currentIndex, resultString);
                     contentInput.setSelection(currentIndex + resultString.length());
                 }
-            }else {
+            } else {
                 Toast.makeText(getContext(), "上传图片失败！", Toast.LENGTH_SHORT).show();
             }
             waitingDialog.dismiss();
@@ -274,7 +274,7 @@ public class LWriteMail extends XBaseLayer {
         }
         @Override
         protected void onPostExecute(Integer resultCode) {
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 Toast.makeText(getContext(), "发送站内信成功！", Toast.LENGTH_SHORT).show();
 
                 Handler handler1 = getFrameHandler();
@@ -282,7 +282,7 @@ public class LWriteMail extends XBaseLayer {
                 msg.what = MainMsg.WRITE_MAIL_BACK;
                 msg.arg1 = 1;// 发帖成功
                 handler1.sendMessage(msg);
-            }else {
+            } else {
                 switch(resultCode) {
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(LWriteMail.this, true).show("由于长时间发呆，要重新登录哦");

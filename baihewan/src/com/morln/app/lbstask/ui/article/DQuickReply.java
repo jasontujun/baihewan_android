@@ -17,10 +17,10 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XDialog;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XDialog;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.
@@ -130,7 +130,7 @@ public class DQuickReply implements XDialog {
         }
         @Override
         protected void onPostExecute(Integer resultCode) {
-            if(StatusCode.isSuccess(resultCode)){
+            if (StatusCode.isSuccess(resultCode)){
                 Toast.makeText(uiLayer.getContext(), "回帖成功！", Toast.LENGTH_SHORT).show();
 
                 Handler handler1 = uiLayer.getFrameHandler();
@@ -138,8 +138,8 @@ public class DQuickReply implements XDialog {
                 msg.what = MainMsg.BBS_REPLY_ARTICLE_BACK;
                 msg.arg1 = 1;// 回帖成功
                 handler1.sendMessage(msg);
-            }else {
-                switch(resultCode){
+            } else {
+                switch (resultCode) {
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(uiLayer, true).show("由于长时间发呆，要重新登录哦");
                         Toast.makeText(uiLayer.getContext(), "BBS登录失效,请重新登录！", Toast.LENGTH_SHORT).show();

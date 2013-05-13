@@ -1,12 +1,14 @@
 package com.morln.app.lbstask.logic;
 
 import android.content.Context;
-import com.morln.app.data.db.XSQLiteHelper;
 import com.morln.app.lbstask.bbs.cache.*;
 import com.morln.app.lbstask.cache.*;
 import com.morln.app.lbstask.utils.StatusCode;
 import com.morln.app.lbstask.utils.img.ImageLoader;
-import com.morln.app.media.image.XAndroidImageLocalMgr;
+import com.xengine.android.data.db.XSQLiteHelper;
+import com.xengine.android.media.image.XAndroidImageLocalMgr;
+import com.xengine.android.system.file.XAndroidFileMgr;
+import com.xengine.android.system.file.XFileMgr;
 
 /**
  * Created by jasontujun.
@@ -23,8 +25,7 @@ public class SystemMgr {
         return instance;
     }
 
-    private SystemMgr() {
-    }
+    private SystemMgr() {}
 
     /**
      * 接受反馈
@@ -49,9 +50,7 @@ public class SystemMgr {
      * @param context
      */
     public static void initSystem(Context context) {
-        XAndroidImageLocalMgr.getInstance().clearImgDir();
-        clearMgr();
-        clearDataSource();
+        clearSystem();
         initDB(context);
         initDataSources(context);
     }
@@ -110,24 +109,22 @@ public class SystemMgr {
         repo.registerDataSource(new ArticleSource());
     }
 
-
-    /**
-     * 清空数据源
-     */
-    public static void clearDataSource() {
-        DataRepo.clearInstance();
-    }
-
-    /**
-     * 清空logic层。（清除之前的实例）
-     */
-    public static void clearMgr() {
+    public static void clearSystem() {
+        // clear image cache
         ImageLoader.getInstance().clearImageCache();
 
+        // clear tmp file
+        XAndroidFileMgr.getInstance().clearDir(XFileMgr.FILE_TYPE_TMP);
+        XAndroidFileMgr.getInstance().clearDir(XFileMgr.FILE_TYPE_PHOTO);
+
+        // clear Mgr
         LoginMgr.clearInstance();
         BbsArticleMgr.clearInstance();
         BbsBoardMgr.clearInstance();
         BbsMailMgr.clearInstance();
         BbsPersonMgr.clearInstance();
+
+        // clear DataSource
+        DataRepo.clearInstance();
     }
 }

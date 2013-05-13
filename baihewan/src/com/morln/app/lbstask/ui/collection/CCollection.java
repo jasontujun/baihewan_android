@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.morln.app.data.cache.XDataChangeListener;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.bbs.cache.CollectArticleSource;
 import com.morln.app.lbstask.bbs.model.ArticleBase;
@@ -20,9 +19,10 @@ import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.utils.AnimationUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.data.cache.XDataChangeListener;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,11 +74,11 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
         mgrBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(articleListAdapter.getCount() == 0) {
+                if (articleListAdapter.getCount() == 0) {
                     Toast.makeText(getContext(), "没有可以删除的了", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(mgrBtn, getContext());
-                }else {
-                    if(deletedList == null) {
+                } else {
+                    if (deletedList == null) {
                         deletedList = new ArrayList<String>();
                     }else {
                         deletedList.clear();
@@ -114,7 +114,7 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
                 mState = STATE_NORMAL;
                 refresh();
                 // 后台同步
-                if(deletedList != null && deletedList.size() > 0) {
+                if (deletedList != null && deletedList.size() > 0) {
                     new TSyncCollection(parentLayer().getUIFrame(), false, null).execute(null);
                 }
             }
@@ -157,14 +157,14 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
         List<ArticleBase> collectedList = articleListAdapter.getArticleList();
         // 判断当前是哪一组的那篇帖子
         int articleIndex = -1;
-        for(int i =0; i<collectedList.size(); i++) {
-            if(collectedList.get(i).getId().equals(currentArticleId)) {
+        for (int i =0; i<collectedList.size(); i++) {
+            if (collectedList.get(i).getId().equals(currentArticleId)) {
                 articleIndex = i;
                 break;
             }
         }
         // 返回上一篇帖子
-        if(articleIndex > 0){
+        if (articleIndex > 0){
             ArticleBase article = collectedList.get(articleIndex - 1);
             currentArticleId = article.getId();
             return article;
@@ -177,14 +177,14 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
         List<ArticleBase> collectedList = articleListAdapter.getArticleList();
         // 判断当前是哪一组的那篇帖子
         int articleIndex = -1;
-        for(int i =0; i<collectedList.size(); i++) {
-            if(collectedList.get(i).getId().equals(currentArticleId)) {
+        for (int i =0; i<collectedList.size(); i++) {
+            if (collectedList.get(i).getId().equals(currentArticleId)) {
                 articleIndex = i;
                 break;
             }
         }
         // 返回下一篇帖子
-        if(articleIndex != -1 && articleIndex < collectedList.size()-1) {
+        if (articleIndex != -1 && articleIndex < collectedList.size()-1) {
             ArticleBase article = collectedList.get(articleIndex + 1);
             currentArticleId = article.getId();
             return article;
@@ -194,7 +194,7 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
 
     @Override
     public int back() {
-        if(mState != STATE_NORMAL) {
+        if (mState != STATE_NORMAL) {
             mState = STATE_NORMAL;
             refresh();
             return XBackType.CHILD_BACK;
@@ -208,8 +208,8 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
     @Override
     public void onLayerUnCovered() {
         super.onLayerUnCovered();
-        if(state != null) {
-            if(mState == STATE_NORMAL) {
+        if (state != null) {
+            if (mState == STATE_NORMAL) {
                 contentList.onRestoreInstanceState(state);
             }
         }
@@ -218,7 +218,7 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
     @Override
     public void onLayerCovered() {
         super.onLayerCovered();
-        if(mState == STATE_NORMAL) {
+        if (mState == STATE_NORMAL) {
             state = contentList.onSaveInstanceState();
         }
     }
@@ -232,14 +232,14 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
         private List<ArticleBase> articleList = new ArrayList<ArticleBase>();
 
         public void setArticleList(List<ArticleBase> articleList1) {
-            if(articleList1 == null) {
+            if (articleList1 == null) {
                 articleList = new ArrayList<ArticleBase>();
             }else {
                 articleList = new ArrayList<ArticleBase>(articleList1);
             }
             notifyDataSetChanged();
             // 无内容的提示
-            if(getCount() == 0) {
+            if (getCount() == 0) {
                 nothingTip.setVisibility(View.VISIBLE);
             }else {
                 nothingTip.setVisibility(View.INVISIBLE);
@@ -287,12 +287,12 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             Object item = getItem(i);
-            if(item == null) {
+            if (item == null) {
                 return null;
             }
 
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_article_list_item, null);
                 holder = new ViewHolder();
                 holder.frame = (RelativeLayout) convertView.findViewById(R.id.frame);
@@ -317,7 +317,7 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
             // 人气栏
             holder.popFrame.setVisibility(View.GONE);
             // 删除栏
-            if(mState == STATE_DELETE) {
+            if (mState == STATE_DELETE) {
                 holder.deleteFrame.setVisibility(View.VISIBLE);
                 holder.deleteFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -338,13 +338,13 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
             holder.boardTipFrame.setVisibility(View.VISIBLE);
             holder.boardIdTip.setText(article.getBoard());
             Board board = bbsBoardMgr.getBoard(article.getBoard());
-            if(board != null) {
+            if (board != null) {
                 holder.boardChineseTip.setText(board.getChinesName());
-            }else {
+            } else {
                 holder.boardChineseTip.setText("");
             }
             // 设置监听
-            if(mState == STATE_NORMAL) {
+            if (mState == STATE_NORMAL) {
                 holder.frame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

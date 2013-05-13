@@ -4,7 +4,7 @@ import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.utils.img.ImageUrlType;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.Comparator;
 import java.util.List;
@@ -193,7 +193,7 @@ public class ArticleDetail {
     }
 
     public int getWordBlockSize() {
-        if(wordBlocks == null)
+        if (wordBlocks == null)
             return 0;
         return wordBlocks.size();
     }
@@ -207,7 +207,7 @@ public class ArticleDetail {
     }
 
     public int getImgSize() {
-        if(imgUrls == null)
+        if (imgUrls == null)
             return 0;
         return imgUrls.size();
     }
@@ -226,10 +226,10 @@ public class ArticleDetail {
      */
     public void resetImg() {
         ImageSource imageSource = (ImageSource) DataRepo.getInstance().getSource(SourceName.IMAGE);
-        for(int i = 0; i<imgUrls.size(); i++) {
+        for (int i = 0; i<imgUrls.size(); i++) {
             String imageUrl = imgUrls.get(i);
             String localImageFile = imageSource.getLocalImage(imageUrl);
-            if(!XStringUtil.isNullOrEmpty(localImageFile) &&
+            if (!XStringUtil.isNullOrEmpty(localImageFile) &&
                     (localImageFile.equals(ImageUrlType.IMG_LOADING)
                             || localImageFile.equals(ImageUrlType.IMG_ERROR))) {
                 imageSource.putImage(imageUrl, "");

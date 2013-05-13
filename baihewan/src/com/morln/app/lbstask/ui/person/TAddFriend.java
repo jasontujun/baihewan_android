@@ -6,7 +6,7 @@ import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * Created by jasontujun.

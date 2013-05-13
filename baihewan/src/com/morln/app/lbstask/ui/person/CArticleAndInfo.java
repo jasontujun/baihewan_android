@@ -16,8 +16,8 @@ import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.ui.Linear;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * Created by jasontujun.

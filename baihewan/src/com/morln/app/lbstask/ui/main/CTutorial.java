@@ -13,9 +13,9 @@ import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.controls.viewflow.CircleFlowIndicator;
 import com.morln.app.lbstask.controls.viewflow.ViewFlow;
 import com.morln.app.lbstask.res.BbsMsg;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * 提示教程界面

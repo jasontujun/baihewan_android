@@ -20,10 +20,10 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
 import com.morln.app.lbstask.utils.ViewUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.
@@ -118,7 +118,7 @@ public class CPersonInfo extends XBaseComponent {
         mailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(userId != null) {
+                if (userId != null) {
                     Handler handler = getFrameHandler();
                     Message msg = handler.obtainMessage();
                     msg.what = MainMsg.WRITE_MAIL;
@@ -126,7 +126,7 @@ public class CPersonInfo extends XBaseComponent {
                     bundle.putString("receiver", userId);
                     msg.setData(bundle);
                     handler.sendMessage(msg);
-                }else {
+                } else {
                     Toast.makeText(getContext(), "无法发站内信", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -152,22 +152,22 @@ public class CPersonInfo extends XBaseComponent {
      * @param userId
      */
     public void show(String userId) {
-        if(userId == null) {
+        if (userId == null) {
             return;
         }
 
         this.userId = userId;
-        if(userId.equals(globalStateSource.getCurrentUserName())){
+        if (userId.equals(globalStateSource.getCurrentUserName())){
             infoLabel.setText("我的个人资料");
-        }else {
+        } else {
             infoLabel.setText("Ta的个人资料");
         }
 
         // 先从本地缓存中获取
         userInfo = bbsPersonMgr.getBbsUserInfoFromLocal(userId);
-        if(userInfo != null) {
+        if (userInfo != null) {
             refresh();
-        }else {
+        } else {
             // 如果没有，从网上抓取
             new TPersonInfo(parentLayer().getUIFrame(), userId, true,
                     new TPersonInfo.GetUserInfoListener() {
@@ -185,7 +185,7 @@ public class CPersonInfo extends XBaseComponent {
     }
 
     private void refresh() {
-        if(userInfo != null) {
+        if (userInfo != null) {
             nothingTip.setVisibility(View.GONE);
             contentFrame.setVisibility(View.VISIBLE);
 
@@ -204,15 +204,15 @@ public class CPersonInfo extends XBaseComponent {
             showWordView.setText(userInfo.getShowWord());
             hpView.setText(userInfo.getHp());
             String role = userInfo.getRole();
-            if(XStringUtil.isNullOrEmpty(role)) {
+            if (XStringUtil.isNullOrEmpty(role)) {
                 roleView.setText("一介布衣");
-            }else {
+            } else {
                 roleView.setText(role);
             }
 
-            if(userId.equals(globalStateSource.getCurrentUserName())) {
+            if (userId.equals(globalStateSource.getCurrentUserName())) {
                 refreshSignatureFrame();// 显示自己的资料,出现手机签名栏
-            }else {
+            } else {
                 refreshVisitorFrame();// 显示别人的资料,出现访客按钮栏
             }
         }else {// 默认个人资料
@@ -224,10 +224,10 @@ public class CPersonInfo extends XBaseComponent {
     private void refreshSignatureFrame() {
         signatureFrame.setVisibility(View.VISIBLE);
         visitorFrame.setVisibility(View.GONE);
-        if(XStringUtil.isNullOrEmpty(bbsPersonMgr.getMobileSignature())) {
+        if (XStringUtil.isNullOrEmpty(bbsPersonMgr.getMobileSignature())) {
             signatureView.setText("小爪机木有签名好可怜……");
             signatureView.setTextColor(getContext().getResources().getColor(R.color.dark_gray));
-        }else {
+        } else {
             signatureView.setText(bbsPersonMgr.getMobileSignature());
             signatureView.setTextColor(getContext().getResources().getColor(R.color.black));
         }
@@ -236,9 +236,9 @@ public class CPersonInfo extends XBaseComponent {
     private void refreshVisitorFrame() {
         signatureFrame.setVisibility(View.GONE);
         visitorFrame.setVisibility(View.VISIBLE);
-        if(bbsPersonMgr.isFriend(userId)) {// 是好友，显示删除好友按钮
+        if (bbsPersonMgr.isFriend(userId)) {// 是好友，显示删除好友按钮
             friendBtn.setVisibility(View.VISIBLE);
-        }else {// 不是好友
+        } else {// 不是好友
             friendBtn.setVisibility(View.GONE);
         }
     }
@@ -276,10 +276,10 @@ public class CPersonInfo extends XBaseComponent {
         @Override
         protected void onPostExecute(Integer resultCode) {
             waitingDialog.dismiss();
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 Toast.makeText(getContext(), "成功删除了好友"+username+"……", Toast.LENGTH_SHORT).show();
                 refresh();
-            }else {
+            } else {
                 switch (resultCode){
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦");

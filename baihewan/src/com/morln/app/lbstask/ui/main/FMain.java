@@ -30,15 +30,17 @@ import com.morln.app.lbstask.ui.mail.LWriteMail;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.img.ImgMgrHolder;
-import com.morln.app.media.image.XAndroidImageLocalMgr;
-import com.morln.app.session.http.XNetworkUtil;
-import com.morln.app.system.heartbeat.XAndroidHBM;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XLog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
+import com.xengine.android.media.image.XAndroidImageLocalMgr;
+import com.xengine.android.session.http.XNetworkUtil;
+import com.xengine.android.system.file.XAndroidFileMgr;
+import com.xengine.android.system.file.XFileMgr;
+import com.xengine.android.system.heartbeat.XAndroidHBM;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XLog;
 
 import java.util.List;
 
@@ -78,6 +80,8 @@ public class FMain extends XBaseFrame {
         XNetworkUtil.init(getApplicationContext());
         HttpClientHolder.init(getApplicationContext());
         AnimationUtil.init(getApplicationContext());
+        // 初始化图片管理器
+        XAndroidFileMgr.getInstance().setRootName("baihewan");
     }
 
     /**
@@ -88,8 +92,6 @@ public class FMain extends XBaseFrame {
      */
     @Override
     public void init(Context context) {
-        // 初始化图片管理器
-        XAndroidImageLocalMgr.getInstance().setImgDir("/baihewan/tmp");
 
         // 初始化图片下载管理器
         int screenWidth = screen().getScreenWidth();
@@ -100,7 +102,7 @@ public class FMain extends XBaseFrame {
         getSystemStateManager().registerSystemStateListener(XAndroidHBM.getInstance());
 
         // 启动logo界面
-        if(logoLayer == null) {
+        if (logoLayer == null) {
             logoLayer = new LLogo(this, new Runnable() {
                 @Override
                 public void run() {
@@ -122,7 +124,7 @@ public class FMain extends XBaseFrame {
     @Override
     public void onFrameDisplay() {
         // 检测网络和GPS的状态
-        if(!XNetworkUtil.isNetworkAvailable())
+        if (!XNetworkUtil.isNetworkAvailable())
             DialogUtil.createWarningDialog(this).show("有点小问题~", "您的手机网络没打开哦~");
     }
 
@@ -146,17 +148,17 @@ public class FMain extends XBaseFrame {
         XLog.d("BACK", "点击back按钮！");
 
         XUILayer layer = getTopLayer();
-        if(layer != null) {
+        if (layer != null) {
             int result = layer.back();// 先调用顶部图层的back()函数
-            if(result == XBackType.SELF_BACK) {
+            if (result == XBackType.SELF_BACK) {
                 removeLayer(layer);// 退出这一图层
                 lastBackTime = 0;
-            }else if(result == XBackType.NOTHING_TO_BACK) {
+            } else if (result == XBackType.NOTHING_TO_BACK) {
                 back();// 没有可以退出的。调用自身的back()函数
-            }else {
+            } else {
                 lastBackTime = 0;// 如果图层back键操作成功，则重置退出程序的标识
             }
-        }else {
+        } else {
             back();// 再调用自身的back()函数
         }
         return true;
@@ -169,7 +171,7 @@ public class FMain extends XBaseFrame {
     @Override
     public boolean isKeyMenuDisable() {
         XUILayer layer = getTopLayer();
-        if(layer != null) {
+        if (layer != null) {
             return layer.onMenu();
         }
         return true;
@@ -188,7 +190,7 @@ public class FMain extends XBaseFrame {
     private void sendDialogMsg(int what, Bundle data) {
         Message msg = dialogHandler.obtainMessage();
         msg.what = what;
-        if(data != null) {
+        if (data != null) {
             msg.setData(data);
         }
         dialogHandler.sendMessage(msg);
@@ -223,11 +225,11 @@ public class FMain extends XBaseFrame {
                     break;
                 case MainMsg.LOGOUT:
                     XUILayer layer = getTopLayer();
-                    if(layer != null) {
+                    if (layer != null) {
                         removeLayer(layer);
-                        if(loginLayer != null) {
+                        if (loginLayer != null) {
                             loginLayer.setVisibility(true);
-                        }else {
+                        } else {
                             loginLayer = new LLogin(FMain.this);
                             addLayer(loginLayer);
                         }
@@ -291,7 +293,7 @@ public class FMain extends XBaseFrame {
                 case MainMsg.WRITE_ARTICLE_BACK:
                     removeLayer(writeArticleLayer);
                     writeArticleLayer = null;
-                    if(msg.arg1 != 0) {// 如果发帖成功，自动刷新  TODO
+                    if (msg.arg1 != 0) {// 如果发帖成功，自动刷新  TODO
 //                        mainLayer.refreshAfterWriteArticle();
                     }
                     break;
@@ -310,7 +312,7 @@ public class FMain extends XBaseFrame {
                 case MainMsg.BBS_REPLY_ARTICLE_BACK:
                     removeLayer(replyArticleLayer);
                     replyArticleLayer = null;
-                    if(msg.arg1 != 0 && readArticleLayer != null) {// 如果回帖成功，自动刷新
+                    if (msg.arg1 != 0 && readArticleLayer != null) {// 如果回帖成功，自动刷新
                         readArticleLayer.refreshArticle();
                     }
                     break;
@@ -342,11 +344,11 @@ public class FMain extends XBaseFrame {
                 // 上一篇、下一篇帖子
                 case MainMsg.SEE_PRE_ARTICLE: {
                     Linear<ArticleBase> secondLayer = (Linear<ArticleBase>) getSecondTopLayer();
-                    if(secondLayer != null) {
+                    if (secondLayer != null) {
                         ArticleBase article = secondLayer.getPre();
-                        if(article == null) {
+                        if (article == null) {
                             Toast.makeText(getContext(), "木有上一篇帖子了~", Toast.LENGTH_SHORT).show();
-                        }else {
+                        } else {
                             readArticleLayer.showArticle(article.getId(), article.getBoard());
                         }
                     }
@@ -354,11 +356,11 @@ public class FMain extends XBaseFrame {
                 }
                 case MainMsg.SEE_NEXT_ARTICLE: {
                     Linear<ArticleBase> secondLayer = (Linear<ArticleBase>) getSecondTopLayer();
-                    if(secondLayer != null) {
+                    if (secondLayer != null) {
                         ArticleBase article = secondLayer.getNext();
-                        if(article == null) {
+                        if (article == null) {
                             Toast.makeText(getContext(), "木有下一篇帖子了~", Toast.LENGTH_SHORT).show();
-                        }else {
+                        } else {
                             readArticleLayer.showArticle(article.getId(), article.getBoard());
                         }
                     }
@@ -366,9 +368,9 @@ public class FMain extends XBaseFrame {
                 }
                 // 上一封、下一封站内信
                 case MainMsg.SEE_PRE_MAIL:
-                    if(mainLayer != null) {
+                    if (mainLayer != null) {
                         Mail mail = mainLayer.seePreMail();
-                        if(mail == null) {
+                        if (mail == null) {
                             Toast.makeText(getContext(), "木有上一封站内信了~", Toast.LENGTH_SHORT).show();
                         }else {
                             readMailLayer.showMail(mail.getId());
@@ -376,9 +378,9 @@ public class FMain extends XBaseFrame {
                     }
                     break;
                 case MainMsg.SEE_NEXT_MAIL:
-                    if(mainLayer != null) {
+                    if (mainLayer != null) {
                         Mail mail = mainLayer.seeNextMail();
-                        if(mail == null) {
+                        if (mail == null) {
                             Toast.makeText(getContext(), "木有下一封站内信了~", Toast.LENGTH_SHORT).show();
                         }else {
                             readMailLayer.showMail(mail.getId());
@@ -397,23 +399,23 @@ public class FMain extends XBaseFrame {
     private void quitApp() {
         // 停止刷新状态（邮件）
         BbsMailMgr.getInstance().stopMailRemindTask();
-        // 退出前清空临时图片缓存
-        XAndroidImageLocalMgr.getInstance().clearImgDir();
-        // 清空管理器
-        SystemMgr.clearMgr();
         // 退出程序自动注销
         GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
                 getInstance().getSource(SourceName.GLOBAL_STATE);
         SystemSettingSource systemSettingSource = (SystemSettingSource) DataRepo.
                 getInstance().getSource(SourceName.SYSTEM_SETTING);
-        if(globalStateSource.isLogin() && systemSettingSource.isAutoLogout()) {
+        if (globalStateSource.isLogin() && systemSettingSource.isAutoLogout()) {
             globalStateSource.setCurrentUser("", "");
             // 启动service
             XLog.d("SERVICE", "启动自动注销service！");
             Intent intent = new Intent(LogoutService.ACTION_BACKGROUND);
             intent.setClass(getContext(), LogoutService.class);
+            String bbsCode = globalStateSource.getBbsCode();
+            intent.putExtra("bbsCode", bbsCode);
             getContext().startService(intent);
         }
+        // 退出前清空整个系统，如：临时文件，管理器等
+        SystemMgr.clearSystem();
         exit();
     }
 
@@ -424,9 +426,9 @@ public class FMain extends XBaseFrame {
     @Override
     public int back() {
         long currentTime = System.currentTimeMillis();
-        if(currentTime - lastBackTime <= PRESS_BACK_INTERVAL) {
+        if (currentTime - lastBackTime <= PRESS_BACK_INTERVAL) {
             quitApp();
-        }else {
+        } else {
             lastBackTime = currentTime;
             Toast.makeText(getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
         }

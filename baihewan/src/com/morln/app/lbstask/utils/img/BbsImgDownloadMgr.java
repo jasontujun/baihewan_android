@@ -1,7 +1,7 @@
 package com.morln.app.lbstask.utils.img;
 
 import com.morln.app.lbstask.session.HttpClientHolder;
-import com.morln.app.media.image.XBaseImageDownloadMgr;
+import com.xengine.android.media.image.XBaseImageDownloadMgr;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 

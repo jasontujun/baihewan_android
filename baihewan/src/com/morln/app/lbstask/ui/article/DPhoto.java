@@ -10,15 +10,15 @@ import android.widget.*;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.utils.AnimationUtil;
-import com.morln.app.media.graphics.util.XGraphicUtil;
-import com.morln.app.media.image.XAndroidImageLocalMgr;
-import com.morln.app.media.image.XImageLocalMgr;
-import com.morln.app.system.mobile.XPhotoListener;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XDialog;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.media.graphics.util.XGraphicUtil;
+import com.xengine.android.media.image.XAndroidImageLocalMgr;
+import com.xengine.android.media.image.XImageLocalMgr;
+import com.xengine.android.system.mobile.XPhotoListener;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XDialog;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class DPhoto implements XDialog {
         rotateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bitmap != null) {
+                if (bitmap != null) {
                     bitmap = XGraphicUtil.rotate(90, bitmap);
                     photoView.setImageBitmap(bitmap);
                 }
@@ -89,10 +89,10 @@ public class DPhoto implements XDialog {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 isCompressed = b;
-                if(b) {
+                if (b) {
                     sizeView.setText(XStringUtil.fileSize2String(
                             (long) (photoFile.length() * COMPRESS_RATE)));
-                }else {
+                } else {
                     sizeView.setText(XStringUtil.fileSize2String(photoFile.length()));
                 }
             }
@@ -110,7 +110,7 @@ public class DPhoto implements XDialog {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(photoFile == null) {
+                if (photoFile == null) {
                     Toast.makeText(uiLayer.getContext(), "没有选择图片哦~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(shootBtn, uiLayer.getContext());
                     AnimationUtil.startShakeAnimation(galleryBtn, uiLayer.getContext());
@@ -160,7 +160,7 @@ public class DPhoto implements XDialog {
     private XPhotoListener photoListener = new XPhotoListener() {
         @Override
         public void onSuccess(File file) {
-            if(file != null) {
+            if (file != null) {
                 XLog.d("PHOTO", "photo file:" + file.getAbsolutePath());
                 try {
                     shootBtn.setVisibility(View.INVISIBLE);

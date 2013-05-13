@@ -5,7 +5,7 @@ import android.widget.Toast;
 import com.morln.app.lbstask.logic.LoginMgr;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XUIFrame;
+import com.xengine.android.system.ui.XUIFrame;
 
 /**
  * Created by jasontujun.

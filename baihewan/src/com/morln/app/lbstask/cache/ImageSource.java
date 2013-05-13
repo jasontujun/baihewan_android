@@ -1,7 +1,7 @@
 package com.morln.app.lbstask.cache;
 
-import com.morln.app.data.cache.XDataSource;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.data.cache.XDataSource;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.HashMap;
 
@@ -27,11 +27,11 @@ public class ImageSource implements XDataSource {
     }
 
     public boolean containsLocalImage(String imageUrl) {
-        if(XStringUtil.isNullOrEmpty(imageUrl)) {
+        if (XStringUtil.isNullOrEmpty(imageUrl)) {
             return false;
         }
 
-        if(!images.containsKey(imageUrl)) {
+        if (!images.containsKey(imageUrl)) {
             return false;
         }
 

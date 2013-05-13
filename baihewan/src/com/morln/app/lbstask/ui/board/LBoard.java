@@ -19,9 +19,9 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -278,10 +278,10 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
 
     @Override
     public int back() {
-        if(refreshTask != null) {
+        if (refreshTask != null) {
             refreshTask.cancel(true);
         }
-        if(moreTask != null) {
+        if (moreTask != null) {
             moreTask.cancel(true);
         }
         return XBackType.SELF_BACK;
@@ -291,7 +291,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
      * 排序
      */
     private void sortArticleList() {
-        if(currentArticleList != null) {
+        if (currentArticleList != null) {
             Collections.sort(currentArticleList, ArticleBase.getBoardComparator());
         }
     }
@@ -304,7 +304,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
 
         @Override
         public int getCount() {
-            if(currentArticleList == null) {
+            if (currentArticleList == null) {
                 return 0;
             }
             return currentArticleList.size();
@@ -312,7 +312,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
 
         @Override
         public Object getItem(int i) {
-            if(currentArticleList == null) {
+            if (currentArticleList == null) {
                 return null;
             }
 
@@ -342,12 +342,12 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             Object item = getItem(i);
-            if(item == null){
+            if (item == null){
                 return null;
             }
 
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_article_list_item, null);
                 holder = new ViewHolder();
                 holder.frame = (RelativeLayout) convertView.findViewById(R.id.frame);
@@ -359,7 +359,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
@@ -380,14 +380,14 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
                 }
             });
             // 装饰符
-            if(article.isUp()) {
+            if (article.isUp()) {
                 holder.decoration.setImageResource(R.color.light_red);
                 holder.label.setVisibility(View.VISIBLE);
                 setViewBackground(holder.label, BbsPic.LABEL_HOT);
-            }else {
-                if(article.getNo() <= 0) {
+            } else {
+                if (article.getNo() <= 0) {
                     holder.decoration.setImageResource(R.color.dark_gray);
-                }else {
+                } else {
                     holder.decoration.setImageResource(R.color.light_green);
                 }
                 holder.label.setVisibility(View.GONE);
@@ -395,7 +395,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
             // 作者
             holder.author.setText(article.getAuthorName());
             // 置顶
-            if(article.isUp()){
+            if (article.isUp()){
                 holder.up.setVisibility(View.VISIBLE);
             } else {
                 holder.up.setVisibility(View.INVISIBLE);
@@ -403,7 +403,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
             // 人气
             if(article.isUp()){
                 holder.popularity.setText(""+article.getPopularity());
-            }else {
+            } else {
                 holder.popularity.setText(""+article.getReplyCount()+"/"+article.getPopularity());
             }
             // 标题
@@ -507,7 +507,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
 
         @Override
         protected void onPreExecute() {
-            if(hasDialog) {
+            if (hasDialog) {
                 waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
                 waitingDialog.setAsyncTask(this);
                 waitingDialog.show();
@@ -524,20 +524,20 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
         }
         @Override
         protected void onPostExecute(Integer resultCode) {
-            if(hasDialog) {
+            if (hasDialog) {
                 waitingDialog.dismiss();
             }
             articleListAdapter.notifyDataSetChanged();// 刷新列表
             articleList.onRefreshComplete();
             if (StatusCode.isSuccess(resultCode)) {
-                if(hasDialog) {
+                if (hasDialog) {
                     AnimationUtil.startListAnimation(articleList);
                 }
             }
         }
         @Override
         protected void onCancelled() {
-            if(hasDialog) {
+            if (hasDialog) {
                 waitingDialog.dismiss();
             }
 
@@ -552,7 +552,7 @@ public class LBoard extends XBaseLayer implements Linear<ArticleBase> {
     @Override
     public void onLayerUnCovered() {
         super.onLayerUnCovered();
-        if(state != null) {
+        if (state != null) {
             articleList.onRestoreInstanceState(state);
         }
     }

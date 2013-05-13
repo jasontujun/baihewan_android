@@ -1,9 +1,9 @@
 package com.morln.app.lbstask.bbs.cache;
 
-import com.morln.app.data.cache.XBaseAdapterIdDataSource;
 import com.morln.app.lbstask.bbs.model.ArticleBase;
 import com.morln.app.lbstask.bbs.model.Board;
 import com.morln.app.lbstask.cache.SourceName;
+import com.xengine.android.data.cache.XBaseAdapterIdDataSource;
 
 import java.util.ArrayList;
 import java.util.List;

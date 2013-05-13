@@ -12,10 +12,10 @@ import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XLog;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XLog;
 
 /**
  * 显示帖子的组件。
@@ -98,15 +98,15 @@ public class LReadMail extends XBaseLayer {
                 // TIP 登陆权限检测
                 GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
                         getInstance().getSource(SourceName.GLOBAL_STATE);
-                if(!globalStateSource.isLogin()) {
+                if (!globalStateSource.isLogin()) {
                     new DLogin(LReadMail.this, true).show();
                     return;
                 }
 
                 Mail mail = BbsMailMgr.getInstance().getMailDetailFromLocal(mailId);
-                if(mail != null) {
+                if (mail != null) {
                     String title = mail.getTitle();
-                    if(!title.contains("Re: "))  {
+                    if (!title.contains("Re: "))  {
                         title = "Re: " + title;
                     }
                     XLog.d("REPLY", "站内信 title:" + title);
@@ -119,7 +119,7 @@ public class LReadMail extends XBaseLayer {
                     bundle.putString("receiver", mail.getSender());
                     msg.setData(bundle);
                     handler1.sendMessage(msg);
-                }else {
+                } else {
                     Toast.makeText(getContext(), "站内信不存在，无法回复", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -150,13 +150,13 @@ public class LReadMail extends XBaseLayer {
             public void onScroll(AbsListView absListView, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
                 View v = absListView.getChildAt(0);
-                if(v == null) {
+                if (v == null) {
                     return;
                 }
 
-                if(firstVisibleItem == 0 && v.getTop() >= 0) {
+                if (firstVisibleItem == 0 && v.getTop() >= 0) {
                     topBtn.setVisibility(View.GONE);
-                }else {
+                } else {
                     topBtn.setVisibility(View.VISIBLE);
                 }
             }
@@ -174,11 +174,11 @@ public class LReadMail extends XBaseLayer {
      */
     private void setMailContentVisibility(boolean visibility) {
         functionBtnFrame.setVisibility(View.VISIBLE);
-        if(visibility) {
+        if (visibility) {
             nothingTip.setText("帖子可能被删除了");
             nothingTip.setVisibility(View.INVISIBLE);
             content.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             nothingTip.setVisibility(View.VISIBLE);
             content.setVisibility(View.INVISIBLE);
         }
@@ -194,9 +194,9 @@ public class LReadMail extends XBaseLayer {
 
         mailAdapter.clearImgAsyncTasks();// 清除后台线程
 
-        if(BbsMailMgr.getInstance().getMailDetailFromLocal(mailUrl) != null) {
+        if (BbsMailMgr.getInstance().getMailDetailFromLocal(mailUrl) != null) {
             refreshMailToTop();
-        }else {
+        } else {
             new GetMailDetailTask().execute(null);
         }
     }
@@ -229,7 +229,7 @@ public class LReadMail extends XBaseLayer {
     @Override
     public void onLayerUnCovered() {
         super.onLayerUnCovered();
-        if(state != null) {
+        if (state != null) {
             content.onRestoreInstanceState(state);
         }
     }
@@ -264,7 +264,7 @@ public class LReadMail extends XBaseLayer {
             if (mail == null) {
                 Toast.makeText(getContext(), "对不起，邮件不存在...", Toast.LENGTH_SHORT).show();
                 setMailContentVisibility(false);
-            }else {
+            } else {
                 setMailContentVisibility(true);
                 refreshMailToTop();
 

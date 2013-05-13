@@ -21,11 +21,11 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.io.File;
 
@@ -88,25 +88,25 @@ public class LReplyArticle extends XBaseLayer {
         Board board = bbsBoardMgr.getBoard(hostBoard);
         boardTipChinese.setText(board.getChinesName());
         // 设置标题
-        if(floor > 0){
+        if (floor > 0){
             titleInput.setText(hostTitle);
-        }else {
+        } else {
             titleInput.setText("Re: " + hostTitle);
         }
         // 设置内容
-        if(floor > 0){
+        if (floor > 0){
             contentInput.setText("To "+floor+"楼 "+floorName+":\n");
         }
-        if(!XStringUtil.isNullOrEmpty(hostContent)){
+        if (!XStringUtil.isNullOrEmpty(hostContent)){
             String c = contentInput.getText().toString();
             contentInput.setText(c + hostContent);
         }
         // 设置签名
         String s = systemSettingSource.getMobileSignature();
-        if(XStringUtil.isNullOrEmpty(s)) {
+        if (XStringUtil.isNullOrEmpty(s)) {
             signature.setText("还没有手机签名哦~");
             signature.setTextColor(getContext().getResources().getColor(R.color.gray));
-        }else {
+        } else {
             signature.setText("from百荷湾: "+s);
             signature.setTextColor(getContext().getResources().getColor(R.color.light_purple));
         }
@@ -164,7 +164,7 @@ public class LReplyArticle extends XBaseLayer {
      */
     public void addPhoto(String localPhotoUrl, String description, boolean isCompress) {
         // TODO 压缩！
-        if(isCompress) {
+        if (isCompress) {
 
         }
         File photoFile = new File(localPhotoUrl);
@@ -196,7 +196,7 @@ public class LReplyArticle extends XBaseLayer {
                     int currentIndex = contentInput.getSelectionStart();//获取光标所在位置
                     Editable contentEditable = contentInput.getText();
                     XLog.d("ARTICLE", "光标位置：" + currentIndex + ",当前文本长度" + contentEditable.length());
-                    if(0 <= currentIndex && currentIndex <= contentEditable.length()){
+                    if (0 <= currentIndex && currentIndex <= contentEditable.length()){
                         contentEditable.insert(currentIndex, bbsExpression);
                         // 把表情字符替换为图片
                         CharSequence str = expressionMap.changeToSpanString(LReplyArticle.this, contentEditable.toString());
@@ -238,7 +238,7 @@ public class LReplyArticle extends XBaseLayer {
         }
         @Override
         protected void onPostExecute(Integer resultCode) {
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 Toast.makeText(getContext(), "回帖成功！", Toast.LENGTH_SHORT).show();
 
                 Handler handler1 = getFrameHandler();
@@ -247,7 +247,7 @@ public class LReplyArticle extends XBaseLayer {
                 msg.arg1 = 1;// 回帖成功
                 handler1.sendMessage(msg);
             }else {
-                switch(resultCode){
+                switch (resultCode) {
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
                         new DLogin(LReplyArticle.this, true).show("由于长时间发呆，要重新登录哦");
                         Toast.makeText(getContext(), "BBS登录失效,请重新登录！", Toast.LENGTH_SHORT).show();
@@ -295,13 +295,13 @@ public class LReplyArticle extends XBaseLayer {
         }
         @Override
         protected void onPostExecute(String resultString) {
-            if(resultString != null){
+            if (resultString != null){
                 Toast.makeText(getContext(), "上传图片成功！", Toast.LENGTH_SHORT).show();
 
                 int currentIndex = contentInput.getSelectionStart();//获取光标所在位置
                 Editable contentEditable = contentInput.getText();
                 XLog.d("ARTICLE", "光标位置：" + currentIndex + ",当前文本长度" + contentEditable.length());
-                if(0 <= currentIndex && currentIndex <= contentEditable.length()){
+                if (0 <= currentIndex && currentIndex <= contentEditable.length()){
                     contentEditable.insert(currentIndex, resultString);
                     contentInput.setSelection(currentIndex + resultString.length());
                 }

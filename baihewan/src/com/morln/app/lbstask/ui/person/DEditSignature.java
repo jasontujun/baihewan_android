@@ -9,10 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XDialog;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XDialog;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.
@@ -47,9 +47,9 @@ public class DEditSignature implements XDialog {
 
         currentSignature = bbsPersonMgr.getMobileSignature();
         totalNumView.setText("" + SIGNATURE_LIMIT);
-        if(XStringUtil.isNullOrEmpty(currentSignature)){
+        if (XStringUtil.isNullOrEmpty(currentSignature)) {
             currentNumView.setText("" + 0);
-        }else {
+        } else {
             currentNumView.setText("" + currentSignature.length());
             editView.setText(currentSignature);
         }
@@ -77,7 +77,7 @@ public class DEditSignature implements XDialog {
                     editView.setText(editable);
                     editView.setSelection(tempSelection);//设置光标在最后
                     currentNumView.setText("" + SIGNATURE_LIMIT);
-                }else {
+                } else {
                     currentNumView.setText("" + editable.length());
                 }
             }
@@ -90,7 +90,7 @@ public class DEditSignature implements XDialog {
                 currentSignature = editView.getText().toString();
                 bbsPersonMgr.setMobileSignature(currentSignature);
 
-                if(okTask != null) {
+                if (okTask != null) {
                     okTask.run();
                 }
 

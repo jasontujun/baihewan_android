@@ -1,10 +1,10 @@
 package com.morln.app.lbstask.bbs.cache;
 
-import com.morln.app.data.cache.XBaseAdapterDataSource;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.bbs.model.Board;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.res.BbsPic;
+import com.xengine.android.data.cache.XBaseAdapterDataSource;
 
 /**
  * 今日热门讨论区数据源

@@ -15,9 +15,9 @@ import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.logic.LoginMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.utils.AnimationUtil;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XDialog;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XDialog;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * 登陆对话框

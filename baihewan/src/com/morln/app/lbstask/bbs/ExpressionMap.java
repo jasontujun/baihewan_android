@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XUILayer;
 
 import java.util.ArrayList;
 import java.util.List;

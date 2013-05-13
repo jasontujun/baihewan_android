@@ -14,11 +14,11 @@ import com.morln.app.lbstask.logic.SystemMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.res.SystemPic;
 import com.morln.app.lbstask.utils.LoadingWordUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * 欢迎界面，是程序的第一个界面。
@@ -73,7 +73,7 @@ public class LLogo extends XBaseLayer {
         // 计算差值
         long delta = endTime - startTime;
         XLog.d("FK", "LOGO的时间间隔：" + delta);
-        if(delta < LOGO_LENGTH) {
+        if (delta < LOGO_LENGTH) {
             long remain = LOGO_LENGTH - delta;
             try {
                 Thread.sleep(remain);
@@ -82,9 +82,9 @@ public class LLogo extends XBaseLayer {
             }
         }else {
             // 如果是自动登录，且登录时间过长，则弹出直接跳转的按钮
-            if(isAutoLogin) {
+            if (isAutoLogin) {
 
-                if(autoLoginTask != null) {
+                if (autoLoginTask != null) {
                     autoLoginTask.cancel(true);
                     Handler handler = getFrameHandler();
                     handler.sendMessage(handler.obtainMessage(MainMsg.GO_TO_MAIN));
@@ -108,7 +108,7 @@ public class LLogo extends XBaseLayer {
             @Override
             protected void onPostExecute(Void result) {
                 // 外部传入的初始化任务
-                if(initTask != null) {
+                if (initTask != null) {
                     initTask.run();
                 }
 
@@ -119,7 +119,7 @@ public class LLogo extends XBaseLayer {
                         DataRepo.getInstance().getSource(SourceName.SYSTEM_SETTING);
                 String userName = globalStateSource.getLastUserName();// 上一次用户名
                 String password = globalStateSource.getLastUserPassword();// 上一次密码
-                if(!systemSettingSource.isAutoLogin() ||
+                if (!systemSettingSource.isAutoLogin() ||
                         XStringUtil.isNullOrEmpty(userName) ||
                         XStringUtil.isNullOrEmpty(password)) {
                     // 非自动登录状态。（未设置自动登录，或没有记住密码）
@@ -128,7 +128,7 @@ public class LLogo extends XBaseLayer {
                     Handler handler = getFrameHandler();
                     Message msg = handler.obtainMessage(MainMsg.GO_TO_LOGIN);
                     handler.sendMessage(msg);
-                }else {
+                } else {
                     // 自动登录状态
                     // 跳转到主界面
                     endTiming(true);

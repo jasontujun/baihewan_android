@@ -12,10 +12,10 @@ import com.morln.app.lbstask.logic.SystemMgr;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XDialog;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XDialog;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.

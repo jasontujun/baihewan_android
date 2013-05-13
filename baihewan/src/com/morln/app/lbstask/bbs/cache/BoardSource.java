@@ -1,12 +1,12 @@
 package com.morln.app.lbstask.bbs.cache;
 
-import com.morln.app.data.cache.XBaseAdapterIdDBDataSource;
-import com.morln.app.data.db.XDBTable;
 import com.morln.app.lbstask.bbs.db.BoardTable;
 import com.morln.app.lbstask.bbs.model.ArticleBase;
 import com.morln.app.lbstask.bbs.model.Board;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.utils.XLog;
+import com.xengine.android.data.cache.XBaseAdapterIdDBDataSource;
+import com.xengine.android.data.db.XDBTable;
+import com.xengine.android.utils.XLog;
 
 import java.util.ArrayList;
 import java.util.List;

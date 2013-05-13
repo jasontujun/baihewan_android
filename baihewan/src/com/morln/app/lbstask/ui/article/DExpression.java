@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.bbs.ExpressionMap;
 import com.morln.app.lbstask.res.BbsMsg;
-import com.morln.app.system.ui.XBaseFrame;
-import com.morln.app.system.ui.XDialog;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBaseFrame;
+import com.xengine.android.system.ui.XDialog;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * Created by jasontujun.

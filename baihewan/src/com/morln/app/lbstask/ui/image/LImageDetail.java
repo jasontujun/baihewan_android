@@ -9,10 +9,10 @@ import android.widget.*;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.controls.XZoomHolder;
 import com.morln.app.lbstask.utils.img.ImageLoader;
-import com.morln.app.media.image.XImageLocalMgr;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
+import com.xengine.android.media.image.XImageLocalMgr;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
 
 import java.util.List;
 

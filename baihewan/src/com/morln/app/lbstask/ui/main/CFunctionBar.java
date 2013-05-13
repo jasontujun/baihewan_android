@@ -23,10 +23,10 @@ import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XLog;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,9 +137,9 @@ public class CFunctionBar extends XBaseComponent {
         topBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!globalStateSource.isLogin()) {
+                if (!globalStateSource.isLogin()) {
                     new DLogin(parentLayer(), true).show();
-                }else {
+                } else {
                     DialogUtil.createConfirmDialog(parentLayer().getUIFrame(), new Runnable() {
                         @Override
                         public void run() {
@@ -150,7 +150,7 @@ public class CFunctionBar extends XBaseComponent {
             }
         });
         // 按钮监听
-        for(int i = 0; i< items.size(); i++) {
+        for (int i = 0; i < items.size(); i++) {
             final int cIndex = i;
             // 按下图片效果
             items.get(i).itemFrame.setOuterBeforeAfterListener(new ChangeImageTouchListener.OuterBeforeAfterListener() {
@@ -187,7 +187,7 @@ public class CFunctionBar extends XBaseComponent {
                 }
                 @Override
                 public void afterRelease(View view) {
-                    if(cIndex == selectedItemIndex){
+                    if (cIndex == selectedItemIndex){
                         Resources res = getContext().getResources();
                         items.get(cIndex).label.setTextColor(res.getColor(R.color.yellow_green));
                         switch (cIndex){
@@ -305,9 +305,9 @@ public class CFunctionBar extends XBaseComponent {
      * @param visible
      */
     public void setOtherInfoItemVisible(boolean visible) {
-        if(visible) {
+        if (visible) {
             btn5Frame.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             btn5Frame.setVisibility(View.GONE);
         }
     }
@@ -326,11 +326,11 @@ public class CFunctionBar extends XBaseComponent {
      * 重新刷新顶栏（用于游客登录后）
      */
     public void refreshTopFrame() {
-        if(globalStateSource.isLogin()) {
+        if (globalStateSource.isLogin()) {
             usernameView.setText(globalStateSource.getCurrentUserName());
             userNameTip.setText("的百荷湾");
             topBtn.setBackgroundResource(R.drawable.btn_logout);
-        }else {
+        } else {
             usernameView.setText("游客");
             userNameTip.setText("欢迎来到百荷湾");
             topBtn.setBackgroundResource(R.drawable.btn_login_gray);
@@ -353,9 +353,9 @@ public class CFunctionBar extends XBaseComponent {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case REFRESH_MAIL_TIP:
-                    if(msg.arg1 == 0) {
+                    if (msg.arg1 == 0) {
                         newMailTip.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         newMailTip.setVisibility(View.VISIBLE);
                         newMailTip.setText("" + msg.arg1);
                     }
@@ -370,9 +370,9 @@ public class CFunctionBar extends XBaseComponent {
     private void refreshItem() {
         refreshMailTip(globalStateSource.getNewMailNum());
 
-        for(int i = 0; i< items.size(); i++) {
+        for (int i = 0; i< items.size(); i++) {
             items.get(i).itemFrame.resetBg();
-            if(i == selectedItemIndex) {
+            if (i == selectedItemIndex) {
                 items.get(i).tip.setVisibility(View.VISIBLE);
                 Resources res = getContext().getResources();
                 items.get(i).label.setTextColor(res.getColor(R.color.yellow_green));
@@ -500,7 +500,7 @@ public class CFunctionBar extends XBaseComponent {
                         break;
                 }
             }
-            if(resultCode != StatusCode.HTTP_EXCEPTION) {
+            if (resultCode != StatusCode.HTTP_EXCEPTION) {
                 globalStateSource.setLoginStatus(GlobalStateSource.LOGIN_STATUS_NO_LOGIN);
                 globalStateSource.setCurrentUser("", "");
                 globalStateSource.clearToken();

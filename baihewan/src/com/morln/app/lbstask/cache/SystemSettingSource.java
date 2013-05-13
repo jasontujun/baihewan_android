@@ -2,7 +2,7 @@ package com.morln.app.lbstask.cache;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.morln.app.data.cache.XDataSource;
+import com.xengine.android.data.cache.XDataSource;
 
 /**
  * 系统配置数据源。

@@ -8,10 +8,10 @@ import com.morln.app.lbstask.session.HttpClientHolder;
 import com.morln.app.lbstask.session.bean.top10.Top10ArticleBase;
 import com.morln.app.lbstask.utils.GsonUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.session.http.XHttp;
-import com.morln.app.session.http.XURLBuilder;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.http.XURLBuilder;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
@@ -52,7 +52,7 @@ public class Top10APINew {
      * @return
      */
     public int getTop10ByIndex(int bIndex, int eIndex, List<Top10ArticleBase> top10List) {
-        if(bIndex < 0){
+        if (bIndex < 0){
             bIndex = 0;
         }
 
@@ -99,7 +99,7 @@ public class Top10APINew {
             HttpGet httpPut = new HttpGet(url);
             HttpResponse response = http.execute(httpPut, false);
 
-            if(response == null) {
+            if (response == null) {
                 return StatusCode.HTTP_EXCEPTION;
             }
 

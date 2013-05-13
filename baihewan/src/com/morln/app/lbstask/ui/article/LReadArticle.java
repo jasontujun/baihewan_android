@@ -18,10 +18,10 @@ import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseLayer;
-import com.morln.app.system.ui.XUIFrame;
-import com.morln.app.utils.XLog;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseLayer;
+import com.xengine.android.system.ui.XUIFrame;
+import com.xengine.android.utils.XLog;
 
 /**
  * 显示帖子详情的界面
@@ -335,7 +335,7 @@ public class LReadArticle extends XBaseLayer {
     @Override
     public void onLayerUnCovered() {
         super.onLayerUnCovered();
-        if(state != null) {
+        if (state != null) {
             content.onRestoreInstanceState(state);
         }
     }
@@ -370,7 +370,7 @@ public class LReadArticle extends XBaseLayer {
             if (article == null) {
                 Toast.makeText(getContext(), "对不起，找不到这个帖子...", Toast.LENGTH_SHORT).show();
                 setArticleContentVisibility(false);
-            }else {
+            } else {
                 setArticleContentVisibility(true);
                 refreshArticleToTop();
                 refreshTopBtnFrame();
@@ -410,7 +410,7 @@ public class LReadArticle extends XBaseLayer {
             if (article == null) {
                 Toast.makeText(getContext(), "还是找不到这个帖子哦", Toast.LENGTH_SHORT).show();
                 setDeleteArticleContentVisibility(false);
-            }else {
+            } else {
                 Toast.makeText(getContext(), "手气不错哈！", Toast.LENGTH_SHORT).show();
                 setDeleteArticleContentVisibility(true);
                 refreshArticleToTop();
@@ -446,7 +446,7 @@ public class LReadArticle extends XBaseLayer {
         protected void onPostExecute(Void result) {
             if (article == null) {
                 Toast.makeText(getContext(), "刷新失败...", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 setArticleContentVisibility(true);
                 refreshArticleToTop();
 

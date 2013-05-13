@@ -8,8 +8,8 @@ import com.morln.app.lbstask.cache.GlobalStateSource;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.session.HttpClientHolder;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.session.http.XHttp;
-import com.morln.app.utils.XLog;
+import com.xengine.android.session.http.XHttp;
+import com.xengine.android.utils.XLog;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -51,7 +51,7 @@ public class LoginAPINew {
             request.setEntity(new UrlEncodedFormEntity(params));
             HttpResponse response = http.execute(request, false);
 
-            if(response == null) {
+            if (response == null) {
                 return StatusCode.HTTP_EXCEPTION;
             }
 

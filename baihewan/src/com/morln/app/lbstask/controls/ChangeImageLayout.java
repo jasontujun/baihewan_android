@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.morln.app.system.ui.XUIFrame;
+import com.xengine.android.system.ui.XUIFrame;
 
 /**
  * 可根据触摸变换背景的图层

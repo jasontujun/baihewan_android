@@ -16,8 +16,8 @@ import com.morln.app.lbstask.session.apinew.Top10APINew;
 import com.morln.app.lbstask.session.apinew.Top10ContentAPINew;
 import com.morln.app.lbstask.session.bean.top10.Top10Content;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.utils.XLog;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XStringUtil;
 
 import java.io.File;
 import java.util.ArrayList;

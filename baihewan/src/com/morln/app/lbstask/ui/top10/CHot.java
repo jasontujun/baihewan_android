@@ -19,10 +19,10 @@ import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XLog;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,7 +108,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
             public void onClick(View view) {
                 int sec = zoneSource.getZoneSecByName(currentTitle) - 1;
                 boolean result = getZoneHot(sec);
-                if(!result) {
+                if (!result) {
                     AnimationUtil.startShakeAnimation(preLabel, getContext());
                     Toast.makeText(getContext(), "前面木有了~", Toast.LENGTH_SHORT).show();
                 }
@@ -126,7 +126,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
             public void onClick(View view) {
                 int sec = zoneSource.getZoneSecByName(currentTitle) + 1;
                 boolean result = getZoneHot(sec);
-                if(!result) {
+                if (!result) {
                     AnimationUtil.startShakeAnimation(nextLabel, getContext());
                     Toast.makeText(getContext(), "后面木有了~", Toast.LENGTH_SHORT).show();
                 }
@@ -142,7 +142,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
     }
 
     public void refreshTitle() {
-        if(1 <= currentZoneSec && currentZoneSec <= 11) {
+        if (1 <= currentZoneSec && currentZoneSec <= 11) {
             currentTitle = zoneSource.getZoneNameBySec(currentZoneSec);
             titleView.setText(currentTitle);
         }
@@ -152,28 +152,28 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
      * 某一个区的热点
      */
     public boolean getZoneHot(int sec) {
-        if(1<=sec && sec <= 11) {
+        if (1<=sec && sec <= 11) {
             // 终止刷新线程，防止冲突
-            if(refreshTask != null) {
+            if (refreshTask != null) {
                 refreshTask.cancel(true);
             }
             new GetZoneHotTask(sec).execute(null);
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
 
     private void initZonePopWindow() {
-        if(zonePopup == null) {
+        if (zonePopup == null) {
             View contentView =View.inflate(getContext(), R.layout.popup_selectionlist, null);
             zonePopup = new PopupWindow(contentView, screen().dp2px(210), screen().dp2px(220));
 
             // 数据
             final String KEY = "key";
             final ArrayList<Map<String, String>> items = new ArrayList<Map<String, String>>();
-            for(int i = 0; i<zoneSource.size()-1; i++) {
+            for (int i = 0; i < zoneSource.size() - 1; i++) {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(KEY, zoneSource.get(i).getName());
                 items.add(map);
@@ -206,7 +206,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
     @Override
     public ArticleBase getPre() {
         ArticleBase a = zoneHotGroups.getPre();
-        if(a != null){
+        if (a != null){
             currentArticle = a;
         }
         return a;
@@ -215,7 +215,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
     @Override
     public ArticleBase getNext() {
         ArticleBase a = zoneHotGroups.getNext();
-        if(a != null) {
+        if (a != null) {
             currentArticle = a;
         }
         return a;
@@ -270,7 +270,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         protected Void doInBackground(Void... para) {
             resultCode = bbsArticleMgr.getZoneHotFromWeb(zoneSec);
 
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 // 刷新各区热点分组！
                 zoneHotGroups.refresh();
             }
@@ -295,7 +295,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
                 zoneListAdapter.setCurrentGroupIndex(groupIndex);
                 contentList.onRefreshComplete();
 
-                if(groupIndex != -1) {
+                if (groupIndex != -1) {
                     AnimationUtil.startListAnimation(contentList);
                     Toast.makeText(getContext(), "获取更多热点成功！", Toast.LENGTH_SHORT).show();
                 }else {
@@ -330,7 +330,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         protected Void doInBackground(Void... para) {
             resultCode = bbsArticleMgr.getZoneHotFromWeb(zoneIndex);
 
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 // 刷新各区热点分组！
                 zoneHotGroups.refresh();
             }
@@ -357,14 +357,14 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         private List<ArticleBase> articleBaseList = new ArrayList<ArticleBase>();
 
         public void setCurrentGroupIndex(int currentGroupIndex) {
-            if(currentGroupIndex != -1) {
+            if (currentGroupIndex != -1) {
                 articleBaseList = zoneHotGroups.getGroup(currentGroupIndex);
-                if(articleBaseList == null) {
+                if (articleBaseList == null) {
                     articleBaseList = new ArrayList<ArticleBase>();
                 }
 
                 // 刷新按钮和向前按钮(只有第一个分组没有向前按钮)
-                if(currentGroupIndex == 0) {
+                if (currentGroupIndex == 0) {
                     preLabel.setVisibility(View.INVISIBLE);
                 }else {
                     preLabel.setVisibility(View.VISIBLE);
@@ -409,12 +409,12 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             Object item = getItem(i);
-            if(item == null) {
+            if (item == null) {
                 return null;
             }
 
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_article_list_item, null);
                 holder = new ViewHolder();
                 holder.frame = (RelativeLayout) convertView.findViewById(R.id.frame);
@@ -454,7 +454,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
             // 作者
             holder.author.setText(article.getAuthorName());
             // 置顶
-            if(article.isUp()) {
+            if (article.isUp()) {
                 holder.up.setVisibility(View.VISIBLE);
             } else {
                 holder.up.setVisibility(View.INVISIBLE);
@@ -469,7 +469,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
             holder.boardTipFrame.setVisibility(View.VISIBLE);
             holder.boardIdTip.setText(article.getBoard());
             Board board = bbsBoardMgr.getBoard(article.getBoard());
-            if(board != null) {
+            if (board != null) {
                 holder.boardChineseTip.setText(board.getChinesName());
             }else {
                 holder.boardChineseTip.setText("");
@@ -498,7 +498,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
             // 刷新分组数据
             groupList.clear();
             List<String> zoneList = bbsArticleMgr.getZoneNameList();
-            for (int i = 0; i<zoneList.size(); i++) {
+            for (int i = 0; i < zoneList.size(); i++) {
                 String zoneName = zoneList.get(i);
                 ZoneHotGroup zgroup = new ZoneHotGroup(zoneName, bbsArticleMgr.getZoneListBaseName(zoneName));
                 groupList.add(zgroup);
@@ -512,7 +512,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
 
         @Override
         public List getGroup(int groupIndex) {
-            if(0 <= groupIndex && groupIndex < groupList.size())
+            if (0 <= groupIndex && groupIndex < groupList.size())
                 return groupList.get(groupIndex).items;
             else
                 return null;
@@ -525,8 +525,8 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
 
         @Override
         public int getGroupIndex(String name) {
-            for(int i = 0; i<groupList.size(); i++) {
-                if(groupList.get(i).name.equals(name)) {
+            for (int i = 0; i<groupList.size(); i++) {
+                if (groupList.get(i).name.equals(name)) {
                     return i;
                 }
             }
@@ -552,20 +552,20 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         public void addGroup(String groupName, List<ArticleBase> items, int gLocation) {
             int groupIndex = getGroupIndex(groupName);
-            if(groupIndex == -1) {// 不存在此组
+            if (groupIndex == -1) {// 不存在此组
                 List<ArticleBase> zoneHotList = new ArrayList<ArticleBase>();
-                for(int i = 0; i< items.size(); i++) {
+                for (int i = 0; i< items.size(); i++) {
                     zoneHotList.add((ArticleBase) items.get(i));
                 }
-                if(gLocation < 0) {
+                if (gLocation < 0) {
                     groupList.add(0, new ZoneHotGroup(groupName, zoneHotList));
-                }else if(gLocation > groupList.size()) {
+                } else if (gLocation > groupList.size()) {
                     groupList.add(new ZoneHotGroup(groupName, zoneHotList));
-                }else {
+                } else {
                     groupList.add(gLocation, new ZoneHotGroup(groupName, zoneHotList));
                 }
-            }else {// 存在此组
-                for(int i = 0; i<items.size(); i++) {
+            } else {// 存在此组
+                for (int i = 0; i < items.size(); i++) {
                     ArticleBase ab = (ArticleBase) items.get(i);
                     groupList.get(groupIndex).items.add(ab);
                 }
@@ -581,9 +581,9 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         public void addItem(String groupName, ArticleBase item, int gLocation) {
             int i = getGroupIndex(groupName);
-            if(i != -1) {// 存在此组
+            if (i != -1) {// 存在此组
                 groupList.get(i).items.add(item);
-            }else {// 不存在此组
+            } else {// 不存在此组
                 List<ArticleBase> itemList = new ArrayList<ArticleBase>();
                 itemList.add(item);
                 addGroup(groupName, itemList, gLocation);
@@ -593,7 +593,7 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         public void deleteGroup(String groupName) {
             int i = getGroupIndex(groupName);
-            if(i != -1) {
+            if (i != -1) {
                 groupList.remove(i);
             }
         }
@@ -605,8 +605,8 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
 
         @Override
         public void deleteItem(ArticleBase item) {
-            for(int i = 0; i<groupList.size(); i++) {
-                if(groupList.get(i).items.remove(item)) {
+            for (int i = 0; i < groupList.size(); i++) {
+                if (groupList.get(i).items.remove(item)) {
                     return;
                 }
             }
@@ -619,18 +619,18 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
 
         @Override
         public ArticleBase getPre() {
-            if(currentArticle == null) {
+            if (currentArticle == null) {
                 return null;
             }
 
             int groupIndex = -1;
             int articleIndex = -1;
             // 判断当前是哪一组的那篇帖子
-            for(int i = 0; i<groupList.size(); i++) {
+            for (int i = 0; i < groupList.size(); i++) {
                 List<ArticleBase> articleList = groupList.get(i).items;
-                for(int j = 0; j<articleList.size(); j++) {
+                for (int j = 0; j < articleList.size(); j++) {
                     ArticleBase a = articleList.get(j);
-                    if(currentArticle.getId().equals(a.getId()) &&
+                    if (currentArticle.getId().equals(a.getId()) &&
                             currentArticle.getBoard().equals(a.getBoard())) {
                         groupIndex = i;
                         articleIndex = j;
@@ -639,13 +639,13 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
                 }
             }
             // 返回上一篇帖子
-            if(groupIndex != -1 && articleIndex != -1) {
+            if (groupIndex != -1 && articleIndex != -1) {
                 // 帖子不是本组第一个
-                if(articleIndex > 0) {
+                if (articleIndex > 0) {
                     return groupList.get(groupIndex).items.get(articleIndex-1);
                     // 帖子是本组第一个,返回上一组最后一个
-                }else {
-                    if(groupIndex > 0 &&
+                } else {
+                    if (groupIndex > 0 &&
                             groupList.get(groupIndex-1).items.size()>0) {
                         return groupList.get(groupIndex-1).items.
                                 get(groupList.get(groupIndex - 1).items.size() - 1);
@@ -657,18 +657,18 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
 
         @Override
         public ArticleBase getNext() {
-            if(currentArticle == null) {
+            if (currentArticle == null) {
                 return null;
             }
 
             int groupIndex = -1;
             int articleIndex = -1;
             // 判断当前是哪一组的那篇帖子
-            for(int i = 0; i<groupList.size(); i++) {
+            for (int i = 0; i < groupList.size(); i++) {
                 List<ArticleBase> articleList = groupList.get(i).items;
-                for(int j = 0; j<articleList.size(); j++) {
+                for (int j = 0; j < articleList.size(); j++) {
                     ArticleBase a = articleList.get(j);
-                    if(currentArticle.getId().equals(a.getId()) &&
+                    if (currentArticle.getId().equals(a.getId()) &&
                             currentArticle.getBoard().equals(a.getBoard())) {
                         groupIndex = i;
                         articleIndex = j;
@@ -677,14 +677,14 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
                 }
             }
             // 返回下一篇帖子
-            if(groupIndex != -1 && articleIndex != -1) {
+            if (groupIndex != -1 && articleIndex != -1) {
                 // 帖子不是本组最后一个
-                if(articleIndex < groupList.get(groupIndex).items.size()-1) {
+                if (articleIndex < groupList.get(groupIndex).items.size()-1) {
                     return groupList.get(groupIndex).items.get(articleIndex+1);
                     // 帖子是本组最后一个,返回下一组第一个
-                }else {
-                    if(groupIndex < groupList.size()-1 &&
-                            groupList.get(groupIndex+1).items.size()>0) {
+                } else {
+                    if (groupIndex < groupList.size() - 1 &&
+                            groupList.get(groupIndex+1).items.size() > 0) {
                         return groupList.get(groupIndex+1).items.get(0);
                     }
                 }

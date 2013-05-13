@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import com.morln.app.lbstask.bbs.model.BbsUserBase;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.utils.DialogUtil;
-import com.morln.app.system.ui.XUIFrame;
+import com.xengine.android.system.ui.XUIFrame;
 
 /**
  * 获取用户信息的AsyncTask

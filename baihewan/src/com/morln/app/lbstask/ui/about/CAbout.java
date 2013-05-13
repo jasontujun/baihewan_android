@@ -6,9 +6,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.res.SystemPic;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
 
 /**
  * Created by jasontujun.

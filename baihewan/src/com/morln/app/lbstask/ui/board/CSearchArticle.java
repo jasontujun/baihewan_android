@@ -13,10 +13,10 @@ import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.system.ui.XBackType;
-import com.morln.app.system.ui.XBaseComponent;
-import com.morln.app.system.ui.XUILayer;
-import com.morln.app.utils.XStringUtil;
+import com.xengine.android.system.ui.XBackType;
+import com.xengine.android.system.ui.XBaseComponent;
+import com.xengine.android.system.ui.XUILayer;
+import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,33 +102,33 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
                 String fromDay = fromDayInput.getText().toString();
                 String toDay = toDayInput.getText().toString();
 
-                if(XStringUtil.isNullOrEmpty(fromDay)) {
+                if (XStringUtil.isNullOrEmpty(fromDay)) {
                     Toast.makeText(getContext(),"请填写帖子的时间范围~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(fromDayInput, getContext());
                     return;
                 }
-                if(XStringUtil.isNullOrEmpty(toDay)) {
+                if (XStringUtil.isNullOrEmpty(toDay)) {
                     Toast.makeText(getContext(),"请填写帖子的时间范围~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(toDayInput, getContext());
                     return;
                 }
-                if(!XStringUtil.isNumber(fromDay)) {
+                if (!XStringUtil.isNumber(fromDay)) {
                     Toast.makeText(getContext(),"帖子的时间范围必须是数字哦！", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(fromDayInput, getContext());
                     return;
                 }
-                if(!XStringUtil.isNumber(toDay)) {
+                if (!XStringUtil.isNumber(toDay)) {
                     Toast.makeText(getContext(),"帖子的时间范围必须是数字哦！", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(toDayInput, getContext());
                     return;
                 }
-                if(Integer.parseInt(fromDay) >= Integer.parseInt(toDay)) {
+                if (Integer.parseInt(fromDay) >= Integer.parseInt(toDay)) {
                     Toast.makeText(getContext(),"帖子的时间错误！", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(fromDayInput, getContext());
                     AnimationUtil.startShakeAnimation(toDayInput, getContext());
                     return;
                 }
-                if(XStringUtil.isNullOrEmpty(author) && XStringUtil.isNullOrEmpty(title1) &&
+                if (XStringUtil.isNullOrEmpty(author) && XStringUtil.isNullOrEmpty(title1) &&
                         XStringUtil.isNullOrEmpty(title2) && XStringUtil.isNullOrEmpty(title3)) {
                     Toast.makeText(getContext(),"搜索条件不足~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(searchBtn, getContext());
@@ -158,20 +158,20 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
 
     @Override
     public ArticleBase getPre() {
-        if(searchResultList.size()>1 && currentArticleIndex>0){
+        if (searchResultList.size() > 1 && currentArticleIndex > 0){
             currentArticleIndex = currentArticleIndex - 1;
             return searchResultList.get(currentArticleIndex);
-        }else {
+        } else {
             return null;
         }
     }
 
     @Override
     public ArticleBase getNext() {
-        if(searchResultList.size()>1 && currentArticleIndex<searchResultList.size()-1){
+        if (searchResultList.size() > 1 && currentArticleIndex < searchResultList.size()-1){
             currentArticleIndex = currentArticleIndex + 1;
             return searchResultList.get(currentArticleIndex);
-        }else {
+        } else {
             return null;
         }
     }
@@ -187,7 +187,7 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
 
     @Override
     public int back() {
-        if(!beforeSearchState) {
+        if (!beforeSearchState) {
             goToSearch();
             return XBackType.CHILD_BACK;
         }
@@ -211,7 +211,7 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
     public void onLayerCovered() {
         super.onLayerCovered();
 
-        if(!beforeSearchState) {
+        if (!beforeSearchState) {
             state = resultListView.onSaveInstanceState();
         }
     }
@@ -260,12 +260,12 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             Object item = getItem(i);
-            if(item == null){
+            if (item == null){
                 return null;
             }
 
             ViewHolder holder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_article_list_item, null);
                 holder = new ViewHolder();
                 holder.frame = (RelativeLayout) convertView.findViewById(R.id.frame);
@@ -288,9 +288,9 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
 
             // 装饰符
             long index = getItemId(i);
-            if(index%2 == 1){
+            if (index%2 == 1){
                 holder.decoration.setImageResource(R.color.light_purple);
-            }else {
+            } else {
                 holder.decoration.setImageResource(R.color.light_green);
             }
             // 作者
@@ -307,9 +307,9 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
             holder.boardTipFrame.setVisibility(View.VISIBLE);
             holder.boardIdTip.setText(article.getBoard());
             Board board = bbsBoardMgr.getBoard(article.getBoard());
-            if(board != null) {
+            if (board != null) {
                 holder.boardChineseTip.setText(board.getChinesName());
-            }else {
+            } else {
                 holder.boardChineseTip.setText("");
             }
 
@@ -350,11 +350,11 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
         @Override
         protected void onPostExecute(Void result) {
             waitingDialog.dismiss();
-            if(StatusCode.isSuccess(resultCode)) {
+            if (StatusCode.isSuccess(resultCode)) {
                 searchResultList = resultList;
                 goToResult();
                 Toast.makeText(getContext(), "搜索成功！", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 switch (resultCode) {
                     case StatusCode.HTTP_EXCEPTION:
                         Toast.makeText(getContext(), "网络连接异常...", Toast.LENGTH_SHORT).show();

@@ -4,11 +4,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import com.morln.app.lbstask.bbs.session.BbsAPI;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.utils.XLog;
+import com.xengine.android.utils.XLog;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,15 +26,7 @@ public class LogoutService extends Service{
         super.onCreate();
         XLog.d("SERVICE", "create service");
 
-        GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        if(globalStateSource == null) {
-            globalStateSource = new GlobalStateSource(getApplicationContext());
-        }
-        bbsCode = globalStateSource.getBbsCode();
         isRunning = false;
-
-        // 启动轮询任务相关消息
-        startRequestBackService();
     }
 
     @Override
@@ -52,11 +41,12 @@ public class LogoutService extends Service{
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         XLog.d("SERVICE", "onStart service");
+
         if(intent == null) {
             return;
         }
         if (ACTION_BACKGROUND.equals(intent.getAction())) {
-            startRequestBackService();
+            startRequestBackService(intent);
         }
     }
 
@@ -64,11 +54,12 @@ public class LogoutService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         XLog.d("SERVICE", "onStartCommand service");
+
         if(intent == null) {
             return START_NOT_STICKY;
         }
         if (ACTION_BACKGROUND.equals(intent.getAction())) {
-            startRequestBackService();
+            startRequestBackService(intent);
         }
 
         // We want this service to continue running until it is explicitly
@@ -80,9 +71,10 @@ public class LogoutService extends Service{
     /**
      * 启动轮询任务相关消息
      */
-    private void startRequestBackService() {
+    private void startRequestBackService(Intent intent) {
         if(!isRunning) {
-            XLog.d("SERVICE", "启动任务");
+            bbsCode = intent.getStringExtra("bbsCode");
+            XLog.d("SERVICE", "启动任务， bbsCode:" + bbsCode);
             RequestMsgTask requestMsgTask = new RequestMsgTask(bbsCode);
             new Timer().schedule(requestMsgTask, 0);
             isRunning = true;
