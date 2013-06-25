@@ -5,8 +5,8 @@ import com.morln.app.lbstask.bbs.cache.*;
 import com.morln.app.lbstask.cache.*;
 import com.morln.app.lbstask.utils.StatusCode;
 import com.morln.app.lbstask.utils.img.ImageLoader;
+import com.morln.app.lbstask.utils.img.ImgMgrHolder;
 import com.xengine.android.data.db.XSQLiteHelper;
-import com.xengine.android.media.image.XAndroidImageLocalMgr;
 import com.xengine.android.system.file.XAndroidFileMgr;
 import com.xengine.android.system.file.XFileMgr;
 
@@ -51,8 +51,15 @@ public class SystemMgr {
      */
     public static void initSystem(Context context) {
         clearSystem();
+        initFileMgr();
         initDB(context);
         initDataSources(context);
+    }
+
+    private static void initFileMgr() {
+        XFileMgr fileMgr = XAndroidFileMgr.getInstance();
+        ImgMgrHolder.getImgDownloadMgr().setDownloadDirectory(
+                fileMgr.getDir(XFileMgr.FILE_TYPE_TMP).getAbsolutePath());
     }
 
     /**

@@ -32,10 +32,8 @@ import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.img.ImgMgrHolder;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.xengine.android.media.image.XAndroidImageLocalMgr;
 import com.xengine.android.session.http.XNetworkUtil;
 import com.xengine.android.system.file.XAndroidFileMgr;
-import com.xengine.android.system.file.XFileMgr;
 import com.xengine.android.system.heartbeat.XAndroidHBM;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseFrame;
@@ -80,7 +78,7 @@ public class FMain extends XBaseFrame {
         XNetworkUtil.init(getApplicationContext());
         HttpClientHolder.init(getApplicationContext());
         AnimationUtil.init(getApplicationContext());
-        // 初始化图片管理器
+        // 初始化文件管理器根目录
         XAndroidFileMgr.getInstance().setRootName("baihewan");
     }
 

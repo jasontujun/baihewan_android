@@ -15,7 +15,7 @@ import java.util.TimerTask;
  * Date: 12-7-19
  * Time: 下午7:18
  */
-public class LogoutService extends Service{
+public class LogoutService extends Service {
     public static final String ACTION_BACKGROUND = "com.mroln.app.baihewan.service.Logout";
     private boolean isRunning;
 
