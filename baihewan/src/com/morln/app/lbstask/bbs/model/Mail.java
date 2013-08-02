@@ -3,7 +3,7 @@ package com.morln.app.lbstask.bbs.model;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.utils.img.ImageUrlType;
+import com.xengine.android.media.image.loader.XImageLocalUrl;
 
 import java.util.Comparator;
 import java.util.List;
@@ -163,8 +163,8 @@ public class Mail {
         for(int i = 0; i<imgUrls.size(); i++) {
             String imageUrl = imgUrls.get(i);
             String localImageFile = imageSource.getLocalImage(imageUrl);
-            if(localImageFile.equals(ImageUrlType.IMG_LOADING)
-                    || localImageFile.equals(ImageUrlType.IMG_ERROR)) {
+            if(localImageFile.equals(XImageLocalUrl.IMG_LOADING)
+                    || localImageFile.equals(XImageLocalUrl.IMG_ERROR)) {
                 imageSource.putImage(imageUrl, "");
             }
         }

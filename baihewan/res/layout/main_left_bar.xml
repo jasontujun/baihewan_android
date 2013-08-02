@@ -72,7 +72,7 @@
             android:layout_below="@+id/top_frame"
             android:orientation="vertical">
         <!--十大热点-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn1_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -107,9 +107,9 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--订阅收藏-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn2_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -144,9 +144,9 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--各区版面-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn3_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -181,9 +181,9 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--个人中心-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn4_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -218,9 +218,9 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--Ta的百合-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn5_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -275,9 +275,9 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--站内信-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn6_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -328,9 +328,9 @@
                     android:textColor="@color/white"
                     android:background="@drawable/tip_bg_red"
                     android:visibility="gone"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--设置-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn7_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -365,9 +365,9 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
         <!--关于-->
-        <com.morln.app.lbstask.controls.ChangeImageLayout
+        <com.morln.app.lbstask.ui.controls.ChangeImageLayout
                 android:id="@+id/btn8_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp">
@@ -402,6 +402,6 @@
                     android:layout_marginRight="3dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/separator_horizontal"/>
-        </com.morln.app.lbstask.controls.ChangeImageLayout>
+        </com.morln.app.lbstask.ui.controls.ChangeImageLayout>
     </LinearLayout>
 </RelativeLayout>

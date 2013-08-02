@@ -1,4 +1,4 @@
-package com.morln.app.lbstask.session;
+package com.morln.app.lbstask.engine;
 
 import android.content.Context;
 import com.xengine.android.session.http.XAndroidHttpClient;
@@ -13,9 +13,7 @@ public class HttpClientHolder {
     private static Context context;
 
     private static XAndroidHttpClient mainClient;// 主要的通信线程池
-
     private static XAndroidHttpClient imageClient;// 图片的通信线程池
-
 
     /**
      * 请使用getApplicationContext()来初始化
@@ -25,16 +23,16 @@ public class HttpClientHolder {
     }
 
     public static synchronized XAndroidHttpClient getMainHttpClient() {
-        if(mainClient == null) {
+        if (mainClient == null) {
             mainClient = new XAndroidHttpClient(context);
         }
         return mainClient;
     }
 
     public static synchronized XAndroidHttpClient getImageHttpClient() {
-        if(imageClient == null) {
+        if (imageClient == null) {
             imageClient = new XAndroidHttpClient(context);
         }
-        return mainClient;
+        return imageClient;
     }
 }

@@ -1,4 +1,4 @@
-package com.morln.app.lbstask.controls;
+package com.morln.app.lbstask.ui.controls;
 
 import android.content.Context;
 import android.graphics.Point;

@@ -1,12 +1,14 @@
 package com.morln.app.lbstask.logic;
 
 import android.content.Context;
+import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.bbs.cache.*;
 import com.morln.app.lbstask.cache.*;
-import com.morln.app.lbstask.utils.StatusCode;
-import com.morln.app.lbstask.utils.img.ImageLoader;
-import com.morln.app.lbstask.utils.img.ImgMgrHolder;
+import com.morln.app.lbstask.engine.*;
+import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.data.db.XSQLiteHelper;
+import com.xengine.android.media.graphics.XAndroidScreen;
+import com.xengine.android.media.graphics.XScreen;
 import com.xengine.android.system.file.XAndroidFileMgr;
 import com.xengine.android.system.file.XFileMgr;
 
@@ -28,38 +30,45 @@ public class SystemMgr {
     private SystemMgr() {}
 
     /**
-     * 接受反馈
-     * 反馈直接发送至官方账号的站内信。(baihewan)
-     * @param content
-     * @return
+     * 初始化xengine的一些重要模块。
+     * 在第一个Activity的最开始执行。
+     * @param context
      */
-    public int feedback(String content) {
-        GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
-                getInstance().getSource(SourceName.GLOBAL_STATE);
-        if(globalStateSource.getLoginStatus() == GlobalStateSource.LOGIN_STATUS_NO_LOGIN) {
-            return StatusCode.NOT_AUTHORIZED;// 未登陆
-        }
-        String username = globalStateSource.getCurrentUserName();
-        String title = "【反馈】来自" + username;
-        return BbsMailMgr.getInstance().sendMail(title, content, "baihewan");
+    public void initEngine(Context context) {
+        // 初始化文件管理模块
+        XFileMgr fileMgr = XAndroidFileMgr.getInstance();
+        fileMgr.setRootName("baihewan");
+        fileMgr.setDir(XFileMgr.FILE_TYPE_TMP, "tmp", true);
+        fileMgr.setDir(XFileMgr.FILE_TYPE_PHOTO, "photo", true);
+        // 初始化网络模块
+        HttpClientHolder.init(context);
+        DownloadMgrHolder.init(HttpClientHolder.getImageHttpClient());
+        UploadMgrHolder.init(HttpClientHolder.getImageHttpClient());
+        // 初始化图片模块
+        XScreen screen = new XAndroidScreen(context);
+        ImgMgrHolder.init(HttpClientHolder.getImageHttpClient(),
+                screen.getScreenWidth(), screen.getScreenHeight());
+        MyImageLoader.getInstance().init(
+                R.drawable.img_empty,
+                R.drawable.img_click_load,
+                R.drawable.img_loading,
+                R.drawable.img_load_fail
+        );
+
+
+        // 初始化手机功能管理器
+//        mMobileMgr = new XAndroidMobileMgr(this, screen.getScreenWidth(), screen.getScreenHeight());
     }
 
-
     /**
-     * 初始化百荷湾系统
+     * 初始化软件系统（数据等）。
+     * 可以在loading界面延迟执行。
      * @param context
      */
     public static void initSystem(Context context) {
         clearSystem();
-        initFileMgr();
         initDB(context);
         initDataSources(context);
-    }
-
-    private static void initFileMgr() {
-        XFileMgr fileMgr = XAndroidFileMgr.getInstance();
-        ImgMgrHolder.getImgDownloadMgr().setDownloadDirectory(
-                fileMgr.getDir(XFileMgr.FILE_TYPE_TMP).getAbsolutePath());
     }
 
     /**
@@ -118,7 +127,7 @@ public class SystemMgr {
 
     public static void clearSystem() {
         // clear image cache
-        ImageLoader.getInstance().clearImageCache();
+        MyImageLoader.getInstance().clearImageCache();
 
         // clear tmp file
         XAndroidFileMgr.getInstance().clearDir(XFileMgr.FILE_TYPE_TMP);
@@ -133,5 +142,22 @@ public class SystemMgr {
 
         // clear DataSource
         DataRepo.clearInstance();
+    }
+
+    /**
+     * 接受反馈
+     * 反馈直接发送至官方账号的站内信。(baihewan)
+     * @param content
+     * @return
+     */
+    public int feedback(String content) {
+        GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
+                getInstance().getSource(SourceName.GLOBAL_STATE);
+        if(globalStateSource.getLoginStatus() == GlobalStateSource.LOGIN_STATUS_NO_LOGIN) {
+            return StatusCode.NOT_AUTHORIZED;// 未登陆
+        }
+        String username = globalStateSource.getCurrentUserName();
+        String title = "【反馈】来自" + username;
+        return BbsMailMgr.getInstance().sendMail(title, content, "baihewan");
     }
 }

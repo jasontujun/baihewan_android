@@ -3,7 +3,7 @@ package com.morln.app.lbstask.bbs.model;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.utils.img.ImageUrlType;
+import com.xengine.android.media.image.loader.XImageLocalUrl;
 import com.xengine.android.utils.XStringUtil;
 
 import java.util.Comparator;
@@ -230,8 +230,8 @@ public class ArticleDetail {
             String imageUrl = imgUrls.get(i);
             String localImageFile = imageSource.getLocalImage(imageUrl);
             if (!XStringUtil.isNullOrEmpty(localImageFile) &&
-                    (localImageFile.equals(ImageUrlType.IMG_LOADING)
-                            || localImageFile.equals(ImageUrlType.IMG_ERROR))) {
+                    (localImageFile.equals(XImageLocalUrl.IMG_LOADING)
+                            || localImageFile.equals(XImageLocalUrl.IMG_ERROR))) {
                 imageSource.putImage(imageUrl, "");
             }
         }

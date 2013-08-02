@@ -12,7 +12,7 @@ import com.morln.app.lbstask.bbs.cache.ZoneSource;
 import com.morln.app.lbstask.bbs.model.Zone;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.controls.ChangeImageLayout;
+import com.morln.app.lbstask.ui.controls.ChangeImageLayout;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XDialog;
 import com.xengine.android.system.ui.XUILayer;

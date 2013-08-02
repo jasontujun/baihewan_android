@@ -16,7 +16,6 @@ import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.logic.SystemMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.service.LogoutService;
-import com.morln.app.lbstask.session.HttpClientHolder;
 import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.ui.article.LReadArticle;
 import com.morln.app.lbstask.ui.article.LReplyArticle;
@@ -29,11 +28,9 @@ import com.morln.app.lbstask.ui.mail.LReadMail;
 import com.morln.app.lbstask.ui.mail.LWriteMail;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
-import com.morln.app.lbstask.utils.img.ImgMgrHolder;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xengine.android.session.http.XNetworkUtil;
-import com.xengine.android.system.file.XAndroidFileMgr;
 import com.xengine.android.system.heartbeat.XAndroidHBM;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseFrame;
@@ -50,7 +47,6 @@ import java.util.List;
 public class FMain extends XBaseFrame {
     private long lastBackTime;// 上一次back键的时间
     private static final int PRESS_BACK_INTERVAL = 1500; // back按键间隔，单位：毫秒
-
 
     // 界面
     private LLogo logoLayer;
@@ -76,26 +72,18 @@ public class FMain extends XBaseFrame {
 //        XLog.setInfoEnabled(false);
 
         XNetworkUtil.init(getApplicationContext());
-        HttpClientHolder.init(getApplicationContext());
         AnimationUtil.init(getApplicationContext());
-        // 初始化文件管理器根目录
-        XAndroidFileMgr.getInstance().setRootName("baihewan");
+
+        // 初始化引擎的各个模块
+        SystemMgr.getInstance().initEngine(getApplicationContext());
     }
 
     /**
-     * 初始化函数。
-     * 设置XAndroidImageLocalMgr的缓存文件夹。
-     * 启动Logo界面。
+     * 初始化函数，启动Logo界面。
      * @param context
      */
     @Override
     public void init(Context context) {
-
-        // 初始化图片下载管理器
-        int screenWidth = screen().getScreenWidth();
-        int screenHeight = screen().getScreenHeight();
-        ImgMgrHolder.init(screenWidth, screenHeight);
-
         // 注册心跳
         getSystemStateManager().registerSystemStateListener(XAndroidHBM.getInstance());
 

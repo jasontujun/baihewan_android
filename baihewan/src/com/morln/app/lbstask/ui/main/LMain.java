@@ -12,7 +12,7 @@ import com.morln.app.lbstask.bbs.model.Mail;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.GlobalStateSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.controls.DragLayer;
+import com.morln.app.lbstask.ui.controls.DragLayer;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.ui.about.CAbout;

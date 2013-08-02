@@ -24,7 +24,7 @@ public class BoardSource extends XBaseAdapterIdDBDataSource<Board> {
      */
     public void init() {
         loadFromDatabase();
-        if(size() == 0) {
+        if (size() == 0) {
             XLog.d("DB", "版面的数据库表，加载了0个数据");
             initDefaultData();
         }

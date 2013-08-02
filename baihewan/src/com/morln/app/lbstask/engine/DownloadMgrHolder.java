@@ -1,0 +1,36 @@
+package com.morln.app.lbstask.engine;
+
+import com.xengine.android.session.download.XDownloadMgr;
+import com.xengine.android.session.download.XHttpDownloadMgr;
+import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.series.XSerialDownloadMgr;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: tujun
+ * Date: 13-8-2
+ * Time: 下午3:04
+ * To change this template use File | Settings | File Templates.
+ */
+public class DownloadMgrHolder {
+
+    private static XDownloadMgr mDownloadMgrInstance;
+    private static XSerialDownloadMgr mSerialDownloadMgrInstance;
+    private static XHttp mHttpClient;
+
+    public static void init(XHttp httpClient) {
+        mHttpClient = httpClient;
+    }
+
+    public static synchronized XDownloadMgr getDownloadMgr() {
+        if (mDownloadMgrInstance == null)
+            mDownloadMgrInstance = new XHttpDownloadMgr(mHttpClient);
+        return mDownloadMgrInstance;
+    }
+
+    public static synchronized XSerialDownloadMgr getSerialDownloadMgr() {
+        if (mSerialDownloadMgrInstance == null)
+            mSerialDownloadMgrInstance = new XSerialDownloadMgr(getDownloadMgr());
+        return mSerialDownloadMgrInstance;
+    }
+}

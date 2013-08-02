@@ -15,7 +15,7 @@ import com.morln.app.lbstask.cache.SystemSettingSource;
 import com.morln.app.lbstask.session.apinew.Top10APINew;
 import com.morln.app.lbstask.session.apinew.Top10ContentAPINew;
 import com.morln.app.lbstask.session.bean.top10.Top10Content;
-import com.morln.app.lbstask.utils.StatusCode;
+import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
 

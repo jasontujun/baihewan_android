@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.morln.app.lbstask.controls.viewflow;
+package com.morln.app.lbstask.ui.controls.viewflow;
 
 /**
  * An interface which defines the contract between a ViewFlow and a

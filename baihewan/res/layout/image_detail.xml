@@ -4,7 +4,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
-    <com.morln.app.lbstask.controls.XZoomHolder
+    <com.morln.app.lbstask.ui.controls.XZoomHolder
             android:id="@+id/zoom_holder"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
@@ -12,7 +12,7 @@
                 android:id="@+id/switcher"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"/>
-    </com.morln.app.lbstask.controls.XZoomHolder>
+    </com.morln.app.lbstask.ui.controls.XZoomHolder>
 
     <Gallery android:id="@+id/gallery"
              android:background="#55000000"

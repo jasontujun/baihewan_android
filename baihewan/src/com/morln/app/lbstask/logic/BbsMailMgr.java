@@ -9,7 +9,7 @@ import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.GlobalStateSource;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.cache.SystemSettingSource;
-import com.morln.app.lbstask.utils.StatusCode;
+import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
 

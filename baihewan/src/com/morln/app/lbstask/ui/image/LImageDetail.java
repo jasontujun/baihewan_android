@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.controls.XZoomHolder;
-import com.morln.app.lbstask.utils.img.ImageLoader;
-import com.xengine.android.media.image.XImageLocalMgr;
+import com.morln.app.lbstask.engine.MyImageLoader;
+import com.morln.app.lbstask.ui.controls.XZoomHolder;
+import com.xengine.android.media.image.processor.XImageProcessor;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseLayer;
 import com.xengine.android.system.ui.XUIFrame;
@@ -121,8 +121,8 @@ public class LImageDetail extends XBaseLayer implements
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
         String imageUrl = imageUrls.get(position);
         // 异步方式加载图片
-        ImageLoader.getInstance().asyncLoadBitmap(getContext(),
-                imageUrl, mSwitcher, XImageLocalMgr.ImageSize.SCREEN);
+        MyImageLoader.getInstance().asyncLoadBitmap(getContext(),
+                imageUrl, mSwitcher, XImageProcessor.ImageSize.SCREEN);
     }
 
     @Override
@@ -175,16 +175,12 @@ public class LImageDetail extends XBaseLayer implements
 
             String imageUrl = imageUrls.get(position);
 
-
-//            imageView.setImageDrawable(ImageUtil.getSmallLocalImage(getContext(), imageUrl));
-//            // 设置图片资源（异步加载）
-//            XImageLoader.getInstance().asyncLoadBitmap(
-//                    getContext(), imageUrl, imageView,
-//                    XImageLocalMgr.ImageSize.SMALL);
+            // 设置图片资源（异步加载）
+            MyImageLoader.getInstance().asyncLoadBitmap(
+                    getContext(), imageUrl, imageView, XImageProcessor.ImageSize.SMALL);
 //            // 设置图片资源（同步加载）
-            ImageLoader.getInstance().syncLoadBitmap(
-                    getContext(), imageUrl, imageView,
-                    XImageLocalMgr.ImageSize.SMALL);
+//            MyImageLoader.getInstance().syncLoadBitmap(
+//                    getContext(), imageUrl, imageView, XImageProcessor.ImageSize.SMALL);
 
             return convertView;
         }

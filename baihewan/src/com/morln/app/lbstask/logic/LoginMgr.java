@@ -5,7 +5,7 @@ import com.morln.app.lbstask.bbs.session.BbsAPI;
 import com.morln.app.lbstask.cache.*;
 import com.morln.app.lbstask.model.UserBase;
 import com.morln.app.lbstask.session.apinew.LoginAPINew;
-import com.morln.app.lbstask.utils.StatusCode;
+import com.morln.app.lbstask.session.StatusCode;
 
 /**
  * Created by jasontujun.

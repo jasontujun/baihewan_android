@@ -13,7 +13,7 @@ import com.morln.app.lbstask.model.UserBase;
 import com.morln.app.lbstask.session.apinew.CollectionAPINew;
 import com.morln.app.lbstask.session.apinew.FriendAPINew;
 import com.morln.app.lbstask.session.bean.CollectionArticle;
-import com.morln.app.lbstask.utils.StatusCode;
+import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
 

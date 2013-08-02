@@ -1,4 +1,4 @@
-package com.morln.app.lbstask.controls.gif;
+package com.morln.app.lbstask.ui.controls.gif;
 
 import android.graphics.Bitmap;
 

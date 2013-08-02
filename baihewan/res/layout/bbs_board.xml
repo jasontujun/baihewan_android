@@ -131,7 +131,7 @@
         android:background="@drawable/shadow_horizontal"/>
 
     <!--版内帖子栏-->
-    <com.morln.app.lbstask.controls.XListView
+    <com.morln.app.lbstask.ui.controls.XListView
             style="@style/listview"
             android:id="@+id/content_list"
             android:layout_width="fill_parent"

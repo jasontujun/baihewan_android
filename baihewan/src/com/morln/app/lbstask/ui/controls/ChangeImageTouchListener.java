@@ -1,4 +1,4 @@
-package com.morln.app.lbstask.controls;
+package com.morln.app.lbstask.ui.controls;
 
 import android.view.MotionEvent;
 import android.view.View;

@@ -6,7 +6,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
     <!--内容，拖动图层-->
-    <com.morln.app.lbstask.controls.DragLayer
+    <com.morln.app.lbstask.ui.controls.DragLayer
             android:id="@+id/drag_frame"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
