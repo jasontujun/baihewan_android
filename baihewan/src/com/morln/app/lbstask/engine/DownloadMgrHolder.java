@@ -1,6 +1,6 @@
 package com.morln.app.lbstask.engine;
 
-import com.xengine.android.session.download.XDownloadMgr;
+import com.xengine.android.session.download.XDownload;
 import com.xengine.android.session.download.XHttpDownloadMgr;
 import com.xengine.android.session.http.XHttp;
 import com.xengine.android.session.series.XSerialDownloadMgr;
@@ -14,7 +14,7 @@ import com.xengine.android.session.series.XSerialDownloadMgr;
  */
 public class DownloadMgrHolder {
 
-    private static XDownloadMgr mDownloadMgrInstance;
+    private static XDownload mDownloadMgrInstance;
     private static XSerialDownloadMgr mSerialDownloadMgrInstance;
     private static XHttp mHttpClient;
 
@@ -22,7 +22,7 @@ public class DownloadMgrHolder {
         mHttpClient = httpClient;
     }
 
-    public static synchronized XDownloadMgr getDownloadMgr() {
+    public static synchronized XDownload getDownloadMgr() {
         if (mDownloadMgrInstance == null)
             mDownloadMgrInstance = new XHttpDownloadMgr(mHttpClient);
         return mDownloadMgrInstance;

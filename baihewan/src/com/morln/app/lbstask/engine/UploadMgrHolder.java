@@ -3,7 +3,7 @@ package com.morln.app.lbstask.engine;
 import com.xengine.android.session.http.XHttp;
 import com.xengine.android.session.series.XSerialUploadMgr;
 import com.xengine.android.session.upload.XHttpUploadMgr;
-import com.xengine.android.session.upload.XUploadMgr;
+import com.xengine.android.session.upload.XUpload;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +14,7 @@ import com.xengine.android.session.upload.XUploadMgr;
  */
 public class UploadMgrHolder {
 
-    private static XUploadMgr mUploadMgrInstance;
+    private static XUpload mUploadMgrInstance;
     private static XSerialUploadMgr mSerialUploadMgrInstance;
     private static XHttp mHttpClient;
 
@@ -22,7 +22,7 @@ public class UploadMgrHolder {
         mHttpClient = httpClient;
     }
 
-    public static synchronized XUploadMgr getUploadMgr() {
+    public static synchronized XUpload getUploadMgr() {
         if (mUploadMgrInstance == null)
             mUploadMgrInstance = new XHttpUploadMgr(mHttpClient);
         return mUploadMgrInstance;

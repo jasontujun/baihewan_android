@@ -48,13 +48,24 @@ public class SystemMgr {
         XScreen screen = new XAndroidScreen(context);
         ImgMgrHolder.init(HttpClientHolder.getImageHttpClient(),
                 screen.getScreenWidth(), screen.getScreenHeight());
-        MyImageLoader.getInstance().init(
+        MyImageViewLocalLoader.getInstance().init(
                 R.drawable.img_empty,
                 R.drawable.img_click_load,
                 R.drawable.img_loading,
                 R.drawable.img_load_fail
         );
-
+        MyImageSwitcherLocalLoader.getInstance().init(
+                R.drawable.img_empty,
+                R.drawable.img_click_load,
+                R.drawable.img_loading,
+                R.drawable.img_load_fail
+        );
+        MyImageScrollRemoteLoader.getInstance().init(
+                R.drawable.img_empty,
+                R.drawable.img_click_load,
+                R.drawable.img_loading,
+                R.drawable.img_load_fail
+        );
 
         // 初始化手机功能管理器
 //        mMobileMgr = new XAndroidMobileMgr(this, screen.getScreenWidth(), screen.getScreenHeight());
@@ -127,7 +138,8 @@ public class SystemMgr {
 
     public static void clearSystem() {
         // clear image cache
-        MyImageLoader.getInstance().clearImageCache();
+        MyImageViewLocalLoader.getInstance().clearImageCache();
+        MyImageScrollRemoteLoader.getInstance().clearImageCache();
 
         // clear tmp file
         XAndroidFileMgr.getInstance().clearDir(XFileMgr.FILE_TYPE_TMP);

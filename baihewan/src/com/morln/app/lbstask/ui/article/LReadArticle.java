@@ -190,18 +190,21 @@ public class LReadArticle extends XBaseLayer {
         content.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
+                articleAdapter.onScrollStateChanged(absListView, i);
             }
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+                articleAdapter.onScroll(absListView, firstVisibleItem,
+                        visibleItemCount, totalItemCount);
                 View v = absListView.getChildAt(0);
-                if(v == null) {
+                if (v == null) {
                     return;
                 }
 
-                if(firstVisibleItem == 0 && v.getTop() >= 0) {
+                if (firstVisibleItem == 0 && v.getTop() >= 0) {
                     topBtn.setVisibility(View.GONE);
-                }else {
+                } else {
                     topBtn.setVisibility(View.VISIBLE);
                 }
             }
@@ -260,14 +263,14 @@ public class LReadArticle extends XBaseLayer {
 
         articleAdapter.clearImgAsyncTasks();// 清除后台线程
 
-        if(BbsArticleMgr.getInstance()
+        if (BbsArticleMgr.getInstance()
                 .getThemeArticleFromLocal(articleId, articleBoard) != null) {
             refreshTopBtnFrame();
             refreshBoardTip();
             refreshArticleToTop();
 
             articleAdapter.autoDownloadImg();// 自动下载图片
-        }else {
+        } else {
             new GetArticleTask().execute(null);
         }
     }

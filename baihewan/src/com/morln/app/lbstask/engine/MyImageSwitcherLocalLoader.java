@@ -3,7 +3,7 @@ package com.morln.app.lbstask.engine;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.xengine.android.media.image.loader.XBaseImageLoader;
+import com.xengine.android.media.image.loader.XImageSwitcherLocalLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,18 +12,18 @@ import com.xengine.android.media.image.loader.XBaseImageLoader;
  * Time: 下午2:56
  * To change this template use File | Settings | File Templates.
  */
-public class MyImageLoader extends XBaseImageLoader {
+public class MyImageSwitcherLocalLoader extends XImageSwitcherLocalLoader {
 
-    private static MyImageLoader instance;
+    private static MyImageSwitcherLocalLoader instance;
 
-    public synchronized static MyImageLoader getInstance() {
+    public synchronized static MyImageSwitcherLocalLoader getInstance() {
         if (instance == null) {
-            instance = new MyImageLoader();
+            instance = new MyImageSwitcherLocalLoader();
         }
         return instance;
     }
 
-    private MyImageLoader() {
+    private MyImageSwitcherLocalLoader() {
         super();
     }
 

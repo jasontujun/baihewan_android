@@ -14,7 +14,7 @@ import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
 import com.morln.app.lbstask.cache.SystemSettingSource;
 import com.morln.app.lbstask.engine.ImgMgrHolder;
-import com.morln.app.lbstask.engine.MyImageLoader;
+import com.morln.app.lbstask.engine.MyImageViewLocalLoader;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.model.UserBase;
@@ -349,7 +349,7 @@ public class AMail extends BaseAdapter {
                     holderImage.imageView.setLayoutParams(params);
                 }
                 // 设置图片资源（异步加载）
-                MyImageLoader.getInstance().asyncLoadBitmap(
+                MyImageViewLocalLoader.getInstance().asyncLoadBitmap(
                         layer.getContext(), imgUrl, holderImage.imageView,
                         XImageProcessor.ImageSize.SCREEN);
 
@@ -457,7 +457,7 @@ public class AMail extends BaseAdapter {
                     imageViewByTag.setLayoutParams(params);
                 }
                 // 设置图片资源(异步加载)
-                MyImageLoader.getInstance().asyncLoadBitmap(
+                MyImageViewLocalLoader.getInstance().asyncLoadBitmap(
                         layer.getContext(), imgUrl, imageViewByTag,
                         XImageProcessor.ImageSize.SCREEN);
             }

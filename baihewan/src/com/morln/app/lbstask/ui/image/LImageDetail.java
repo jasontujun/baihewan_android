@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.engine.MyImageLoader;
+import com.morln.app.lbstask.engine.MyImageSwitcherLocalLoader;
+import com.morln.app.lbstask.engine.MyImageViewLocalLoader;
 import com.morln.app.lbstask.ui.controls.XZoomHolder;
 import com.xengine.android.media.image.processor.XImageProcessor;
 import com.xengine.android.system.ui.XBackType;
@@ -17,7 +18,7 @@ import com.xengine.android.system.ui.XUIFrame;
 import java.util.List;
 
 /**
- * 专门浏览一串图片的界面
+ * 浏览一串图片的界面
  * Created by jasontujun.
  * Date: 12-5-13
  * Time: 下午6:08
@@ -121,7 +122,7 @@ public class LImageDetail extends XBaseLayer implements
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
         String imageUrl = imageUrls.get(position);
         // 异步方式加载图片
-        MyImageLoader.getInstance().asyncLoadBitmap(getContext(),
+        MyImageSwitcherLocalLoader.getInstance().asyncLoadBitmap(getContext(),
                 imageUrl, mSwitcher, XImageProcessor.ImageSize.SCREEN);
     }
 
@@ -176,10 +177,10 @@ public class LImageDetail extends XBaseLayer implements
             String imageUrl = imageUrls.get(position);
 
             // 设置图片资源（异步加载）
-            MyImageLoader.getInstance().asyncLoadBitmap(
+            MyImageViewLocalLoader.getInstance().asyncLoadBitmap(
                     getContext(), imageUrl, imageView, XImageProcessor.ImageSize.SMALL);
 //            // 设置图片资源（同步加载）
-//            MyImageLoader.getInstance().syncLoadBitmap(
+//            MyImageViewLocalLoader.getInstance().syncLoadBitmap(
 //                    getContext(), imageUrl, imageView, XImageProcessor.ImageSize.SMALL);
 
             return convertView;
