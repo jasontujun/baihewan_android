@@ -12,9 +12,7 @@ import com.morln.app.lbstask.bbs.model.Mail;
 import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
-import com.morln.app.lbstask.engine.ImgMgrHolder;
-import com.morln.app.lbstask.engine.MyImageViewLocalLoader;
+import com.morln.app.lbstask.engine.MyImageScrollRemoteLoader;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.model.UserBase;
@@ -22,27 +20,25 @@ import com.morln.app.lbstask.res.BbsPic;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.person.DUser;
 import com.morln.app.lbstask.ui.person.TPersonInfo;
-import com.morln.app.lbstask.utils.ImageUtil;
 import com.xengine.android.media.image.loader.XImageLocalUrl;
+import com.xengine.android.media.image.loader.XScrollRemoteLoader;
 import com.xengine.android.media.image.processor.XImageProcessor;
-import com.xengine.android.session.http.XNetworkUtil;
 import com.xengine.android.session.series.XSerialDownloadListener;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 邮件详情的List适配器
+ * (帖子详情 = 主贴)
  * Created by jasontujun.
  * Date: 12-10-25
  * Time: 下午9:45
  */
-public class AMail extends BaseAdapter {
+public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  {
     private static final String TAG = "MAIL";
-
     private ImageSource imageSource;
 
     private XUILayer layer;
@@ -52,11 +48,11 @@ public class AMail extends BaseAdapter {
     private int itemCount;// 列表项数量
     private int[] itemTypeArray;// 列表项的类型
     private int[] itemIndexArray;// 列表项的索引位置
-    private List<String> imgUrlList = new ArrayList<String>();
-    private List<XSerialDownloadListener> listenerList = new ArrayList<XSerialDownloadListener>();
 
     // 表情字符
     private ExpressionMap expressionMap;
+    // 图片加载器
+    private XScrollRemoteLoader mImageScrollLoader;
 
     // view类型
     private static final int HEAD_VIEW = 0;
@@ -71,6 +67,7 @@ public class AMail extends BaseAdapter {
 
         imageSource = (ImageSource) DataRepo.getInstance().getSource(SourceName.IMAGE);
         expressionMap = ExpressionMap.getInstance();
+        mImageScrollLoader = MyImageScrollRemoteLoader.getInstance();
     }
 
 
@@ -78,29 +75,29 @@ public class AMail extends BaseAdapter {
      * 启动线性下载的异步线程
      */
     public void autoDownloadImg() {
-        SystemSettingSource systemSettingSource = (SystemSettingSource) DataRepo.
-                getInstance().getSource(SourceName.SYSTEM_SETTING);
-        int isAutoDownLoad = systemSettingSource.getAutoDownloadImg();
-        if (isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_CLOSE) {
-            return;
-        }
-        if ((isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_WIFI &&
-                XNetworkUtil.isWifiConnected()) ||
-                isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_ALWAYS)
-            ImageUtil.serialDownloadImage(imgUrlList, listenerList);
+//        SystemSettingSource systemSettingSource = (SystemSettingSource) DataRepo.
+//                getInstance().getSource(SourceName.SYSTEM_SETTING);
+//        int isAutoDownLoad = systemSettingSource.getAutoDownloadImg();
+//        if (isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_CLOSE) {
+//            return;
+//        }
+//        if ((isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_WIFI &&
+//                XNetworkUtil.isWifiConnected()) ||
+//                isAutoDownLoad == SystemSettingSource.AUTO_DOWNLOAD_IMG_ALWAYS)
+//            ImageUtil.serialDownloadImage(imgUrlList, listenerList);
+        notifyDataSetChanged();
     }
 
     /**
      * 清空后台加载图片的线程，并还原帖子图片（有或无）
      */
     public void clearImgAsyncTasks() {
-        ImgMgrHolder.getImageSerialDownloadMgr().stopAndReset();// 清空后台线程
-
+        // 清空后台线程
+        mImageScrollLoader.stopAndClear();
         // 还原帖子图片
         if (mail != null)
             mail.resetImg();
     }
-
 
     /**
      * 刷新楼层(当前的楼层位置不变)
@@ -112,8 +109,6 @@ public class AMail extends BaseAdapter {
         itemCount = 0;
         itemTypeArray = null;
         itemIndexArray = null;
-        imgUrlList.clear();
-        listenerList.clear();
 
         // 初始化articleFloors
         mail= BbsMailMgr.getInstance().getMailDetailFromLocal(mailId);
@@ -145,14 +140,6 @@ public class AMail extends BaseAdapter {
             }
         }
         itemTypeArray[itemIndex] = FOOT_VIEW;
-
-        // 初始化imageUrlList和listenerList
-        List<String> urlList = mail.getImgUrls();
-        imgUrlList.addAll(urlList);
-        for (int j = 0; j < urlList.size(); j++) {
-            listenerList.add(new ListImageDownloadListener(host, urlList, j));
-        }
-
         notifyDataSetChanged();
     }
 
@@ -311,31 +298,8 @@ public class AMail extends BaseAdapter {
                 final String localImg = imageSource.getLocalImage(imgUrl);
                 holderImage.imageView.setTag(imgUrl);// TIP 关键点1，设置该imageView的tag
                 // 设置图片监听
-                final ContentImageHolder finalHolderImage = holderImage;
-                holderImage.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (XStringUtil.isNullOrEmpty(localImg)) {
-                            ImageUtil.serialDownloadImage(imgUrl,
-                                    new ListImageDownloadListener(host, mail.getImgUrls(), imgIndex));// 下载图片
-                            finalHolderImage.imageView.setImageResource(R.drawable.img_loading);
-                        } else if (localImg.equals(XImageLocalUrl.IMG_ERROR)) {
-                            ImageUtil.serialDownloadImage(imgUrl,
-                                    new ListImageDownloadListener(host, mail.getImgUrls(), imgIndex));// 下载图片
-                            finalHolderImage.imageView.setImageResource(R.drawable.img_loading);
-                            Toast.makeText(layer.getContext(), "尝试重新加载图片！", Toast.LENGTH_SHORT).show();
-                        } else if (localImg.equals(XImageLocalUrl.IMG_LOADING)) {
-                            Toast.makeText(layer.getContext(), "努力加载图片中，请稍后……", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // 查看图片详情
-                            List<String> imageUrls = mail.getImgUrls();
-                            Handler handler = layer.getFrameHandler();
-                            Message msg = handler.obtainMessage(MainMsg.SEE_IMAGE_DETAIL, imageUrls);
-                            msg.arg1 = imgIndex;
-                            handler.sendMessage(msg);
-                        }
-                    }
-                });
+                holderImage.imageView.setOnClickListener(new ImageViewClickListener
+                        (imgIndex, imgUrl, holderImage.imageView, mail.getImgUrls()));
                 // 设置图片大小
                 ViewGroup.LayoutParams params = holderImage.imageView.getLayoutParams();
                 if (XStringUtil.isNullOrEmpty(localImg) || localImg.equals(XImageLocalUrl.IMG_ERROR) ||
@@ -348,10 +312,9 @@ public class AMail extends BaseAdapter {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     holderImage.imageView.setLayoutParams(params);
                 }
-                // 设置图片资源（异步加载）
-                MyImageViewLocalLoader.getInstance().asyncLoadBitmap(
-                        layer.getContext(), imgUrl, holderImage.imageView,
-                        XImageProcessor.ImageSize.SCREEN);
+                mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
+                        holderImage.imageView, XImageProcessor.ImageSize.SCREEN,
+                        new ListImageDownloadListener());
 
                 return convertView;
             }
@@ -381,21 +344,30 @@ public class AMail extends BaseAdapter {
         return null;
     }
 
-    class ListImageDownloadListener implements XSerialDownloadListener {
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        switch (scrollState) {
+            case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                mImageScrollLoader.onScroll();
+                break;
+            case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                mImageScrollLoader.onIdle();
+                break;
+            case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                mImageScrollLoader.onScroll();
+                break;
 
-        private ListView listView;
-
-        private List<String> imgUrlList;
-
-        private int imageIndex;
-
-        ListImageDownloadListener(ListView listView,
-                                  List<String> imgUrlList, int imageIndex) {
-            this.listView = listView;
-            this.imgUrlList = imgUrlList;
-            this.imageIndex = imageIndex;
+            default:
+                break;
         }
+    }
 
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem,
+                         int visibleItemCount, int totalItemCount) {
+    }
+
+    private class ListImageDownloadListener implements XSerialDownloadListener {
         @Override
         public void beforeDownload(String s) {
         }
@@ -419,34 +391,13 @@ public class AMail extends BaseAdapter {
         @Override
         public void afterDownload(final String imgUrl) {
             // TIP 关键点2，通过之前设置的tag获取imageView
-            final ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imgUrl);
+            final ImageView imageViewByTag = (ImageView) host.findViewWithTag(imgUrl);
             if (imageViewByTag != null) {
-                // 设置监听
                 final String localImg = imageSource.getLocalImage(imgUrl);
-                imageViewByTag.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (XStringUtil.isNullOrEmpty(localImg)) {
-                            ImageUtil.serialDownloadImage(imgUrl, ListImageDownloadListener.this);// 下载图片
-                            imageViewByTag.setImageResource(R.drawable.img_loading);
-                        } else if (localImg.equals(XImageLocalUrl.IMG_ERROR)) {
-                            ImageUtil.serialDownloadImage(imgUrl, ListImageDownloadListener.this);
-                            imageViewByTag.setImageResource(R.drawable.img_loading);
-                            Toast.makeText(layer.getContext(), "尝试重新加载图片！", Toast.LENGTH_SHORT).show();
-                        } else if (localImg.equals(XImageLocalUrl.IMG_LOADING)) {
-                            Toast.makeText(layer.getContext(), "努力加载图片中，请稍后……", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // 查看图片详情
-                            Handler handler = layer.getFrameHandler();
-                            Message msg = handler.obtainMessage(MainMsg.SEE_IMAGE_DETAIL, imgUrlList);
-                            msg.arg1 = imageIndex;
-                            handler.sendMessage(msg);
-                        }
-                    }
-                });
                 // 设置图片大小
                 ViewGroup.LayoutParams params = imageViewByTag.getLayoutParams();
-                if (XStringUtil.isNullOrEmpty(localImg) || localImg.equals(XImageLocalUrl.IMG_ERROR) ||
+                if (XStringUtil.isNullOrEmpty(localImg) ||
+                        localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
                     params.height = layer.screen().dp2px(88);
@@ -456,10 +407,49 @@ public class AMail extends BaseAdapter {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     imageViewByTag.setLayoutParams(params);
                 }
-                // 设置图片资源(异步加载)
-                MyImageViewLocalLoader.getInstance().asyncLoadBitmap(
-                        layer.getContext(), imgUrl, imageViewByTag,
-                        XImageProcessor.ImageSize.SCREEN);
+            }
+        }
+    }
+
+
+    private class ImageViewClickListener implements View.OnClickListener {
+        private int imgIndex;
+        private String imgUrl;
+        private ImageView imageView;
+        private List<String> imgUrlList;
+
+        private ImageViewClickListener(int imgIndex, String imgUrl,
+                                       ImageView imageView, List<String> imgUrlList) {
+            this.imgIndex = imgIndex;
+            this.imgUrl = imgUrl;
+            this.imageView = imageView;
+            this.imgUrlList = imgUrlList;
+        }
+
+        @Override
+        public void onClick(View view) {
+            final String localImg = imageSource.getLocalImage(imgUrl);
+            if (XStringUtil.isNullOrEmpty(localImg)) {
+                // 下载图片
+                mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
+                        imageView, XImageProcessor.ImageSize.SCREEN,
+                        new ListImageDownloadListener());
+                mImageScrollLoader.onIdle();
+            } else if (localImg.equals(XImageLocalUrl.IMG_ERROR)) {
+                // 下载图片
+                mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
+                        imageView, XImageProcessor.ImageSize.SCREEN,
+                        new ListImageDownloadListener());
+                mImageScrollLoader.onIdle();
+                Toast.makeText(layer.getContext(), "尝试重新加载图片！", Toast.LENGTH_SHORT).show();
+            } else if (localImg.equals(XImageLocalUrl.IMG_LOADING)) {
+                Toast.makeText(layer.getContext(), "努力加载图片中，请稍后……", Toast.LENGTH_SHORT).show();
+            } else {
+                // 查看图片详情
+                Handler handler = layer.getFrameHandler();
+                Message msg = handler.obtainMessage(MainMsg.SEE_IMAGE_DETAIL, imgUrlList);
+                msg.arg1 = imgIndex;
+                handler.sendMessage(msg);
             }
         }
     }

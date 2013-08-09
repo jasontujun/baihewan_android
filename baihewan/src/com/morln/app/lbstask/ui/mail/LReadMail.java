@@ -140,15 +140,20 @@ public class LReadMail extends XBaseLayer {
             }
         });
 
-        // 初始化“回到顶部”按钮
+        // 初始化文章
+        mailAdapter = new AMail(this, content);
+        content.setAdapter(mailAdapter);
         content.setFastScrollEnabled(true);
         content.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
+                mailAdapter.onScrollStateChanged(absListView, i);
             }
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+                mailAdapter.onScroll(absListView, firstVisibleItem,
+                        visibleItemCount, totalItemCount);
                 View v = absListView.getChildAt(0);
                 if (v == null) {
                     return;
@@ -162,9 +167,6 @@ public class LReadMail extends XBaseLayer {
             }
         });
 
-        // 初始化文章
-        mailAdapter = new AMail(this, content);
-        content.setAdapter(mailAdapter);
         showMail(mId);
     }
 

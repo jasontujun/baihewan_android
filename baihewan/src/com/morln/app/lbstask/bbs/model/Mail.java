@@ -154,7 +154,6 @@ public class Mail {
         this.imgUrls = imgUrls;
     }
 
-
     /**
      * 还原图片
      */
@@ -163,8 +162,8 @@ public class Mail {
         for(int i = 0; i<imgUrls.size(); i++) {
             String imageUrl = imgUrls.get(i);
             String localImageFile = imageSource.getLocalImage(imageUrl);
-            if(localImageFile.equals(XImageLocalUrl.IMG_LOADING)
-                    || localImageFile.equals(XImageLocalUrl.IMG_ERROR)) {
+            if(XImageLocalUrl.IMG_LOADING.equals(localImageFile)
+                    || XImageLocalUrl.IMG_ERROR.equals(localImageFile)) {
                 imageSource.putImage(imageUrl, "");
             }
         }

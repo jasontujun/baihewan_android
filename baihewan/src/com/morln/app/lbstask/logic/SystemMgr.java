@@ -60,6 +60,12 @@ public class SystemMgr {
                 R.drawable.img_loading,
                 R.drawable.img_load_fail
         );
+        MyImageScrollLocalLoader.getInstance().init(
+                R.drawable.img_empty,
+                R.drawable.img_click_load,
+                R.drawable.img_loading,
+                R.drawable.img_load_fail
+        );
         MyImageScrollRemoteLoader.getInstance().init(
                 R.drawable.img_empty,
                 R.drawable.img_click_load,

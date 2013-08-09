@@ -2,7 +2,6 @@ package com.morln.app.lbstask.engine;
 
 import com.xengine.android.media.image.download.XHttpImageDownloadMgr;
 import com.xengine.android.media.image.download.XImageDownload;
-import com.xengine.android.media.image.download.XImageSerialDownloadMgr;
 import com.xengine.android.session.http.XHttp;
 
 /**
@@ -14,7 +13,6 @@ import com.xengine.android.session.http.XHttp;
 public class ImgMgrHolder {
 
     private static XImageDownload mImageDownloadMgrInstance;
-    private static XImageSerialDownloadMgr mImageSerialDownloadMgrInstance;
 
     private static XHttp mHttpClient;
     private static int mScreenWidth;
@@ -31,12 +29,5 @@ public class ImgMgrHolder {
             mImageDownloadMgrInstance = new XHttpImageDownloadMgr(
                     mHttpClient, mScreenWidth, mScreenHeight);
         return mImageDownloadMgrInstance;
-    }
-
-    public static synchronized XImageSerialDownloadMgr getImageSerialDownloadMgr() {
-        if (mImageSerialDownloadMgrInstance == null)
-            mImageSerialDownloadMgrInstance = new XImageSerialDownloadMgr(
-                    getImageDownloadMgr());
-        return mImageSerialDownloadMgrInstance;
     }
 }

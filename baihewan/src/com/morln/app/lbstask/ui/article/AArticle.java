@@ -14,7 +14,6 @@ import com.morln.app.lbstask.cache.DataRepo;
 import com.morln.app.lbstask.cache.GlobalStateSource;
 import com.morln.app.lbstask.cache.ImageSource;
 import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.engine.ImgMgrHolder;
 import com.morln.app.lbstask.engine.MyImageScrollRemoteLoader;
 import com.morln.app.lbstask.logic.BbsArticleMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
@@ -55,8 +54,6 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
     private int[] itemHostArray;// 列表项所属的帖子
     private int[] itemTypeArray;// 列表项的类型
     private int[] itemIndexArray;// 列表项的索引位置
-    private List<String> imgUrlList = new ArrayList<String>();
-    private List<XSerialDownloadListener> listenerList = new ArrayList<XSerialDownloadListener>();
 
     // 表情字符
     private ExpressionMap expressionMap;
@@ -90,7 +87,6 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         this.refreshListener = listener;
     }
 
-
     /**
      * 启动线性下载的异步线程
      */
@@ -112,9 +108,8 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
      * 清空后台加载图片的线程，并还原帖子图片（有或无）
      */
     public void clearImgAsyncTasks() {
-        ImgMgrHolder.getImageSerialDownloadMgr().stopAndReset();// 清空后台线程
+        // 清空后台线程
         mImageScrollLoader.stopAndClear();
-
         // 还原帖子图片
         for (int i = 0; i < articleFloors.size(); i++) {
             ArticleDetail article = articleFloors.get(i);
@@ -123,7 +118,6 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
             }
         }
     }
-
 
     /**
      * 刷新楼层(当前的楼层位置不变)
@@ -137,8 +131,6 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         itemHostArray = null;
         itemTypeArray = null;
         itemIndexArray = null;
-        imgUrlList.clear();
-        listenerList.clear();
 
         // 初始化articleFloors
         ArticleDetail theme = BbsArticleMgr.getInstance().
@@ -179,28 +171,19 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 // 文字
                 itemHostArray[itemIndex] = i;
                 itemTypeArray[itemIndex] = CONTENT_WORD_VIEW;
-                itemIndexArray[itemIndex] = j;
+                itemIndexArray[itemIndex] = j;// 帖子内的局部索引
                 itemIndex++;
                 // 图片
                 if (j < article.getImgSize()) {
                     itemHostArray[itemIndex] = i;
                     itemTypeArray[itemIndex] = CONTENT_IMAGE_VIEW;
-                    itemIndexArray[itemIndex] = j;
+                    itemIndexArray[itemIndex] = j;// 帖子内的局部索引
                     itemIndex++;
                 }
             }
             itemHostArray[itemIndex] = i;
             itemTypeArray[itemIndex] = FOOT_VIEW;
             itemIndex++;
-        }
-
-        // 初始化imageUrlList和listenerList
-        for (int i = 0; i < articleFloors.size(); i++) {
-            List<String> urlList = articleFloors.get(i).getImgUrls();
-            imgUrlList.addAll(urlList);
-            for (int j = 0; j < urlList.size(); j++) {
-                listenerList.add(new ListImageDownloadListener(host, urlList, j));
-            }
         }
 
         notifyDataSetChanged();
@@ -375,7 +358,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 holderImage.imageView.setTag(imgUrl);// TIP 关键点1，设置该imageView的tag
                 // 设置图片监听
                 holderImage.imageView.setOnClickListener(new ImageViewClickListener
-                        (imgIndex, imgUrl, holderImage.imageView, imgUrlList));
+                        (imgIndex, imgUrl, holderImage.imageView, article.getImgUrls()));
                 // 设置图片大小
                 ViewGroup.LayoutParams params = holderImage.imageView.getLayoutParams();
                 if (XStringUtil.isNullOrEmpty(localImg) ||
@@ -391,7 +374,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 }
                 mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
                         holderImage.imageView, XImageProcessor.ImageSize.SCREEN,
-                        new ListImageDownloadListener(host, article.getImgUrls(), imgIndex));
+                        new ListImageDownloadListener());
 
                 return convertView;
             }
@@ -428,7 +411,6 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                             new DLogin(layer, true).show();
                             return;
                         }
-
                         Handler handler1 = layer.getFrameHandler();
                         Message msg = handler1.obtainMessage();
                         msg.what = MainMsg.BBS_REPLY_ARTICLE;
@@ -448,20 +430,16 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         return null;
     }
 
-
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         switch (scrollState) {
             case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                XLog.d(TAG, "SCROLL_STATE_FLING");
                 mImageScrollLoader.onScroll();
                 break;
             case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                XLog.d(TAG, "SCROLL_STATE_IDLE");
                 mImageScrollLoader.onIdle();
                 break;
             case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                XLog.d(TAG, "SCROLL_STATE_TOUCH_SCROLL");
                 mImageScrollLoader.onScroll();
                 break;
 
@@ -477,16 +455,6 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
 
 
     private class ListImageDownloadListener implements XSerialDownloadListener {
-        private ListView listView;
-        private List<String> imgUrlList;
-        private int imgIndex;
-
-        ListImageDownloadListener(ListView listView, List<String> imgUrlList, int imgIndex) {
-            this.listView = listView;
-            this.imgUrlList = imgUrlList;
-            this.imgIndex = imgIndex;
-        }
-
         @Override
         public void beforeDownload(String s) {
         }
@@ -510,7 +478,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         @Override
         public void afterDownload(final String imgUrl) {
             // TIP 关键点2，通过之前设置的tag获取imageView
-            final ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imgUrl);
+            final ImageView imageViewByTag = (ImageView) host.findViewWithTag(imgUrl);
             if (imageViewByTag != null) {
                 final String localImg = imageSource.getLocalImage(imgUrl);
                 // 设置图片大小
@@ -552,13 +520,13 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 // 下载图片
                 mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
                         imageView, XImageProcessor.ImageSize.SCREEN,
-                        new ListImageDownloadListener(host, imgUrlList, imgIndex));
+                        new ListImageDownloadListener());
                 mImageScrollLoader.onIdle();
             } else if (localImg.equals(XImageLocalUrl.IMG_ERROR)) {
                 // 下载图片
                 mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
                         imageView, XImageProcessor.ImageSize.SCREEN,
-                        new ListImageDownloadListener(host, imgUrlList, imgIndex));
+                        new ListImageDownloadListener());
                 mImageScrollLoader.onIdle();
                 Toast.makeText(layer.getContext(), "尝试重新加载图片！", Toast.LENGTH_SHORT).show();
             } else if (localImg.equals(XImageLocalUrl.IMG_LOADING)) {
@@ -572,6 +540,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
             }
         }
     }
+
 
     interface RefreshListener {
         void isArticleDeleted(boolean isDeleted);
