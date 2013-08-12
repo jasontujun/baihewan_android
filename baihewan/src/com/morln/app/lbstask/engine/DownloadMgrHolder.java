@@ -1,9 +1,11 @@
 package com.morln.app.lbstask.engine;
 
+import com.xengine.android.media.image.download.XHttpImageDownloadMgr;
+import com.xengine.android.media.image.download.XImageDownload;
 import com.xengine.android.session.download.XDownload;
 import com.xengine.android.session.download.XHttpDownloadMgr;
+import com.xengine.android.session.download.XSerialDownloadMgr;
 import com.xengine.android.session.http.XHttp;
-import com.xengine.android.session.series.XSerialDownloadMgr;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,12 +16,18 @@ import com.xengine.android.session.series.XSerialDownloadMgr;
  */
 public class DownloadMgrHolder {
 
-    private static XDownload mDownloadMgrInstance;
-    private static XSerialDownloadMgr mSerialDownloadMgrInstance;
+    private static int mScreenWidth;
+    private static int mScreenHeight;
     private static XHttp mHttpClient;
 
-    public static void init(XHttp httpClient) {
+    private static XDownload mDownloadMgrInstance;
+    private static XSerialDownloadMgr mSerialDownloadMgrInstance;
+    private static XImageDownload mImageDownloadMgrInstance;
+
+    public static void init(XHttp httpClient, int sWidth, int sHeight) {
         mHttpClient = httpClient;
+        mScreenWidth = sWidth;
+        mScreenHeight = sHeight;
     }
 
     public static synchronized XDownload getDownloadMgr() {
@@ -32,5 +40,12 @@ public class DownloadMgrHolder {
         if (mSerialDownloadMgrInstance == null)
             mSerialDownloadMgrInstance = new XSerialDownloadMgr(getDownloadMgr());
         return mSerialDownloadMgrInstance;
+    }
+
+    public static synchronized XImageDownload getImageDownloadMgr() {
+        if (mImageDownloadMgrInstance == null)
+            mImageDownloadMgrInstance = new XHttpImageDownloadMgr(
+                    mHttpClient, mScreenWidth, mScreenHeight);
+        return mImageDownloadMgrInstance;
     }
 }

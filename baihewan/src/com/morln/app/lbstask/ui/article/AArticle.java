@@ -26,7 +26,7 @@ import com.morln.app.lbstask.ui.person.TPersonInfo;
 import com.xengine.android.media.image.loader.XImageLocalUrl;
 import com.xengine.android.media.image.loader.XScrollRemoteLoader;
 import com.xengine.android.media.image.processor.XImageProcessor;
-import com.xengine.android.session.series.XSerialDownloadListener;
+import com.xengine.android.session.download.XSerialDownloadListener;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
@@ -77,6 +77,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         imageSource = (ImageSource) DataRepo.getInstance().getSource(SourceName.IMAGE);
         expressionMap = ExpressionMap.getInstance();
         mImageScrollLoader = MyImageScrollRemoteLoader.getInstance();
+        mImageScrollLoader.setWorking();
     }
 
     public RefreshListener getRefreshListener() {
@@ -110,6 +111,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
     public void clearImgAsyncTasks() {
         // 清空后台线程
         mImageScrollLoader.stopAndClear();
+        mImageScrollLoader.setWorking();
         // 还原帖子图片
         for (int i = 0; i < articleFloors.size(); i++) {
             ArticleDetail article = articleFloors.get(i);
@@ -434,12 +436,15 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         switch (scrollState) {
             case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                XLog.d(TAG, "SCROLL_STATE_FLING");
                 mImageScrollLoader.onScroll();
                 break;
             case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                XLog.d(TAG, "SCROLL_STATE_IDLE");
                 mImageScrollLoader.onIdle();
                 break;
             case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                XLog.d(TAG, "SCROLL_STATE_TOUCH_SCROLL");
                 mImageScrollLoader.onScroll();
                 break;
 

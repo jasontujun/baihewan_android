@@ -24,7 +24,7 @@ public class MyImageScrollRemoteLoader extends XScrollRemoteLoader {
     }
 
     private MyImageScrollRemoteLoader() {
-        super(ImgMgrHolder.getImageDownloadMgr(),
+        super(DownloadMgrHolder.getImageDownloadMgr(),
                 MyImageScrollLocalLoader.getInstance());
     }
 

@@ -23,7 +23,7 @@ import com.morln.app.lbstask.ui.person.TPersonInfo;
 import com.xengine.android.media.image.loader.XImageLocalUrl;
 import com.xengine.android.media.image.loader.XScrollRemoteLoader;
 import com.xengine.android.media.image.processor.XImageProcessor;
-import com.xengine.android.session.series.XSerialDownloadListener;
+import com.xengine.android.session.download.XSerialDownloadListener;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
@@ -68,6 +68,7 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
         imageSource = (ImageSource) DataRepo.getInstance().getSource(SourceName.IMAGE);
         expressionMap = ExpressionMap.getInstance();
         mImageScrollLoader = MyImageScrollRemoteLoader.getInstance();
+        mImageScrollLoader.setWorking();
     }
 
 
@@ -94,6 +95,7 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
     public void clearImgAsyncTasks() {
         // 清空后台线程
         mImageScrollLoader.stopAndClear();
+        mImageScrollLoader.setWorking();
         // 还原帖子图片
         if (mail != null)
             mail.resetImg();

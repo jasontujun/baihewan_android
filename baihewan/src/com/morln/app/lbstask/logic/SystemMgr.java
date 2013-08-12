@@ -41,13 +41,12 @@ public class SystemMgr {
         fileMgr.setDir(XFileMgr.FILE_TYPE_TMP, "tmp", true);
         fileMgr.setDir(XFileMgr.FILE_TYPE_PHOTO, "photo", true);
         // 初始化网络模块
-        HttpClientHolder.init(context);
-        DownloadMgrHolder.init(HttpClientHolder.getImageHttpClient());
-        UploadMgrHolder.init(HttpClientHolder.getImageHttpClient());
-        // 初始化图片模块
         XScreen screen = new XAndroidScreen(context);
-        ImgMgrHolder.init(HttpClientHolder.getImageHttpClient(),
+        HttpClientHolder.init(context);
+        DownloadMgrHolder.init(HttpClientHolder.getImageHttpClient(),
                 screen.getScreenWidth(), screen.getScreenHeight());
+        UploadMgrHolder.init(HttpClientHolder.getImageHttpClient());
+        // 初始化图片加载模块
         MyImageViewLocalLoader.getInstance().init(
                 R.drawable.img_empty,
                 R.drawable.img_click_load,
@@ -145,6 +144,8 @@ public class SystemMgr {
     public static void clearSystem() {
         // clear image cache
         MyImageViewLocalLoader.getInstance().clearImageCache();
+        MyImageSwitcherLocalLoader.getInstance().clearImageCache();
+        MyImageScrollLocalLoader.getInstance().clearImageCache();
         MyImageScrollRemoteLoader.getInstance().clearImageCache();
 
         // clear tmp file

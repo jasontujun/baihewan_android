@@ -1,8 +1,8 @@
 package com.morln.app.lbstask.engine;
 
 import com.xengine.android.session.http.XHttp;
-import com.xengine.android.session.series.XSerialUploadMgr;
 import com.xengine.android.session.upload.XHttpUploadMgr;
+import com.xengine.android.session.upload.XSerialUploadMgr;
 import com.xengine.android.session.upload.XUpload;
 
 /**
