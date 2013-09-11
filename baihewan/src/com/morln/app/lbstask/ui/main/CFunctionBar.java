@@ -8,10 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.ui.controls.ChangeImageLayout;
 import com.morln.app.lbstask.ui.controls.ChangeImageTouchListener;
 import com.morln.app.lbstask.ui.controls.DragLayer;
@@ -23,6 +22,7 @@ import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
@@ -54,7 +54,8 @@ public class CFunctionBar extends XBaseComponent {
 
     public CFunctionBar(XUILayer parent) {
         super(parent);
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         setContentView(R.layout.main_left_bar);
         frame = (RelativeLayout) findViewById(R.id.frame);

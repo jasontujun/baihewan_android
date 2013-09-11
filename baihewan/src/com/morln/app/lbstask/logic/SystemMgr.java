@@ -2,10 +2,11 @@ package com.morln.app.lbstask.logic;
 
 import android.content.Context;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.*;
-import com.morln.app.lbstask.cache.*;
+import com.morln.app.lbstask.data.cache.*;
 import com.morln.app.lbstask.engine.*;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
+import com.xengine.android.data.cache.XDataRepository;
 import com.xengine.android.data.db.XSQLiteHelper;
 import com.xengine.android.media.graphics.XAndroidScreen;
 import com.xengine.android.media.graphics.XScreen;
@@ -42,7 +43,7 @@ public class SystemMgr {
         fileMgr.setDir(XFileMgr.FILE_TYPE_PHOTO, "photo", true);
         // 初始化网络模块
         XScreen screen = new XAndroidScreen(context);
-        HttpClientHolder.init(context);
+        HttpClientHolder.init(context, "baihewan");
         DownloadMgrHolder.init(HttpClientHolder.getImageHttpClient(),
                 screen.getScreenWidth(), screen.getScreenHeight());
         UploadMgrHolder.init(HttpClientHolder.getImageHttpClient());
@@ -103,7 +104,7 @@ public class SystemMgr {
      * 一部分从SQLite导入。
      */
     private static void initDataSources(Context context) {
-        DataRepo repo = DataRepo.getInstance();
+        XDataRepository repo = DefaultDataRepo.getInstance();
         // 公用数据源
         GlobalStateSource globalStateSource = new GlobalStateSource(context);
         globalStateSource.setLoginStatus(GlobalStateSource.LOGIN_STATUS_NO_LOGIN);
@@ -143,6 +144,10 @@ public class SystemMgr {
 
     public static void clearSystem() {
         // clear image cache
+        MyImageScrollLocalLoader.getInstance().stopAndClear();
+        MyImageScrollRemoteLoader.getInstance().stopAndClear();
+
+        // clear image cache
         MyImageViewLocalLoader.getInstance().clearImageCache();
         MyImageSwitcherLocalLoader.getInstance().clearImageCache();
         MyImageScrollLocalLoader.getInstance().clearImageCache();
@@ -160,7 +165,7 @@ public class SystemMgr {
         BbsPersonMgr.clearInstance();
 
         // clear DataSource
-        DataRepo.clearInstance();
+//        DefaultDataRepo.clearInstance();
     }
 
     /**
@@ -170,7 +175,7 @@ public class SystemMgr {
      * @return
      */
     public int feedback(String content) {
-        GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
+        GlobalStateSource globalStateSource = (GlobalStateSource) DefaultDataRepo.
                 getInstance().getSource(SourceName.GLOBAL_STATE);
         if(globalStateSource.getLoginStatus() == GlobalStateSource.LOGIN_STATUS_NO_LOGIN) {
             return StatusCode.NOT_AUTHORIZED;// 未登陆

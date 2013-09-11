@@ -2,6 +2,7 @@ package com.morln.app.lbstask.ui.person;
 
 import android.app.Dialog;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -47,7 +48,7 @@ public class DEditSignature implements XDialog {
 
         currentSignature = bbsPersonMgr.getMobileSignature();
         totalNumView.setText("" + SIGNATURE_LIMIT);
-        if (XStringUtil.isNullOrEmpty(currentSignature)) {
+        if (TextUtils.isEmpty(currentSignature)) {
             currentNumView.setText("" + 0);
         } else {
             currentNumView.setText("" + currentSignature.length());

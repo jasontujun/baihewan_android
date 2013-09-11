@@ -4,30 +4,26 @@ import android.content.Context;
 import android.content.res.Resources;
 import com.google.gson.reflect.TypeToken;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemUserSource;
-import com.morln.app.lbstask.model.UserBase;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemUserSource;
+import com.morln.app.lbstask.data.model.UserBase;
 import com.morln.app.lbstask.engine.HttpClientHolder;
 import com.morln.app.lbstask.session.bean.CollectionArticle;
 import com.morln.app.lbstask.utils.GsonUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.http.XHttpRequest;
+import com.xengine.android.session.http.XHttpResponse;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fdp.
@@ -61,28 +57,27 @@ public class CollectionAPINew {
             String s = GsonUtil.toString(articleList);
             XLog.d("API", "同步收藏的帖子:" + s);
 
-            HttpPost request = new HttpPost(hostUrl + apiUrl);
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("userName", userName));
-            params.add(new BasicNameValuePair("timeStamp", String.valueOf(timeStamp)));
-            params.add(new BasicNameValuePair("articleList", GsonUtil.toString(articleList)));
-            request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            XHttpRequest request = http
+                    .newRequest(hostUrl + apiUrl)
+                    .setMethod(XHttpRequest.HttpMethod.POST)
+                    .addStringParam("userName", userName)
+                    .addStringParam("timeStamp", String.valueOf(timeStamp))
+                    .addStringParam("articleList", GsonUtil.toString(articleList));
             
-            HttpResponse response = http.execute(request, false);
-            if(response == null){
+            XHttpResponse response = http.execute(request);
+            if (response == null)
                 return StatusCode.HTTP_EXCEPTION;
-            }
 
-            int status = response.getStatusLine().getStatusCode();
+            int status = response.getStatusCode();
             XLog.d("API", "同步收藏的返回码:" + status);
                 SystemUserSource systemUserSource = (SystemUserSource)
-                        DataRepo.getInstance().getSource(SourceName.SYSTEM_USER);
-            Header[] headers = response.getAllHeaders();
-            for (Header header : headers) {
-                if (header.getName().equals("collectionTimeStamp")) {
+                        DefaultDataRepo.getInstance().getSource(SourceName.SYSTEM_USER);
+            Map<String, List<String>> headers = response.getAllHeaders();
+            for (Map.Entry<String, List<String>> header : headers.entrySet()) {
+                if (header.getKey().equals("collectionTimeStamp")) {
                     UserBase user = systemUserSource.getById(userName);
                     if(user != null) {
-                        long collectionTimeStamp = Long.parseLong(header.getValue());
+                        long collectionTimeStamp = Long.parseLong(header.getValue().get(0));
                         user.setCollectionTimeStamp(collectionTimeStamp);
                         XLog.d("API", "返回时，收藏时间戳：" + collectionTimeStamp);
                         systemUserSource.saveToDatabase();
@@ -93,18 +88,17 @@ public class CollectionAPINew {
             articleList.clear();// TIP!!
             if(status == StatusCode.ARTICLE_IS_LATEST) {
                 //如果服务器是最新的则下载最新的收藏列表
-                InputStream is = response.getEntity().getContent();
+                InputStream is = response.getContent();
                 String cnt = XStringUtil.convertStreamToString(is).replaceAll("\\\\r", "");
                 if (cnt != null) {
-                    Type type = new TypeToken<ArrayList<CollectionArticle>>() {
-                    }.getType();
+                    Type type = new TypeToken<ArrayList<CollectionArticle>>() {}.getType();
                     List<CollectionArticle> list = (ArrayList<CollectionArticle>)
                             GsonUtil.toObjectArray(cnt, type);
                     articleList.addAll(list);
                 }
                 is.close();
             }
-            response.getEntity().consumeContent();
+            response.consumeContent();
             return status;
         } catch (IOException e) {
             e.printStackTrace();

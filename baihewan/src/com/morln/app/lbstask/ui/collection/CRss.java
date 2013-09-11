@@ -5,11 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.CollectBoardSource;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.bbs.model.CollectedBoard;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.CollectBoardSource;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.model.CollectedBoard;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.board.CBoardSelector;
@@ -17,6 +16,7 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.data.cache.XDataChangeListener;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
@@ -55,7 +55,8 @@ public class CRss extends XBaseComponent {
     public CRss(XUILayer parent) {
         super(parent);
         bbsBoardMgr = BbsBoardMgr.getInstance();
-        collectBoardSource = (CollectBoardSource) DataRepo.getInstance().getSource(SourceName.BBS_COLLECTION_BOARD);
+        collectBoardSource = (CollectBoardSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.BBS_COLLECTION_BOARD);
 
         setContentView(R.layout.bbs_rss);
         operationBtnFrame = (LinearLayout) findViewById(R.id.operation_btn_frame);

@@ -1,21 +1,17 @@
 package com.morln.app.lbstask.logic;
 
 import android.content.Context;
-import com.morln.app.lbstask.bbs.cache.*;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.ArticleDetail;
-import com.morln.app.lbstask.bbs.model.BbsUserBase;
-import com.morln.app.lbstask.bbs.model.CollectedArticleBase;
-import com.morln.app.lbstask.bbs.session.BbsAPI;
-import com.morln.app.lbstask.cache.*;
-import com.morln.app.lbstask.model.Friend;
-import com.morln.app.lbstask.model.UserBase;
+import android.text.TextUtils;
+import com.morln.app.lbstask.data.cache.*;
+import com.morln.app.lbstask.data.model.*;
+import com.morln.app.lbstask.session.StatusCode;
 import com.morln.app.lbstask.session.apinew.CollectionAPINew;
 import com.morln.app.lbstask.session.apinew.FriendAPINew;
+import com.morln.app.lbstask.session.bbs.BbsAPI;
 import com.morln.app.lbstask.session.bean.CollectionArticle;
-import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
+import com.xengine.android.data.cache.XDataRepository;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +25,7 @@ public class BbsPersonMgr {
     private static BbsPersonMgr instance;
 
     public synchronized static BbsPersonMgr getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new BbsPersonMgr();
         }
         return instance;
@@ -52,7 +48,7 @@ public class BbsPersonMgr {
     private ZoneHotSource zoneHotSource;
 
     private BbsPersonMgr() {
-        DataRepo repo = DataRepo.getInstance();
+        XDataRepository repo = DefaultDataRepo.getInstance();
         systemUserSource = (SystemUserSource) repo.getSource(SourceName.SYSTEM_USER);
         collectArticleSource = (CollectArticleSource) repo.getSource(SourceName.BBS_COLLECTION_ARTICLE);
         systemSettingSource = (SystemSettingSource) repo.getSource(SourceName.SYSTEM_SETTING);
@@ -75,7 +71,7 @@ public class BbsPersonMgr {
         List<ArticleBase> result = new ArrayList<ArticleBase>();
         List<CollectedArticleBase> source = collectArticleSource.
                 getByUsername(globalStateSource.getCurrentUserName());
-        for(int i = 0; i<source.size(); i++) {
+        for (int i = 0; i<source.size(); i++) {
             result.add(source.get(i).getArticle());
         }
         return result;
@@ -87,15 +83,15 @@ public class BbsPersonMgr {
      */
     public void addCollectArticle(String boardId, String articleId) {
         ArticleBase article = boardSource.getArticle(boardId, articleId);
-        if(article == null) {
+        if (article == null) {
             article = historyTop10Source.getById(ArticleBase.createId(boardId, articleId));
         }
-        if(article == null) {
+        if (article == null) {
             article = zoneHotSource.getById(ArticleBase.createId(boardId, articleId));
         }
-        if(article == null) {
+        if (article == null) {
             ArticleDetail articleDetail = articleSource.getById(ArticleDetail.createId(boardId, articleId));
-            if(articleDetail != null) {
+            if (articleDetail != null) {
                 article = articleDetail.createArticleBase();
             }
         }
@@ -107,7 +103,7 @@ public class BbsPersonMgr {
      * @param article
      */
     public void addCollectArticle(ArticleBase article) {
-        if(article == null) {
+        if (article == null) {
             return;
         }
 
@@ -147,9 +143,8 @@ public class BbsPersonMgr {
      * @return
      */
     public boolean containsCollectedArticle(String articleId) {
-        if(XStringUtil.isNullOrEmpty(articleId)) {
+        if (TextUtils.isEmpty(articleId))
             return false;
-        }
 
         String username = globalStateSource.getCurrentUserName();
         return collectArticleSource.getIndexByUsernameId(username, articleId) != -1;
@@ -160,7 +155,7 @@ public class BbsPersonMgr {
      */
     private void updateCollectionTimeStamp(String username) {
         UserBase user = systemUserSource.getById(username);
-        if(user != null) {
+        if (user != null) {
             long oldTimeStamp = user.getCollectionTimeStamp();
             user.setCollectionTimeStamp(oldTimeStamp + 1);
             systemUserSource.saveToDatabase();
@@ -176,7 +171,7 @@ public class BbsPersonMgr {
         String username = globalStateSource.getCurrentUserName();
         List<CollectedArticleBase> localCollection = collectArticleSource.getByUsername(username);
         List<CollectionArticle> sessionList = new ArrayList<CollectionArticle>();
-        for(int i = 0; i<localCollection.size(); i++) {
+        for (int i = 0; i<localCollection.size(); i++) {
             ArticleBase localArticle = localCollection.get(i).getArticle();
             CollectionArticle sessionArticle = CollectionArticle.toSessionBean(localArticle);
             sessionArticle.setUsername(username);
@@ -184,7 +179,7 @@ public class BbsPersonMgr {
         }
         long collectionTimeStamp = 0;
         UserBase user = systemUserSource.getById(username);
-        if(user != null) {
+        if (user != null) {
             collectionTimeStamp = user.getCollectionTimeStamp();
         }
         XLog.d("API", "请求时,时间戳:" + collectionTimeStamp);
@@ -192,10 +187,10 @@ public class BbsPersonMgr {
         int resultCode = new CollectionAPINew(context).syncCollection(username,
                 sessionList, collectionTimeStamp);
         XLog.d("API", "同步收藏返回的列表size:" + sessionList.size());
-        if(resultCode == StatusCode.ARTICLE_IS_LATEST) {
+        if (resultCode == StatusCode.ARTICLE_IS_LATEST) {
             collectArticleSource.deleteByUsername(username);
             List<CollectedArticleBase> localBeans = new ArrayList<CollectedArticleBase>();
-            for(CollectionArticle sessionArticle : sessionList) {
+            for (CollectionArticle sessionArticle : sessionList) {
                 XLog.d("API", "下载的帖子id:" + sessionArticle.getUrl());
                 ArticleBase article = CollectionArticle.toLocalBean(sessionArticle);
                 localBeans.add(new CollectedArticleBase(username, article));
@@ -212,9 +207,8 @@ public class BbsPersonMgr {
      * @return
      */
     public boolean isFriend(String friendName) {
-        if(XStringUtil.isNullOrEmpty(friendName)) {
+        if (TextUtils.isEmpty(friendName))
             return false;
-        }
 
         String username = globalStateSource.getCurrentUserName();
         return userFriendSource.getIndexByUsernameId(username, friendName) != -1;
@@ -227,7 +221,7 @@ public class BbsPersonMgr {
     public int getFriendsFromWeb() {
         List<Friend> friendList = new ArrayList<Friend>();
         int resultCode = BbsAPI.getFriendsFromWeb(friendList);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             userFriendSource.deleteByUsername(globalStateSource.getCurrentUserName());
             userFriendSource.addAll(friendList);// 添加到数据源中
             userFriendSource.saveToDatabase();
@@ -243,7 +237,7 @@ public class BbsPersonMgr {
      */
     public int uploadFriendList(Context context) {
         List<com.morln.app.lbstask.session.bean.friend.Friend> friendList = new ArrayList<com.morln.app.lbstask.session.bean.friend.Friend>();
-        for(int i = 0; i< userFriendSource.size(); i++) {
+        for (int i = 0; i< userFriendSource.size(); i++) {
             Friend f = userFriendSource.get(i);
             friendList.add(f.createSessionFriend());
         }
@@ -259,9 +253,8 @@ public class BbsPersonMgr {
      * @return
      */
     public List<Friend> getFriendList(String ownerName) {
-        if(XStringUtil.isNullOrEmpty(ownerName)) {
+        if (TextUtils.isEmpty(ownerName))
             return new ArrayList<Friend>();
-        }
         
         List<Friend> result = new ArrayList<Friend>();
         for(int i = 0; i<userFriendSource.size(); i++) {
@@ -280,10 +273,10 @@ public class BbsPersonMgr {
      */
     public int addFriend(String username, String customName) {
         int resultCode = BbsAPI.addFriend(username, customName);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             Friend friend = new Friend();
             BbsUserBase userInfo = getBbsUserInfoFromLocal(username);
-            if(userInfo == null) {
+            if (userInfo == null) {
                 userInfo = new BbsUserBase();
                 userInfo.setUsername(username);
             }
@@ -303,7 +296,7 @@ public class BbsPersonMgr {
      */
     public int deleteFriend(String friendName) {
         int resultCode = BbsAPI.deleteFriend(friendName);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             userFriendSource.deleteByUsernameId(globalStateSource.getCurrentUserName(), friendName);
             userFriendSource.saveToDatabase();
         }
@@ -319,7 +312,7 @@ public class BbsPersonMgr {
      */
     public int getPersonArticlesFromWeb(String userId, List<ArticleBase> resultList) {
         int resultCode = BbsAPI.searchArticle(userId, "", "", "", "0", "9999", resultList);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             personArticleSource.addAll(resultList);
         }
         return resultCode;
@@ -343,7 +336,7 @@ public class BbsPersonMgr {
      */
     public int deleteArticle(String board, String articleId) {
         int resultCode = BbsAPI.deleteArticle(board, articleId);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             articleSource.deleteById(ArticleDetail.createId(board, articleId));// 帖子详情中删除此贴
             personArticleSource.deleteById(ArticleBase.createId(board, articleId));
         }
@@ -366,7 +359,7 @@ public class BbsPersonMgr {
      */
     public BbsUserBase getBbsUserInfoFromWeb(String username)  {
         BbsUserBase result = BbsAPI.getBbsUserInfoFromWeb(username);
-        if(result != null) {
+        if (result != null) {
             bbsUserSource.add(result);// 存入本地缓存中
         }
         return result;

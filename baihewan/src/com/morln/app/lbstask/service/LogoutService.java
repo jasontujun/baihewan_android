@@ -3,7 +3,7 @@ package com.morln.app.lbstask.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import com.morln.app.lbstask.bbs.session.BbsAPI;
+import com.morln.app.lbstask.session.bbs.BbsAPI;
 import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.utils.XLog;
 

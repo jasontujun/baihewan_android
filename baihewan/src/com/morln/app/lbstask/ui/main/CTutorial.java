@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.ui.controls.viewflow.CircleFlowIndicator;
 import com.morln.app.lbstask.ui.controls.viewflow.ViewFlow;
 import com.morln.app.lbstask.res.BbsMsg;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
@@ -50,7 +50,8 @@ public class CTutorial extends XBaseComponent {
 
     public CTutorial(XUILayer parent) {
         super(parent);
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         setContentView(R.layout.system_tutorial);
         tutorialEndBtn = (Button) findViewById(R.id.tutorial_end_btn);

@@ -7,12 +7,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.ZoneSource;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.bbs.model.Zone;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.ZoneSource;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.model.Zone;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.utils.AnimationUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
@@ -39,7 +39,8 @@ public class CBoardSelector extends XBaseComponent {
 
     public CBoardSelector(XUILayer parent) {
         super(parent);
-        zoneSource = (ZoneSource) DataRepo.getInstance().getSource(SourceName.BBS_ZONE);
+        zoneSource = (ZoneSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.BBS_ZONE);
 
         setContentView(R.layout.bbs_board_selector);
         zoneList = (ListView) findViewById(R.id.zone_list);

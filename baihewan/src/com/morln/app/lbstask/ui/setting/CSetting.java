@@ -6,11 +6,10 @@ import android.os.Message;
 import android.view.View;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.BoardSource;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
+import com.morln.app.lbstask.data.cache.BoardSource;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.BbsMsg;
@@ -20,6 +19,7 @@ import com.morln.app.lbstask.session.StatusCode;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
@@ -50,7 +50,8 @@ public class CSetting extends XBaseComponent {
 
     public CSetting(XUILayer parent) {
         super(parent);
-        systemSettingSource = (SystemSettingSource) DataRepo.getInstance().getSource(SourceName.SYSTEM_SETTING);
+        systemSettingSource = (SystemSettingSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.SYSTEM_SETTING);
 
         setContentView(R.layout.system_setting);
         frame = (RelativeLayout) findViewById(R.id.frame);
@@ -388,7 +389,8 @@ public class CSetting extends XBaseComponent {
         @Override
         protected void onPostExecute(Integer resultCode) {
             if(StatusCode.isSuccess(resultCode)) {
-                BoardSource boardSource = (BoardSource) DataRepo.getInstance().getSource(SourceName.BBS_BOARD);
+                BoardSource boardSource = (BoardSource) DefaultDataRepo
+                        .getInstance().getSource(SourceName.BBS_BOARD);
                 int boardNumber = boardSource.size();
                 Toast.makeText(getContext(), "更新版面成功！共" + boardNumber + "版面", Toast.LENGTH_SHORT).show();
             }else {

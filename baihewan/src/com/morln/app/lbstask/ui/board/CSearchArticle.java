@@ -1,12 +1,13 @@
 package com.morln.app.lbstask.ui.board;
 
 import android.os.*;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Board;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Board;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.Linear;
@@ -102,12 +103,12 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
                 String fromDay = fromDayInput.getText().toString();
                 String toDay = toDayInput.getText().toString();
 
-                if (XStringUtil.isNullOrEmpty(fromDay)) {
+                if (TextUtils.isEmpty(fromDay)) {
                     Toast.makeText(getContext(),"请填写帖子的时间范围~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(fromDayInput, getContext());
                     return;
                 }
-                if (XStringUtil.isNullOrEmpty(toDay)) {
+                if (TextUtils.isEmpty(toDay)) {
                     Toast.makeText(getContext(),"请填写帖子的时间范围~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(toDayInput, getContext());
                     return;
@@ -128,8 +129,8 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
                     AnimationUtil.startShakeAnimation(toDayInput, getContext());
                     return;
                 }
-                if (XStringUtil.isNullOrEmpty(author) && XStringUtil.isNullOrEmpty(title1) &&
-                        XStringUtil.isNullOrEmpty(title2) && XStringUtil.isNullOrEmpty(title3)) {
+                if (TextUtils.isEmpty(author) && TextUtils.isEmpty(title1) &&
+                        TextUtils.isEmpty(title2) && TextUtils.isEmpty(title3)) {
                     Toast.makeText(getContext(),"搜索条件不足~~", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(searchBtn, getContext());
                     return;

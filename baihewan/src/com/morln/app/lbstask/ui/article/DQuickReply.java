@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -64,7 +65,7 @@ public class DQuickReply implements XDialog {
             @Override
             public void onClick(View view) {
                 content = inputView.getText().toString();
-                if (XStringUtil.isNullOrEmpty(content)) {
+                if (TextUtils.isEmpty(content)) {
                     Toast.makeText(uiLayer.getContext(), "内容不能为空", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(inputView, uiLayer.getContext());
                     return;

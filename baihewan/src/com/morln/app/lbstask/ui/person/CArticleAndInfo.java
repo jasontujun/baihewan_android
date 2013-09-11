@@ -8,14 +8,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.ui.Linear;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
 
@@ -41,7 +41,8 @@ public class CArticleAndInfo extends XBaseComponent implements Linear<ArticleBas
     public CArticleAndInfo(XUILayer parent) {
         super(parent);
         setContentView(R.layout.main_bbs_content);
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         RelativeLayout frame = (RelativeLayout) findViewById(R.id.frame);
         btn1 = (TextView) findViewById(R.id.top_btn1);

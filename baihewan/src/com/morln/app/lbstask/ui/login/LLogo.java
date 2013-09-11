@@ -3,22 +3,22 @@ package com.morln.app.lbstask.ui.login;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.logic.SystemMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.res.SystemPic;
 import com.morln.app.lbstask.utils.LoadingWordUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseLayer;
 import com.xengine.android.system.ui.XUIFrame;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 /**
  * 欢迎界面，是程序的第一个界面。
@@ -114,14 +114,14 @@ public class LLogo extends XBaseLayer {
 
                 // 界面跳转
                 GlobalStateSource globalStateSource = (GlobalStateSource)
-                        DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+                        DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
                 SystemSettingSource systemSettingSource = (SystemSettingSource)
-                        DataRepo.getInstance().getSource(SourceName.SYSTEM_SETTING);
+                        DefaultDataRepo.getInstance().getSource(SourceName.SYSTEM_SETTING);
                 String userName = globalStateSource.getLastUserName();// 上一次用户名
                 String password = globalStateSource.getLastUserPassword();// 上一次密码
                 if (!systemSettingSource.isAutoLogin() ||
-                        XStringUtil.isNullOrEmpty(userName) ||
-                        XStringUtil.isNullOrEmpty(password)) {
+                        TextUtils.isEmpty(userName) ||
+                        TextUtils.isEmpty(password)) {
                     // 非自动登录状态。（未设置自动登录，或没有记住密码）
                     // 跳转到登陆界面
                     endTiming(false);

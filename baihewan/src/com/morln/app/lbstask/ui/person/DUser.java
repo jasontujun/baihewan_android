@@ -8,15 +8,15 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.BbsUserBase;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.model.BbsUserBase;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.ViewUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XDialog;
 import com.xengine.android.system.ui.XUILayer;
@@ -48,7 +48,8 @@ public class DUser implements XDialog {
 
     public DUser(final XUILayer ul, final String userId) {
         this.uiLayer = ul;
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
         bbsPersonMgr = BbsPersonMgr.getInstance();
         userInfo = bbsPersonMgr.getBbsUserInfoFromLocal(userId);
 

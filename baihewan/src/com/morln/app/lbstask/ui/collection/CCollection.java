@@ -8,17 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.CollectArticleSource;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.bbs.model.CollectedArticleBase;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.CollectArticleSource;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.model.CollectedArticleBase;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.utils.AnimationUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.data.cache.XDataChangeListener;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
@@ -55,7 +55,8 @@ public class CCollection extends XBaseComponent implements Linear<ArticleBase> {
 
     public CCollection(XUILayer parent) {
         super(parent);
-        collectArticleSource = (CollectArticleSource) DataRepo.getInstance().getSource(SourceName.BBS_COLLECTION_ARTICLE);
+        collectArticleSource = (CollectArticleSource)
+                DefaultDataRepo.getInstance().getSource(SourceName.BBS_COLLECTION_ARTICLE);
         bbsBoardMgr = BbsBoardMgr.getInstance();
         bbsPersonMgr = BbsPersonMgr.getInstance();
 

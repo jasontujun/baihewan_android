@@ -9,16 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.UserFriendSource;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.UserFriendSource;
 import com.morln.app.lbstask.ui.controls.ChangeImageLayout;
 import com.morln.app.lbstask.ui.controls.ChangeImageTouchListener;
 import com.morln.app.lbstask.ui.controls.DragLayer;
 import com.morln.app.lbstask.ui.controls.XListView;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
-import com.morln.app.lbstask.model.Friend;
+import com.morln.app.lbstask.data.model.Friend;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.res.FuncBarPic;
 import com.morln.app.lbstask.res.MainMsg;
@@ -26,6 +25,7 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.ui.person.TAddFriend;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.data.cache.XDataChangeListener;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
@@ -57,8 +57,10 @@ public class CFriendBar extends XBaseComponent {
         super(parent);
         setContentView(R.layout.main_right_bar);
         bbsPersonMgr = BbsPersonMgr.getInstance();
-        friendSource = (UserFriendSource) DataRepo.getInstance().getSource(SourceName.USER_FRIEND);
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        friendSource = (UserFriendSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.USER_FRIEND);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         frame = (RelativeLayout) findViewById(R.id.frame);
         shadow = (RelativeLayout) findViewById(R.id.shadow);

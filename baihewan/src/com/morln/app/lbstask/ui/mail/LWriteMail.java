@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.ExpressionMap;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
+import com.morln.app.lbstask.utils.ExpressionMap;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.logic.BbsArticleMgr;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.BbsMsg;
@@ -22,11 +22,11 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseLayer;
 import com.xengine.android.system.ui.XUIFrame;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 import java.io.File;
 
@@ -62,7 +62,8 @@ public class LWriteMail extends XBaseLayer {
         this.receiver = r;
         bbsMailMgr = BbsMailMgr.getInstance();
         expressionMap = ExpressionMap.getInstance();
-        systemSettingSource = (SystemSettingSource) DataRepo.getInstance().getSource(SourceName.SYSTEM_SETTING);
+        systemSettingSource = (SystemSettingSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.SYSTEM_SETTING);
 
         setContentView(R.layout.bbs_write_mail);
         frame = (RelativeLayout) findViewById(R.id.frame);
@@ -81,16 +82,16 @@ public class LWriteMail extends XBaseLayer {
         // 设置当前接受者
         receiverNameView.setText(receiver);
         // 初始化标题
-        if (!XStringUtil.isNullOrEmpty(title)) {
+        if (!TextUtils.isEmpty(title)) {
             titleInput.setText(title);
         }
         // 初始化内容
-        if (!XStringUtil.isNullOrEmpty(content)) {
+        if (!TextUtils.isEmpty(content)) {
             titleInput.setText(content);
         }
         // 设置签名
         String s = systemSettingSource.getMobileSignature();
-        if (XStringUtil.isNullOrEmpty(s)) {
+        if (TextUtils.isEmpty(s)) {
             signature.setText("还没有手机签名哦~");
             signature.setTextColor(getContext().getResources().getColor(R.color.gray));
         } else {

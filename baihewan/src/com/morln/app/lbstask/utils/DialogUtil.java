@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,7 +138,7 @@ public class DialogUtil {
         Button cancelBtn = (Button) dialog.findViewById(R.id.dialog_close_btn);
 
         final List<EditText> inputControls = new ArrayList<EditText>();
-        for(int i = 0; i<inputLabelList.length; i++) {
+        for (int i = 0; i<inputLabelList.length; i++) {
             EditText item = new EditText(activity);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.FILL_PARENT, uiFrame.screen().dp2px(45));
@@ -155,19 +156,19 @@ public class DialogUtil {
             @Override
             public void onClick(View view) {
                 List<String> resultList = new ArrayList<String>();
-                for(int i = 0; i < inputLabelList.length; i++) {
+                for (int i = 0; i < inputLabelList.length; i++) {
                     EditText inputControl = inputControls.get(i);
                     String result = inputControl.getText().toString();
-                    if(XStringUtil.isNullOrEmpty(result)) {
+                    if (TextUtils.isEmpty(result)) {
                         Toast.makeText(uiFrame.getContext(),
                                 inputLabelList[i] + "不能为空！", Toast.LENGTH_SHORT).show();
                         AnimationUtil.startShakeAnimation(inputControl, uiFrame.getContext());
                         return;
-                    }else {
+                    } else {
                         resultList.add(result);
                     }
                 }
-                if(listener != null) {
+                if (listener != null) {
                     listener.onInputFinished(resultList);
                 }
                 dialog.dismiss();
@@ -198,7 +199,7 @@ public class DialogUtil {
         TextView titleView = (TextView) dialog.findViewById(R.id.dialog_title);
         LinearLayout itemListView = (LinearLayout) dialog.findViewById(R.id.dialog_item_list);
 
-        for(int i = 0; i<itemList.length; i++) {
+        for (int i = 0; i<itemList.length; i++) {
             final int index = i;
             TextView item = new TextView(uiFrame.getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -212,9 +213,8 @@ public class DialogUtil {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                    if(listener != null) {
+                    if (listener != null)
                         listener.onSelected(index);
-                    }
                 }
             });
             itemListView.addView(item, params);
@@ -240,15 +240,15 @@ public class DialogUtil {
         }
 
         public void show(String title, String msg) {
-            if(title == null || title.equals("")){
+            if (title == null || title.equals("")){
                 this.title.setVisibility(View.GONE);
-            }else {
+            } else {
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(title);
             }
-            if(msg == null || msg.equals("")){
+            if (msg == null || msg.equals("")){
                 this.msg.setVisibility(View.GONE);
-            }else {
+            } else {
                 this.msg.setVisibility(View.VISIBLE);
                 this.msg.setText(msg);
             }
@@ -320,15 +320,15 @@ public class DialogUtil {
         }
 
         public void show(String title, String msg) {
-            if(title == null || title.equals("")){
+            if (title == null || title.equals("")){
                 this.title.setVisibility(View.GONE);
-            }else {
+            } else {
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(title);
             }
-            if(msg == null || msg.equals("")){
+            if (msg == null || msg.equals("")){
                 this.msg.setVisibility(View.GONE);
-            }else {
+            } else {
                 this.msg.setVisibility(View.VISIBLE);
                 this.msg.setText(msg);
             }
@@ -354,9 +354,9 @@ public class DialogUtil {
         }
 
         public void show(String title) {
-            if(XStringUtil.isNullOrEmpty(title)){
+            if (TextUtils.isEmpty(title)){
                 this.title.setVisibility(View.GONE);
-            }else {
+            } else {
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(title);
             }
@@ -385,9 +385,9 @@ public class DialogUtil {
         }
 
         public void show(String title) {
-            if(XStringUtil.isNullOrEmpty(title)){
+            if (TextUtils.isEmpty(title)){
                 this.title.setVisibility(View.GONE);
-            }else {
+            } else {
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(title);
             }

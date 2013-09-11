@@ -2,6 +2,7 @@ package com.morln.app.lbstask.ui.about;
 
 import android.app.Dialog;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -54,7 +55,7 @@ public class DFeedback implements XDialog {
             @Override
             public void onClick(View view) {
                 content = inputView.getText().toString();
-                if (XStringUtil.isNullOrEmpty(content)) {
+                if (TextUtils.isEmpty(content)) {
                     Toast.makeText(uiFrame.getContext(), "内容不能为空", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(inputView, uiFrame.getContext());
                     return;

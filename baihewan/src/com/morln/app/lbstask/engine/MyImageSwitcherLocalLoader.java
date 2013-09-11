@@ -1,8 +1,8 @@
 package com.morln.app.lbstask.engine;
 
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.ImageSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.ImageSource;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.media.image.loader.XImageSwitcherLocalLoader;
 
 /**
@@ -29,7 +29,7 @@ public class MyImageSwitcherLocalLoader extends XImageSwitcherLocalLoader {
 
     @Override
     public String getLocalImage(String imgUrl) {
-        ImageSource imageSource = (ImageSource) DataRepo.
+        ImageSource imageSource = (ImageSource) DefaultDataRepo.
                 getInstance().getSource(SourceName.IMAGE);
         return imageSource.getLocalImage(imgUrl);
     }

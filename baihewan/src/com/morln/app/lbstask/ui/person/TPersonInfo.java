@@ -1,7 +1,7 @@
 package com.morln.app.lbstask.ui.person;
 
 import android.os.AsyncTask;
-import com.morln.app.lbstask.bbs.model.BbsUserBase;
+import com.morln.app.lbstask.data.model.BbsUserBase;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.xengine.android.system.ui.XUIFrame;

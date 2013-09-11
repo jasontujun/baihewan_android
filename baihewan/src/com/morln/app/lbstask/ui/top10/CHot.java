@@ -6,11 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.ZoneSource;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.ZoneSource;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.ui.controls.XListView;
 import com.morln.app.lbstask.logic.BbsArticleMgr;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
@@ -19,6 +18,7 @@ import com.morln.app.lbstask.ui.Linear;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
@@ -61,7 +61,8 @@ public class CHot extends XBaseComponent implements Linear<ArticleBase> {
         setContentView(R.layout.bbs_top10);
         bbsArticleMgr = BbsArticleMgr.getInstance();
         bbsBoardMgr = BbsBoardMgr.getInstance();
-        zoneSource = (ZoneSource) DataRepo.getInstance().getSource(SourceName.BBS_ZONE);
+        zoneSource = (ZoneSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.BBS_ZONE);
 
         topBarFrame = (RelativeLayout) findViewById(R.id.top_frame);
         titleFrame = (RelativeLayout) findViewById(R.id.title_frame);

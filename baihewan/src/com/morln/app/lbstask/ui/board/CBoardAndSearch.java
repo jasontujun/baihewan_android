@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.Mail;
+import com.morln.app.lbstask.data.model.Mail;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.xengine.android.system.ui.XBaseComponent;

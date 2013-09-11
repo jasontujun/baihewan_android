@@ -11,8 +11,8 @@ import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.xengine.android.media.graphics.util.XGraphicUtil;
-import com.xengine.android.media.image.XAndroidImageLocalMgr;
-import com.xengine.android.media.image.XImageLocalMgr;
+import com.xengine.android.media.image.processor.XAndroidImageProcessor;
+import com.xengine.android.media.image.processor.XImageProcessor;
 import com.xengine.android.system.mobile.XPhotoListener;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XDialog;
@@ -122,7 +122,7 @@ public class DPhoto implements XDialog {
                 if (isCompressed) {
                     compressRate = 75;
                 }
-                XAndroidImageLocalMgr.getInstance().saveImageToSd(photoFile.getName(), bitmap,
+                XAndroidImageProcessor.getInstance().saveImageToSd(photoFile.getName(), bitmap,
                         Bitmap.CompressFormat.JPEG, compressRate);
                 if (bitmap != null) {
                     bitmap.recycle();
@@ -170,8 +170,8 @@ public class DPhoto implements XDialog {
                     attrFrame.setVisibility(View.VISIBLE);
 
                     photoFile = file;
-                    bitmap = XAndroidImageLocalMgr.getInstance()
-                            .getLocalImage(file.getName(), XImageLocalMgr.ImageSize.SCREEN);
+                    bitmap = XAndroidImageProcessor.getInstance()
+                            .getLocalImage(file.getName(), XImageProcessor.ImageSize.SCREEN);
                     photoView.setImageBitmap(bitmap);
                     sizeView.setText(XStringUtil.fileSize2String(photoFile.length()));
                 } catch (IOException e1) {

@@ -8,6 +8,8 @@ import com.morln.app.lbstask.session.bean.top10.Top10Content;
 import com.morln.app.lbstask.utils.GsonUtil;
 import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.http.XHttpRequest;
+import com.xengine.android.session.http.XHttpResponse;
 import com.xengine.android.session.http.XURLBuilder;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
@@ -50,13 +52,13 @@ public class Top10ContentAPINew {
                 build();
 
         try {
-            HttpGet httpGet = new HttpGet(url);
-            HttpResponse response = http.execute(httpGet, false);
+            XHttpRequest request = http.newRequest(url);
+            XHttpResponse response = http.execute(request);
 
-            int status = response.getStatusLine().getStatusCode();
+            int status = response.getStatusCode();
             XLog.d("API", "向服务器获取十大内容的返回码：" + status);
             if (StatusCode.isSuccess(status)) {
-                InputStream is = response.getEntity().getContent();
+                InputStream is = response.getContent();
                 String cnt = XStringUtil.convertStreamToString(is).replaceAll("\\\\r", "");
                 XLog.d("API", "向服务器获取十大内容：" + cnt);
                 if (cnt != null) {

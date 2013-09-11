@@ -7,17 +7,17 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.ArticleDetail;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.model.ArticleDetail;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsArticleMgr;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseLayer;
 import com.xengine.android.system.ui.XUIFrame;
@@ -128,7 +128,7 @@ public class LReadArticle extends XBaseLayer {
             @Override
             public void onClick(View view) {
                 // 登陆权限检测
-                GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
+                GlobalStateSource globalStateSource = (GlobalStateSource) DefaultDataRepo.
                         getInstance().getSource(SourceName.GLOBAL_STATE);
                 if(!globalStateSource.isLogin()) {
                     new DLogin(LReadArticle.this, true).show();

@@ -1,22 +1,23 @@
 package com.morln.app.lbstask.logic;
 
 import android.content.Context;
-import com.morln.app.lbstask.bbs.cache.BoardSource;
-import com.morln.app.lbstask.bbs.cache.CollectBoardSource;
-import com.morln.app.lbstask.bbs.cache.TodayHotBoardSource;
-import com.morln.app.lbstask.bbs.cache.ZoneSource;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.bbs.model.CollectedBoard;
-import com.morln.app.lbstask.bbs.model.Zone;
-import com.morln.app.lbstask.bbs.session.BbsAPI;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import android.text.TextUtils;
+import com.morln.app.lbstask.data.cache.BoardSource;
+import com.morln.app.lbstask.data.cache.CollectBoardSource;
+import com.morln.app.lbstask.data.cache.TodayHotBoardSource;
+import com.morln.app.lbstask.data.cache.ZoneSource;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.model.CollectedBoard;
+import com.morln.app.lbstask.data.model.Zone;
+import com.morln.app.lbstask.session.bbs.BbsAPI;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.session.apinew.BoardAPINew;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
+import com.xengine.android.data.cache.XDataRepository;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class BbsBoardMgr {
     private TodayHotBoardSource todayHotBoardSource;
 
     private BbsBoardMgr() {
-        DataRepo repo = DataRepo.getInstance();
+        XDataRepository repo = DefaultDataRepo.getInstance();
         globalStateSource = (GlobalStateSource) repo.getSource(SourceName.GLOBAL_STATE);
         zoneSource = (ZoneSource) repo.getSource(SourceName.BBS_ZONE);
         boardSource = (BoardSource) repo.getSource(SourceName.BBS_BOARD);
@@ -132,7 +133,7 @@ public class BbsBoardMgr {
     public List<Board> getFilteredBoardList(String currentZone, String input) {
         List<Board> resultList = new ArrayList<Board>();
         List<Board> sourceList;
-        if (XStringUtil.isNullOrEmpty(currentZone)) {
+        if (TextUtils.isEmpty(currentZone)) {
             sourceList = boardSource.copyAll();
         } else {
             Zone zone = zoneSource.get(currentZone);
@@ -189,9 +190,8 @@ public class BbsBoardMgr {
      * @return
      */
     public boolean containsCollectedBoard(String boardId) {
-        if (XStringUtil.isNullOrEmpty(boardId)) {
+        if (TextUtils.isEmpty(boardId))
             return false;
-        }
 
         String username = globalStateSource.getCurrentUserName();
         return collectBoardSource.getIndexByUsernameId(username, boardId) != -1;
@@ -202,9 +202,8 @@ public class BbsBoardMgr {
      * @param boardId
      */
     public void addCollectedBoard(String boardId) {
-        if (XStringUtil.isNullOrEmpty(boardId)) {
+        if (TextUtils.isEmpty(boardId))
             return;
-        }
 
         String username = globalStateSource.getCurrentUserName();
         CollectedBoard board = new CollectedBoard(username, boardId);
@@ -230,9 +229,9 @@ public class BbsBoardMgr {
      * @param boardId
      */
     public void deleteCollectedBoard(String boardId) {
-        if (XStringUtil.isNullOrEmpty(boardId)) {
+        if (TextUtils.isEmpty(boardId))
             return;
-        }
+
         CollectedBoard board = new CollectedBoard(globalStateSource.getCurrentUserName(), boardId);
         collectBoardSource.deleteByUsernameId(board.getUserName(), board.getBoardId());
         collectBoardSource.saveToDatabase();// 同步到数据库

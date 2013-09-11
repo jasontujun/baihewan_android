@@ -3,21 +3,21 @@ package com.morln.app.lbstask.ui.login;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.LoginMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.res.SystemPic;
 import com.morln.app.lbstask.utils.AnimationUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseLayer;
 import com.xengine.android.system.ui.XUIFrame;
-import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.
@@ -50,7 +50,8 @@ public class LLogin extends XBaseLayer {
         super(uiFrame);
 
         loginMgr = LoginMgr.getInstance();
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         setContentView(R.layout.entrance_login);
         frame = (RelativeLayout) findViewById(R.id.bg);
@@ -94,13 +95,13 @@ public class LLogin extends XBaseLayer {
             @Override
             public void onClick(View view) {
                 username = usernameInputView.getText().toString();
-                if (XStringUtil.isNullOrEmpty(username)) {
+                if (TextUtils.isEmpty(username)) {
                     Toast.makeText(getContext(), "请填写用户名……", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(usernameInputView, getContext());
                     return;
                 }
                 password = passwordInputView.getText().toString();
-                if (XStringUtil.isNullOrEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(getContext(), "请填写密码……", Toast.LENGTH_SHORT).show();
                     AnimationUtil.startShakeAnimation(passwordInputView, getContext());
                     return;

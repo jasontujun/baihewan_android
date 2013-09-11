@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.ui.controls.DragLayer;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.morln.app.lbstask.ui.Linear;
@@ -23,6 +22,7 @@ import com.morln.app.lbstask.ui.mail.CMail;
 import com.morln.app.lbstask.ui.person.CArticleAndInfo;
 import com.morln.app.lbstask.ui.setting.CSetting;
 import com.morln.app.lbstask.ui.top10.CTopAndHot;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XBaseLayer;
@@ -66,7 +66,8 @@ public class LMain extends XBaseLayer implements Linear<ArticleBase> {
 
     public LMain(XUIFrame uiFrame) {
         super(uiFrame);
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         setContentView(R.layout.main_frame);
         frame = (RelativeLayout) findViewById(R.id.frame);

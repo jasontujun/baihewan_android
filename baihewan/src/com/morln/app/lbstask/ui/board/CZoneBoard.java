@@ -5,18 +5,18 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.*;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.TodayHotBoardSource;
-import com.morln.app.lbstask.bbs.cache.ZoneSource;
-import com.morln.app.lbstask.bbs.model.Board;
-import com.morln.app.lbstask.bbs.model.Zone;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.TodayHotBoardSource;
+import com.morln.app.lbstask.data.cache.ZoneSource;
+import com.morln.app.lbstask.data.model.Board;
+import com.morln.app.lbstask.data.model.Zone;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsBoardMgr;
 import com.morln.app.lbstask.res.BbsPic;
 import com.morln.app.lbstask.res.MainMsg;
@@ -24,10 +24,10 @@ import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.utils.NumberUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +72,10 @@ public class CZoneBoard extends XBaseComponent {
     public CZoneBoard(XUILayer parent) {
         super(parent);
         bbsBoardMgr = BbsBoardMgr.getInstance();
-        zoneSource = (ZoneSource) DataRepo.getInstance().getSource(SourceName.BBS_ZONE);
-        todayHotBoardSource = (TodayHotBoardSource) DataRepo.getInstance().getSource(SourceName.BBS_TODAY_HOT_BOARD);
+        zoneSource = (ZoneSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.BBS_ZONE);
+        todayHotBoardSource = (TodayHotBoardSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.BBS_TODAY_HOT_BOARD);
 
         setContentView(R.layout.bbs_zone_board);
         frame = (RelativeLayout) findViewById(R.id.frame);
@@ -94,7 +96,7 @@ public class CZoneBoard extends XBaseComponent {
             @Override
             public void afterTextChanged(Editable editable) {
                 String s = searchBoardView.getText().toString();
-                if (!XStringUtil.isNullOrEmpty(s)) {
+                if (!TextUtils.isEmpty(s)) {
                     searchResultList = bbsBoardMgr.getFilteredBoardList("", s);// 任何情况下都全局搜索
                     goToSearch();// 跳到搜索结果界面
                 } else {
@@ -186,7 +188,7 @@ public class CZoneBoard extends XBaseComponent {
         searchResultList = null;
 
         String s = searchBoardView.getText().toString();
-        if(!XStringUtil.isNullOrEmpty(s)) {
+        if(!TextUtils.isEmpty(s)) {
             searchBoardView.setText("");
             searchBoardView.requestFocus();
         }

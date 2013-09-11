@@ -2,31 +2,31 @@ package com.morln.app.lbstask.ui.mail;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.ExpressionMap;
-import com.morln.app.lbstask.bbs.model.BbsUserBase;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.ImageSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.utils.ExpressionMap;
+import com.morln.app.lbstask.data.model.BbsUserBase;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.ImageSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.engine.MyImageScrollRemoteLoader;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
-import com.morln.app.lbstask.model.UserBase;
+import com.morln.app.lbstask.data.model.UserBase;
 import com.morln.app.lbstask.res.BbsPic;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.person.DUser;
 import com.morln.app.lbstask.ui.person.TPersonInfo;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.media.image.loader.XImageLocalUrl;
 import com.xengine.android.media.image.loader.XScrollRemoteLoader;
 import com.xengine.android.media.image.processor.XImageProcessor;
 import com.xengine.android.session.download.XSerialDownloadListener;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.List;
 
@@ -65,7 +65,8 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
         this.layer = layer;
         this.host = host;
 
-        imageSource = (ImageSource) DataRepo.getInstance().getSource(SourceName.IMAGE);
+        imageSource = (ImageSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.IMAGE);
         expressionMap = ExpressionMap.getInstance();
         mImageScrollLoader = MyImageScrollRemoteLoader.getInstance();
         mImageScrollLoader.setWorking();
@@ -274,7 +275,7 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
                 }
                 int wordBlockIndex = itemIndexArray[position];
                 String word = mail.getWordBlocks().get(wordBlockIndex);
-                if (!XStringUtil.isNullOrEmpty(word)) {
+                if (!TextUtils.isEmpty(word)) {
                     // 把表情符替换为表情图片
                     CharSequence spannedWord = expressionMap.changeToSpanString(layer, word);
                     holderWord.wordView.setText(spannedWord);
@@ -304,7 +305,7 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
                         (imgIndex, imgUrl, holderImage.imageView, mail.getImgUrls()));
                 // 设置图片大小
                 ViewGroup.LayoutParams params = holderImage.imageView.getLayoutParams();
-                if (XStringUtil.isNullOrEmpty(localImg) || localImg.equals(XImageLocalUrl.IMG_ERROR) ||
+                if (TextUtils.isEmpty(localImg) || localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
                     params.height = layer.screen().dp2px(88);
@@ -398,7 +399,7 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
                 final String localImg = imageSource.getLocalImage(imgUrl);
                 // 设置图片大小
                 ViewGroup.LayoutParams params = imageViewByTag.getLayoutParams();
-                if (XStringUtil.isNullOrEmpty(localImg) ||
+                if (TextUtils.isEmpty(localImg) ||
                         localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
@@ -431,7 +432,7 @@ public class AMail extends BaseAdapter implements AbsListView.OnScrollListener  
         @Override
         public void onClick(View view) {
             final String localImg = imageSource.getLocalImage(imgUrl);
-            if (XStringUtil.isNullOrEmpty(localImg)) {
+            if (TextUtils.isEmpty(localImg)) {
                 // 下载图片
                 mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
                         imageView, XImageProcessor.ImageSize.SCREEN,

@@ -2,7 +2,7 @@ package com.morln.app.lbstask.utils;
 
 import android.view.View;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.model.UserBase;
+import com.morln.app.lbstask.data.model.UserBase;
 
 /**
  * Created by jasontujun.

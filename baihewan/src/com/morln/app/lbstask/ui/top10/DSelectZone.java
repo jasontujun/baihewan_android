@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.ZoneSource;
-import com.morln.app.lbstask.bbs.model.Zone;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.ZoneSource;
+import com.morln.app.lbstask.data.model.Zone;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.ui.controls.ChangeImageLayout;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XDialog;
 import com.xengine.android.system.ui.XUILayer;
@@ -35,7 +35,8 @@ public class DSelectZone implements XDialog {
     public DSelectZone(final XUILayer ul, SelectZoneListener listener) {
         this.uiLayer = ul;
         this.listener = listener;
-        zoneSource = (ZoneSource) DataRepo.getInstance().getSource(SourceName.BBS_ZONE);
+        zoneSource = (ZoneSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.BBS_ZONE);
 
         XBaseFrame activity = (XBaseFrame) uiLayer.getUIFrame();
         dialog = new Dialog(activity, R.style.dialog);

@@ -1,21 +1,23 @@
 package com.morln.app.lbstask.logic;
 
 import android.content.Context;
-import com.morln.app.lbstask.bbs.cache.ArticleSource;
-import com.morln.app.lbstask.bbs.cache.HistoryTop10Source;
-import com.morln.app.lbstask.bbs.cache.ZoneHotSource;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.ArticleDetail;
-import com.morln.app.lbstask.bbs.model.Top10ArticleBase;
-import com.morln.app.lbstask.bbs.session.BbsAPI;
-import com.morln.app.lbstask.bbs.utils.BbsSignature;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
+import android.text.TextUtils;
+import com.morln.app.lbstask.data.cache.ArticleSource;
+import com.morln.app.lbstask.data.cache.HistoryTop10Source;
+import com.morln.app.lbstask.data.cache.ZoneHotSource;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.ArticleDetail;
+import com.morln.app.lbstask.data.model.Top10ArticleBase;
+import com.morln.app.lbstask.session.bbs.BbsAPI;
+import com.morln.app.lbstask.utils.BbsSignature;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.session.apinew.Top10APINew;
 import com.morln.app.lbstask.session.apinew.Top10ContentAPINew;
 import com.morln.app.lbstask.session.bean.top10.Top10Content;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
+import com.xengine.android.data.cache.XDataRepository;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
 
@@ -49,7 +51,7 @@ public class BbsArticleMgr {
     private SystemSettingSource systemSettingSource;
 
     private BbsArticleMgr() {
-        DataRepo repo = DataRepo.getInstance();
+        XDataRepository repo = DefaultDataRepo.getInstance();
         articleSource = (ArticleSource) repo.getSource(SourceName.BBS_ARTICLE);
         top10Source = (HistoryTop10Source) repo.getSource(SourceName.BBS_TOP10);
         zoneHotSource = (ZoneHotSource) repo.getSource(SourceName.BBS_ZONE_HOT);
@@ -68,10 +70,10 @@ public class BbsArticleMgr {
      * 获取网页十大。
      * @return 返回结果码
      */
-    public synchronized  int getTop10FromWeb() {
+    public synchronized int getTop10FromWeb() {
         List<Top10ArticleBase> top10 = new ArrayList<Top10ArticleBase>();
         int resultCode = BbsAPI.getTop10FromWeb(top10);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             top10Source.addAll(top10);
         }
         return resultCode;
@@ -85,15 +87,14 @@ public class BbsArticleMgr {
         List<com.morln.app.lbstask.session.bean.top10.Top10ArticleBase> top10List =
                 new ArrayList<com.morln.app.lbstask.session.bean.top10.Top10ArticleBase>();
         int resultCode = new Top10APINew(context).getTop10ByIndex(startIndex, endIndex, top10List);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             // 检测有无更新数据
-            if(top10List.size() == 0) {
-                XLog.d("TOP10", "没有更新的十大了……");
+            if (top10List.size() == 0)
                 return StatusCode.NO_MORE_SUCCESS;
-            }
+
             // 将十大存入数据源
             List<Top10ArticleBase> resultList = new ArrayList<Top10ArticleBase>();
-            for(int i = 0; i < top10List.size(); i++) {
+            for (int i = 0; i < top10List.size(); i++) {
                 com.morln.app.lbstask.session.bean.top10.Top10ArticleBase serverTopArticle = top10List.get(i);
                 Date firstTime = new Date(serverTopArticle.getFirstTime());
                 Date lastTime = new Date(serverTopArticle.getLastTime());
@@ -118,7 +119,7 @@ public class BbsArticleMgr {
         int resultCode = new Top10APINew(context).getTop10ByDate(year, month, day, top10List);
         XLog.d("TOP10", "向服务器获取历史十大的返回码:"+resultCode);
         XLog.d("TOP10", "list size:"+top10List.size());
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             // 检测有无更新数据
             if(top10List.size() == 0) {
                 XLog.d("TOP10","没有更新的十大了……");
@@ -126,7 +127,7 @@ public class BbsArticleMgr {
             }
             // 将十大存入数据源
             List<Top10ArticleBase> resultList = new ArrayList<Top10ArticleBase>();
-            for(int i = 0; i < top10List.size(); i++) {
+            for (int i = 0; i < top10List.size(); i++) {
                 com.morln.app.lbstask.session.bean.top10.Top10ArticleBase serverTopArticle = top10List.get(i);
                 Date firstTime = new Date(serverTopArticle.getFirstTime());
                 Date lastTime = new Date(serverTopArticle.getLastTime());
@@ -161,16 +162,16 @@ public class BbsArticleMgr {
     public ArticleDetail getThemeArticleFromWeb(String boardStr, String articleIdStr, int pageStr) {
         List<ArticleDetail> articleDetailList = new ArrayList<ArticleDetail>();
         int resultCode = BbsAPI.getThemeArticleFromWeb(boardStr, articleIdStr, pageStr, articleDetailList);
-        if(StatusCode.isSuccess(resultCode)) {
-            for(int i = 0; i<articleDetailList.size(); i++) {
+        if (StatusCode.isSuccess(resultCode)) {
+            for (int i = 0; i<articleDetailList.size(); i++) {
                 articleSource.add(articleDetailList.get(i));
             }
-            if(articleDetailList.size() > 0) {
+            if (articleDetailList.size() > 0) {
                 return articleDetailList.get(0);
-            }else {
+            } else {
                 return null;
             }
-        }else {
+        } else {
             return null;
         }
     }
@@ -183,12 +184,11 @@ public class BbsArticleMgr {
     public ArticleDetail getArticleFromServer(Context context, String articleId, String boardId) {
         Top10Content articleContent = new Top10Content();
         int resultCode = new Top10ContentAPINew(context).getTopContent(articleId, boardId, articleContent);
-        if(!StatusCode.isSuccess(resultCode)) {
+        if (!StatusCode.isSuccess(resultCode))
             return null;
-        }
 
         ArticleDetail articleDetail = BbsAPI.parseNormalArticleContent(articleContent.getContent());
-        if(articleDetail != null) {
+        if (articleDetail != null) {
             articleDetail.setId(articleId);
             articleDetail.setDeleted(true);
             articleSource.add(articleDetail);
@@ -245,7 +245,7 @@ public class BbsArticleMgr {
         content = content + "\n"+"\n"+"-\n";
         String signature = systemSettingSource.getMobileSignature();
         content = content + BbsSignature.signature;// TIP 内容结尾填上产品签名
-        if(!XStringUtil.isNullOrEmpty(signature)) {
+        if (!TextUtils.isEmpty(signature)) {
             content = content + ": " + signature +"\n";// 添加手机签名
         }
         return BbsAPI.sendArticle(board, title, content, pid, reid);
@@ -261,7 +261,7 @@ public class BbsArticleMgr {
      */
     public int replyArticle(String articleId, String board, String title, String content) {
         String pid = BbsAPI.getPid(articleId, board);
-        if(pid == null || pid.equals("")) {
+        if (pid == null || pid.equals("")) {
             return StatusCode.FAIL;
         }
         String reid = articleId.substring(2, articleId.indexOf(".A"));
@@ -277,9 +277,9 @@ public class BbsArticleMgr {
     public synchronized int getZoneHotFromWeb(int sec) {
         List<ArticleBase> articleBaseList = new ArrayList<ArticleBase>();
         int resultCode = BbsAPI.getZoneHotFromWeb(sec, articleBaseList);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             // 存入数据源
-            for(int i = 0; i<articleBaseList.size(); i++) {
+            for (int i = 0; i<articleBaseList.size(); i++) {
                 zoneHotSource.add(articleBaseList.get(i));
             }
         }

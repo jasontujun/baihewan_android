@@ -5,10 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.cache.MailSource;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.MailSource;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.ui.controls.XListView;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.res.BbsMsg;
@@ -19,6 +18,7 @@ import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
@@ -50,7 +50,8 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
     public CMail(XUILayer parent) {
         super(parent);
         bbsMailMgr = BbsMailMgr.getInstance();
-        mailSource = (MailSource) DataRepo.getInstance().getSource(SourceName.USER_MAIL);
+        mailSource = (MailSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.USER_MAIL);
 
         setContentView(R.layout.bbs_mail);
         frame = (RelativeLayout) findViewById(R.id.frame);

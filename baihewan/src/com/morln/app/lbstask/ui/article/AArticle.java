@@ -3,33 +3,33 @@ package com.morln.app.lbstask.ui.article;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.ExpressionMap;
-import com.morln.app.lbstask.bbs.model.ArticleDetail;
-import com.morln.app.lbstask.bbs.model.BbsUserBase;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.ImageSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.utils.ExpressionMap;
+import com.morln.app.lbstask.data.model.ArticleDetail;
+import com.morln.app.lbstask.data.model.BbsUserBase;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.ImageSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.engine.MyImageScrollRemoteLoader;
 import com.morln.app.lbstask.logic.BbsArticleMgr;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
-import com.morln.app.lbstask.model.UserBase;
+import com.morln.app.lbstask.data.model.UserBase;
 import com.morln.app.lbstask.res.BbsPic;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.ui.person.DUser;
 import com.morln.app.lbstask.ui.person.TPersonInfo;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.media.image.loader.XImageLocalUrl;
 import com.xengine.android.media.image.loader.XScrollRemoteLoader;
 import com.xengine.android.media.image.processor.XImageProcessor;
 import com.xengine.android.session.download.XSerialDownloadListener;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,8 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         this.layer = layer;
         this.host = host;
 
-        imageSource = (ImageSource) DataRepo.getInstance().getSource(SourceName.IMAGE);
+        imageSource = (ImageSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.IMAGE);
         expressionMap = ExpressionMap.getInstance();
         mImageScrollLoader = MyImageScrollRemoteLoader.getInstance();
         mImageScrollLoader.setWorking();
@@ -333,7 +334,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 }
                 int wordBlockIndex = itemIndexArray[position];
                 String word = article.getWordBlocks().get(wordBlockIndex);
-                if (!XStringUtil.isNullOrEmpty(word)) {
+                if (!TextUtils.isEmpty(word)) {
                     // 把表情符替换为表情图片
                     CharSequence spannedWord = expressionMap.changeToSpanString(layer, word);
                     holderWord.wordView.setText(spannedWord);
@@ -363,7 +364,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                         (imgIndex, imgUrl, holderImage.imageView, article.getImgUrls()));
                 // 设置图片大小
                 ViewGroup.LayoutParams params = holderImage.imageView.getLayoutParams();
-                if (XStringUtil.isNullOrEmpty(localImg) ||
+                if (TextUtils.isEmpty(localImg) ||
                         localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
@@ -407,7 +408,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                     @Override
                     public void onClick(View view) {
                         // 登陆权限检测
-                        GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
+                        GlobalStateSource globalStateSource = (GlobalStateSource) DefaultDataRepo.
                                 getInstance().getSource(SourceName.GLOBAL_STATE);
                         if (!globalStateSource.isLogin()) {
                             new DLogin(layer, true).show();
@@ -488,7 +489,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 final String localImg = imageSource.getLocalImage(imgUrl);
                 // 设置图片大小
                 ViewGroup.LayoutParams params = imageViewByTag.getLayoutParams();
-                if (XStringUtil.isNullOrEmpty(localImg) ||
+                if (TextUtils.isEmpty(localImg) ||
                         localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
                     params.width = layer.screen().dp2px(100);
@@ -521,7 +522,7 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
         @Override
         public void onClick(View view) {
             final String localImg = imageSource.getLocalImage(imgUrl);
-            if (XStringUtil.isNullOrEmpty(localImg)) {
+            if (TextUtils.isEmpty(localImg)) {
                 // 下载图片
                 mImageScrollLoader.asyncLoadBitmap(layer.getContext(), imgUrl,
                         imageView, XImageProcessor.ImageSize.SCREEN,

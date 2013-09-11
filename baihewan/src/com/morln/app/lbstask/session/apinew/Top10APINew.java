@@ -9,6 +9,8 @@ import com.morln.app.lbstask.session.bean.top10.Top10ArticleBase;
 import com.morln.app.lbstask.utils.GsonUtil;
 import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.http.XHttpRequest;
+import com.xengine.android.session.http.XHttpResponse;
 import com.xengine.android.session.http.XURLBuilder;
 import com.xengine.android.utils.XLog;
 import com.xengine.android.utils.XStringUtil;
@@ -62,12 +64,17 @@ public class Top10APINew {
                 .addIntQueryParam("eIndex", eIndex)
                 .build();
         try {
-            HttpPut httpPut = new HttpPut(url);
-            HttpResponse response = http.execute(httpPut, false);
+            XHttpRequest request = http
+                    .newRequest(url)
+                    .setMethod(XHttpRequest.HttpMethod.PUT);
+            XHttpResponse response = http.execute(request);
 
-            int status = response.getStatusLine().getStatusCode();
+            if (response == null)
+                return StatusCode.HTTP_EXCEPTION;
+
+            int status = response.getStatusCode();
             if (StatusCode.isSuccess(status)) {
-                InputStream is = response.getEntity().getContent();
+                InputStream is = response.getContent();
                 String cnt = XStringUtil.convertStreamToString(is).replaceAll("\\\\r", "");
                 if (cnt != null) {
                     Type type = new TypeToken<ArrayList<Top10ArticleBase>>() {}.getType();
@@ -76,6 +83,7 @@ public class Top10APINew {
                 }
                 is.close();
             }
+            response.consumeContent();
             return status;
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,17 +104,16 @@ public class Top10APINew {
         XLog.d("API", "根据日期获取十大的url:" + url);
 
         try {
-            HttpGet httpPut = new HttpGet(url);
-            HttpResponse response = http.execute(httpPut, false);
+            XHttpRequest request = http.newRequest(url);
+            XHttpResponse response = http.execute(request);
 
-            if (response == null) {
+            if (response == null)
                 return StatusCode.HTTP_EXCEPTION;
-            }
 
-            int status = response.getStatusLine().getStatusCode();
+            int status = response.getStatusCode();
             XLog.d("API", "根据日期获取十大的返回码:" + status);
             if (StatusCode.isSuccess(status)) {
-                InputStream is = response.getEntity().getContent();
+                InputStream is = response.getContent();
                 String cnt = XStringUtil.convertStreamToString(is).replaceAll("\\\\r", "");
                 if (cnt != null) {
                     Type type = new TypeToken<List<Top10>>() {}.getType();
@@ -120,6 +127,7 @@ public class Top10APINew {
                 }
                 is.close();
             }
+            response.consumeContent();
             return status;
         } catch (IOException e) {
             e.printStackTrace();

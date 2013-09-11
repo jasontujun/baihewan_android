@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
-import com.morln.app.lbstask.bbs.model.ArticleBase;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
+import com.morln.app.lbstask.data.model.ArticleBase;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.logic.SystemMgr;
 import com.morln.app.lbstask.res.MainMsg;
@@ -30,6 +29,7 @@ import com.morln.app.lbstask.utils.AnimationUtil;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.session.http.XNetworkUtil;
 import com.xengine.android.system.heartbeat.XAndroidHBM;
 import com.xengine.android.system.ui.XBackType;
@@ -71,7 +71,6 @@ public class FMain extends XBaseFrame {
 //        XLog.setErrorEnabled(false);
 //        XLog.setInfoEnabled(false);
 
-        XNetworkUtil.init(getApplicationContext());
         AnimationUtil.init(getApplicationContext());
 
         // 初始化引擎的各个模块
@@ -110,7 +109,7 @@ public class FMain extends XBaseFrame {
     @Override
     public void onFrameDisplay() {
         // 检测网络和GPS的状态
-        if (!XNetworkUtil.isNetworkAvailable())
+        if (!XNetworkUtil.isNetworkAvailable(getApplicationContext()))
             DialogUtil.createWarningDialog(this).show("有点小问题~", "您的手机网络没打开哦~");
     }
 
@@ -386,9 +385,9 @@ public class FMain extends XBaseFrame {
         // 停止刷新状态（邮件）
         BbsMailMgr.getInstance().stopMailRemindTask();
         // 退出程序自动注销
-        GlobalStateSource globalStateSource = (GlobalStateSource) DataRepo.
+        GlobalStateSource globalStateSource = (GlobalStateSource) DefaultDataRepo.
                 getInstance().getSource(SourceName.GLOBAL_STATE);
-        SystemSettingSource systemSettingSource = (SystemSettingSource) DataRepo.
+        SystemSettingSource systemSettingSource = (SystemSettingSource) DefaultDataRepo.
                 getInstance().getSource(SourceName.SYSTEM_SETTING);
         if (globalStateSource.isLogin() && systemSettingSource.isAutoLogout()) {
             globalStateSource.setCurrentUser("", "");

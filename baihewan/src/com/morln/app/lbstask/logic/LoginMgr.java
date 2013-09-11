@@ -1,11 +1,13 @@
 package com.morln.app.lbstask.logic;
 
 import android.content.Context;
-import com.morln.app.lbstask.bbs.session.BbsAPI;
-import com.morln.app.lbstask.cache.*;
-import com.morln.app.lbstask.model.UserBase;
+import com.morln.app.lbstask.session.bbs.BbsAPI;
+import com.morln.app.lbstask.data.cache.*;
+import com.morln.app.lbstask.data.model.UserBase;
 import com.morln.app.lbstask.session.apinew.LoginAPINew;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
+import com.xengine.android.data.cache.XDataRepository;
 
 /**
  * Created by jasontujun.
@@ -16,7 +18,7 @@ public class LoginMgr {
     private static LoginMgr instance;
 
     public synchronized static LoginMgr getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new LoginMgr();
         }
         return instance;
@@ -31,7 +33,7 @@ public class LoginMgr {
     private SystemUserSource systemUserSource;
 
     private LoginMgr() {
-        DataRepo repo = DataRepo.getInstance();
+        XDataRepository repo = DefaultDataRepo.getInstance();
         globalStateSource = (GlobalStateSource) repo.getSource(SourceName.GLOBAL_STATE);
         systemSettingSource = (SystemSettingSource) repo.getSource(SourceName.SYSTEM_SETTING);
         systemUserSource = (SystemUserSource) repo.getSource(SourceName.SYSTEM_USER);
@@ -43,7 +45,7 @@ public class LoginMgr {
      */
     public int logout(String bbsCode) {
         int statusCode = BbsAPI.logout(bbsCode);
-        if(StatusCode.isSuccess(statusCode)) {
+        if (StatusCode.isSuccess(statusCode)) {
             // 停止邮件更新
             BbsMailMgr.getInstance().stopMailRemindTask();
         }
@@ -59,7 +61,7 @@ public class LoginMgr {
     public int login(Context context, String username, String password) {
         // 登陆Bbs
         int bbsLoginResult = BbsAPI.login(username, password);
-        if(!StatusCode.isSuccess(bbsLoginResult)) {
+        if (!StatusCode.isSuccess(bbsLoginResult)) {
             return bbsLoginResult;
         }
         globalStateSource.setLoginStatus(GlobalStateSource.LOGIN_STATUS_BBS_LOGIN);
@@ -69,11 +71,10 @@ public class LoginMgr {
 
         // 登陆系统
         int systemLoginResult = loginSystem(context, username, password);
-        if(!StatusCode.isSuccess(systemLoginResult)) {
+        if (!StatusCode.isSuccess(systemLoginResult))
             return systemLoginResult;
-        }
 
-        if(systemUserSource.getIndexById(username) == -1) {
+        if (systemUserSource.getIndexById(username) == -1) {
             // 添加系统用户
             UserBase userBase = new UserBase(username);
             systemUserSource.add(userBase);
@@ -91,9 +92,8 @@ public class LoginMgr {
         int resultCode = new LoginAPINew(context).login(username, password);
 
         // 登陆不成功
-        if(!StatusCode.isSuccess(resultCode)) {
+        if (!StatusCode.isSuccess(resultCode))
             return StatusCode.SYSTEM_LOGIN_FAIL;
-        }
 
         return resultCode;
     }
@@ -108,9 +108,8 @@ public class LoginMgr {
      */
     public void setRememberPassword(boolean enable) {
         systemSettingSource.setRememberPassword(enable);
-        if(!enable) {
+        if (!enable)
             globalStateSource.setLastUser(globalStateSource.getLastUserName(), "");
-        }
     }
 
 

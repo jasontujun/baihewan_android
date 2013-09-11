@@ -10,7 +10,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.ExpressionMap;
+import com.morln.app.lbstask.utils.ExpressionMap;
 import com.morln.app.lbstask.res.BbsMsg;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XDialog;

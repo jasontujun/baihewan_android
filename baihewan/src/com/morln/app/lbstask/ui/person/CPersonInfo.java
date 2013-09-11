@@ -4,26 +4,26 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.bbs.model.BbsUserBase;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.model.BbsUserBase;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
 import com.morln.app.lbstask.res.MainMsg;
 import com.morln.app.lbstask.ui.login.DLogin;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
 import com.morln.app.lbstask.utils.ViewUtil;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseComponent;
 import com.xengine.android.system.ui.XUILayer;
-import com.xengine.android.utils.XStringUtil;
 
 /**
  * Created by jasontujun.
@@ -58,7 +58,8 @@ public class CPersonInfo extends XBaseComponent {
     public CPersonInfo(XUILayer parent) {
         super(parent);
         bbsPersonMgr = BbsPersonMgr.getInstance();
-        globalStateSource = (GlobalStateSource) DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+        globalStateSource = (GlobalStateSource) DefaultDataRepo
+                .getInstance().getSource(SourceName.GLOBAL_STATE);
 
         setContentView(R.layout.bbs_person_info);
         contentFrame = findViewById(R.id.content_frame);
@@ -204,7 +205,7 @@ public class CPersonInfo extends XBaseComponent {
             showWordView.setText(userInfo.getShowWord());
             hpView.setText(userInfo.getHp());
             String role = userInfo.getRole();
-            if (XStringUtil.isNullOrEmpty(role)) {
+            if (TextUtils.isEmpty(role)) {
                 roleView.setText("一介布衣");
             } else {
                 roleView.setText(role);
@@ -224,7 +225,7 @@ public class CPersonInfo extends XBaseComponent {
     private void refreshSignatureFrame() {
         signatureFrame.setVisibility(View.VISIBLE);
         visitorFrame.setVisibility(View.GONE);
-        if (XStringUtil.isNullOrEmpty(bbsPersonMgr.getMobileSignature())) {
+        if (TextUtils.isEmpty(bbsPersonMgr.getMobileSignature())) {
             signatureView.setText("小爪机木有签名好可怜……");
             signatureView.setTextColor(getContext().getResources().getColor(R.color.dark_gray));
         } else {

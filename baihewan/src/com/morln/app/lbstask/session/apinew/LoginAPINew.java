@@ -3,23 +3,18 @@ package com.morln.app.lbstask.session.apinew;
 import android.content.Context;
 import android.content.res.Resources;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.engine.HttpClientHolder;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.session.http.XHttp;
+import com.xengine.android.session.http.XHttpRequest;
+import com.xengine.android.session.http.XHttpResponse;
 import com.xengine.android.utils.XLog;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Beryl.
@@ -43,41 +38,32 @@ public class LoginAPINew {
 
 
     public int login(String userName, String password) {
-        try {
-            HttpPost request = new HttpPost(hostUrl + apiUrl);
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("userName", userName));
-            params.add(new BasicNameValuePair("password", password));
-            request.setEntity(new UrlEncodedFormEntity(params));
-            HttpResponse response = http.execute(request, false);
+        XHttpRequest request = http
+                .newRequest(hostUrl + apiUrl)
+                .setMethod(XHttpRequest.HttpMethod.POST)
+                .addStringParam("userName", userName)
+                .addStringParam("password", password);
+        XHttpResponse response = http.execute(request);
 
-            if (response == null) {
-                return StatusCode.HTTP_EXCEPTION;
-            }
+        if (response == null)
+            return StatusCode.HTTP_EXCEPTION;
 
-            int resultCode = response .getStatusLine().getStatusCode();
-            XLog.d("API", "登陆返回码：" + resultCode);
-            if(StatusCode.isSuccess(resultCode)) {
-                String token = "";
-                Header[] headers = response.getAllHeaders();
-                for (Header header : headers) {
-                    if (header.getName().equals("token")) {
-                        token = header.getValue();
-                        GlobalStateSource globalStateSource = (GlobalStateSource)
-                                DataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-                        globalStateSource.setToken(token);
-                    }
+        int resultCode = response.getStatusCode();
+        XLog.d("API", "登陆返回码：" + resultCode);
+        if(StatusCode.isSuccess(resultCode)) {
+            String token = "";
+            Map<String, List<String>> headers = response.getAllHeaders();
+            for (Map.Entry<String, List<String>> header : headers.entrySet()) {
+                if (header.getKey().equals("token")) {
+                    token = header.getValue().get(0);
+                    GlobalStateSource globalStateSource = (GlobalStateSource)
+                            DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
+                    globalStateSource.setToken(token);
                 }
             }
-            response.getEntity().consumeContent();
-            return resultCode;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return StatusCode.HTTP_EXCEPTION;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
         }
+        response.consumeContent();
+        return resultCode;
     }
 
 }

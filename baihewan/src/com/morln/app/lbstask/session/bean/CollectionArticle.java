@@ -1,6 +1,6 @@
 package com.morln.app.lbstask.session.bean;
 
-import com.morln.app.lbstask.bbs.model.ArticleBase;
+import com.morln.app.lbstask.data.model.ArticleBase;
 
 /**
  * Created by fdp.

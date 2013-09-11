@@ -1,17 +1,18 @@
 package com.morln.app.lbstask.logic;
 
-import com.morln.app.lbstask.bbs.cache.MailSource;
-import com.morln.app.lbstask.bbs.model.BbsStatus;
-import com.morln.app.lbstask.bbs.model.Mail;
-import com.morln.app.lbstask.bbs.session.BbsAPI;
-import com.morln.app.lbstask.bbs.utils.BbsSignature;
-import com.morln.app.lbstask.cache.DataRepo;
-import com.morln.app.lbstask.cache.GlobalStateSource;
-import com.morln.app.lbstask.cache.SourceName;
-import com.morln.app.lbstask.cache.SystemSettingSource;
+import android.text.TextUtils;
+import com.morln.app.lbstask.data.cache.MailSource;
+import com.morln.app.lbstask.data.model.BbsStatus;
+import com.morln.app.lbstask.data.model.Mail;
+import com.morln.app.lbstask.session.bbs.BbsAPI;
+import com.morln.app.lbstask.utils.BbsSignature;
+import com.morln.app.lbstask.data.cache.GlobalStateSource;
+import com.morln.app.lbstask.data.cache.SourceName;
+import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.session.StatusCode;
+import com.xengine.android.data.cache.DefaultDataRepo;
+import com.xengine.android.data.cache.XDataRepository;
 import com.xengine.android.utils.XLog;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class BbsMailMgr {
     private static BbsMailMgr instance;
 
     public synchronized static BbsMailMgr getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new BbsMailMgr();
         }
         return instance;
@@ -45,7 +46,7 @@ public class BbsMailMgr {
     private List<Mail.NewMailListener> listeners;// 未读邮件的监听者
 
     private BbsMailMgr() {
-        DataRepo repo = DataRepo.getInstance();
+        XDataRepository repo = DefaultDataRepo.getInstance();
         globalStateSource = (GlobalStateSource) repo.getSource(SourceName.GLOBAL_STATE);
         mailSource = (MailSource) repo.getSource(SourceName.USER_MAIL);
         systemSettingSource = (SystemSettingSource) repo.getSource(SourceName.SYSTEM_SETTING);
@@ -60,7 +61,7 @@ public class BbsMailMgr {
     public int getDefaultMailListFromWeb() {
         List<Mail> mailList = new ArrayList<Mail>();
         int resultCode = BbsAPI.getDefaultMailList(mailList);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             mailSource.clear();
             mailSource.addAll(mailList);
 
@@ -82,7 +83,7 @@ public class BbsMailMgr {
         XLog.d("API", "获取邮件列表的起始值:" + start);
         List<Mail> mailList = new ArrayList<Mail>();
         int resultCode = BbsAPI.getMailList(mailList, start);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             mailSource.addAll(mailList);
 
             // 更新新邮件数量
@@ -101,13 +102,12 @@ public class BbsMailMgr {
      */
     public Mail getMailDetailFromLocal(String id) {
         Mail mail = mailSource.getById(id);
-        if(mail == null) {
+        if (mail == null)
             return null;
-        }
 
-        if(mail.getWordBlocks() == null) {
+        if (mail.getWordBlocks() == null) {
             return null;
-        }else {
+        } else {
             return mail;
         }
     }
@@ -147,7 +147,7 @@ public class BbsMailMgr {
         content = content + "\n" + "\n" + "-\n";
         String signature = systemSettingSource.getMobileSignature();
         content = content + BbsSignature.signature;// TIP 内容结尾填上产品签名
-        if (!XStringUtil.isNullOrEmpty(signature)) {
+        if (!TextUtils.isEmpty(signature)) {
             content = content + ": " + signature + "\n";// 添加手机签名
         }
         return BbsAPI.sendMail(title, content, receiver);
@@ -160,12 +160,10 @@ public class BbsMailMgr {
      */
     public int deleteMail(String id) {
         int resultCode = BbsAPI.deleteMail(id);
-        if(StatusCode.isSuccess(resultCode)) {
+        if (StatusCode.isSuccess(resultCode)) {
             mailSource.deleteById(id);
-
             // 更新新邮件数量
             setNewMailNumber(mailSource.getNewMailNumber());
-
             // 刷新顺序
             mailSource.sort(Mail.getMailComparator());
         }
@@ -177,9 +175,9 @@ public class BbsMailMgr {
      * 启动邮件刷新线程
      */
     public void startMailRemindTask() {
-        if(systemSettingSource.isNewMailRemind()) {
+        if (systemSettingSource.isNewMailRemind()) {
             stopMailRemindTask();
-            if(getBbsStatusTask == null) {
+            if (getBbsStatusTask == null) {
                 getBbsStatusTask = new GetBbsStatusTask();
             }
             // 启动刷新线程
@@ -191,7 +189,7 @@ public class BbsMailMgr {
      * 停止邮件刷新线程
      */
     public void stopMailRemindTask() {
-        if(getBbsStatusTask != null) {
+        if (getBbsStatusTask != null) {
             getBbsStatusTask.cancel();
             getBbsStatusTask = null;
             setNewMailNumber(0);
@@ -203,7 +201,7 @@ public class BbsMailMgr {
      * @param listener
      */
     public void registerNewMailListener(Mail.NewMailListener listener) {
-        if(!listeners.contains(listener)) {
+        if (!listeners.contains(listener)) {
             listeners.add(listener);
         }
     }
@@ -218,7 +216,7 @@ public class BbsMailMgr {
      */
     private synchronized void setNewMailNumber(int newMailNumber) {
         globalStateSource.setNewMailNum(newMailNumber);
-        for(Mail.NewMailListener listener : listeners) {
+        for (Mail.NewMailListener listener : listeners) {
             listener.remind(newMailNumber);
         }
     }
