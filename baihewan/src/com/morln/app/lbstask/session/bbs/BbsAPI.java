@@ -30,14 +30,13 @@ public class BbsAPI {
 
     /**
      * 注销登录
-     * @param code
      * @return
      */
-    public static int logout(String code) {
+    public static int logout() {
         if (isNewAPI)
-            return BbsAPINew.logout(code);
+            return BbsAPINew.logout();
         else
-            return BbsAPIOld.logout(code);
+            return BbsAPIOld.logout();
     }
 
 
@@ -283,11 +282,11 @@ public class BbsAPI {
      * 从网页抓取好友
      * @return
      */
-    public static int getFriendsFromWeb(List<Friend> friendList) {
+    public static int getFriendsFromWeb(List<Friend> friendList, String ownerName) {
         if (isNewAPI)
-            return BbsAPINew.getFriendsFromWeb(friendList);
+            return BbsAPINew.getFriendsFromWeb(friendList, ownerName);
         else
-            return BbsAPIOld.getFriendsFromWeb(friendList);
+            return BbsAPIOld.getFriendsFromWeb(friendList, ownerName);
     }
 
 

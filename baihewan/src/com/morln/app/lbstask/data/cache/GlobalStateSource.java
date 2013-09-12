@@ -3,7 +3,6 @@ package com.morln.app.lbstask.data.cache;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.xengine.android.data.cache.XDataSource;
-import com.xengine.android.utils.XLog;
 
 /**
  * 记录全局都要用到的状态。
@@ -49,8 +48,6 @@ public class GlobalStateSource implements XDataSource {
     private SharedPreferences pref;
 
     private String token ;// 和服务器通信的token
-    private String bbsCode ;// 和小百合通信的code
-    private String bbsCookies ;// 和小百合通信的Cookies
 
     private int newMailNumber;// 新邮件数量
 
@@ -164,23 +161,6 @@ public class GlobalStateSource implements XDataSource {
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt(LOGIN_STATUS, loginStatus);
         editor.commit();
-        XLog.d("ABC", "设置了登陆属性！！！！！！！！" + loginStatus);
-    }
-
-    public void setBbsCookies(String bbsCookies) {
-        this.bbsCookies = bbsCookies;
-    }
-
-    public String getBbsCookies() {
-        return bbsCookies;
-    }
-    
-    public void setBbsCode(String bbsCode) {
-        this.bbsCode = bbsCode;
-    }
-    
-    public String getBbsCode() {
-        return this.bbsCode;
     }
 
     public void setBoardTimeStamp(long boardTimeStamp) {

@@ -219,8 +219,9 @@ public class BbsPersonMgr {
      * @return
      */
     public int getFriendsFromWeb() {
+        String username = globalStateSource.getCurrentUserName();
         List<Friend> friendList = new ArrayList<Friend>();
-        int resultCode = BbsAPI.getFriendsFromWeb(friendList);
+        int resultCode = BbsAPI.getFriendsFromWeb(friendList, username);
         if (StatusCode.isSuccess(resultCode)) {
             userFriendSource.deleteByUsername(globalStateSource.getCurrentUserName());
             userFriendSource.addAll(friendList);// 添加到数据源中

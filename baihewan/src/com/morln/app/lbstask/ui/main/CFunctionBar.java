@@ -144,7 +144,7 @@ public class CFunctionBar extends XBaseComponent {
                     DialogUtil.createConfirmDialog(parentLayer().getUIFrame(), new Runnable() {
                         @Override
                         public void run() {
-                            new LogoutTask(globalStateSource.getBbsCode()).execute(null);
+                            new LogoutTask().execute(null);
                         }
                     }, null).show("确定注销？", null);
                 }
@@ -465,15 +465,9 @@ public class CFunctionBar extends XBaseComponent {
      */
     private class LogoutTask extends AsyncTask<Void, Void, Void> {
 
-        private String bbsCode;
-
         private DialogUtil.WaitingDialog waitingDialog;
 
         private int resultCode;
-
-        private LogoutTask(String bbsCode) {
-            this.bbsCode = bbsCode;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -483,7 +477,7 @@ public class CFunctionBar extends XBaseComponent {
         }
         @Override
         protected Void doInBackground(Void... para) {
-            resultCode = LoginMgr.getInstance().logout(bbsCode);
+            resultCode = LoginMgr.getInstance().logout();
             return null;
         }
 

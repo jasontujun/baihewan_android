@@ -395,8 +395,6 @@ public class FMain extends XBaseFrame {
             XLog.d("SERVICE", "启动自动注销service！");
             Intent intent = new Intent(LogoutService.ACTION_BACKGROUND);
             intent.setClass(getContext(), LogoutService.class);
-            String bbsCode = globalStateSource.getBbsCode();
-            intent.putExtra("bbsCode", bbsCode);
             getContext().startService(intent);
         }
         // 退出前清空整个系统，如：临时文件，管理器等

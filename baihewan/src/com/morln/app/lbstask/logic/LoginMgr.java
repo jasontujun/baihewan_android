@@ -43,8 +43,8 @@ public class LoginMgr {
      * 注销
      * @return
      */
-    public int logout(String bbsCode) {
-        int statusCode = BbsAPI.logout(bbsCode);
+    public int logout() {
+        int statusCode = BbsAPI.logout();
         if (StatusCode.isSuccess(statusCode)) {
             // 停止邮件更新
             BbsMailMgr.getInstance().stopMailRemindTask();
@@ -64,6 +64,8 @@ public class LoginMgr {
         if (!StatusCode.isSuccess(bbsLoginResult)) {
             return bbsLoginResult;
         }
+        globalStateSource.setCurrentUser(username, password);// 登陆成功，记住账户名和密码
+        globalStateSource.setLastUser(username, password);// 登陆成功，记录历史记录
         globalStateSource.setLoginStatus(GlobalStateSource.LOGIN_STATUS_BBS_LOGIN);
 
         // 登陆Bbs后，开始刷用户状态（邮件）

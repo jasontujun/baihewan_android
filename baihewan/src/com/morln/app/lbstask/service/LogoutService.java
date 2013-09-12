@@ -19,8 +19,6 @@ public class LogoutService extends Service {
     public static final String ACTION_BACKGROUND = "com.mroln.app.baihewan.service.Logout";
     private boolean isRunning;
 
-    private String bbsCode;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -73,9 +71,7 @@ public class LogoutService extends Service {
      */
     private void startRequestBackService(Intent intent) {
         if(!isRunning) {
-            bbsCode = intent.getStringExtra("bbsCode");
-            XLog.d("SERVICE", "启动任务， bbsCode:" + bbsCode);
-            RequestMsgTask requestMsgTask = new RequestMsgTask(bbsCode);
+            RequestMsgTask requestMsgTask = new RequestMsgTask();
             new Timer().schedule(requestMsgTask, 0);
             isRunning = true;
         }
@@ -87,17 +83,11 @@ public class LogoutService extends Service {
     }
 
     class RequestMsgTask extends TimerTask {
-        private String bbsCode;
-
-        RequestMsgTask(String bbsCode) {
-            this.bbsCode = bbsCode;
-        }
-
         @Override
         public void run() {
             isRunning = true;
 
-            int resultCode = BbsAPI.logout(bbsCode);
+            int resultCode = BbsAPI.logout();
             XLog.d("SERVICE", "注销bbs的返回码："+resultCode);
             if(StatusCode.isSuccess(resultCode)) {
                 XLog.d("SERVICE", "注销bbs成功！");

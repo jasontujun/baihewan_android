@@ -2,7 +2,6 @@ package com.morln.app.lbstask.session.bbs;
 
 import android.text.TextUtils;
 import com.morln.app.lbstask.data.cache.BoardSource;
-import com.morln.app.lbstask.data.cache.GlobalStateSource;
 import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.data.model.*;
 import com.morln.app.lbstask.engine.HttpClientHolder;
@@ -44,6 +43,9 @@ import java.util.regex.Pattern;
  * Time: 上午11:57
  */
 public class BbsAPINew {
+
+    private static String bbsCode;
+
     /**
      * 检测通信的返回是否是未登录，判断是否由于Token无效引起的
      * @param document
@@ -71,8 +73,6 @@ public class BbsAPINew {
      */
     public static int login(String username, String password) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
             Random random = new Random();
             int code = random.nextInt(99999) % (90000) + 10000;
 
@@ -115,10 +115,8 @@ public class BbsAPINew {
             http.setCookie(UkeyCookie);
             http.setCookie(UuidCookie);
             http.setCookie(UnumCookie);
-            // 取出对应数据存入数据源
-            globalStateSource.setCurrentUser(username, password);// 登陆成功，记住账户名和密码
-            globalStateSource.setLastUser(username, password);// 登陆成功，记录历史记录
-            globalStateSource.setBbsCode(String.valueOf(code));
+            // 记录bbsCode
+            bbsCode = String.valueOf(code);
             return StatusCode.LOGIN_SUCCESS;
         } catch (IOException e) {
             return StatusCode.HTTP_EXCEPTION;
@@ -128,13 +126,12 @@ public class BbsAPINew {
 
     /**
      * 注销登录
-     * @param code
      * @return
      */
-    public static int logout(String code) {
+    public static int logout() {
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.logoutUrl(code))
+                .newRequest(BbsUrlUtil.logoutUrl(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -169,7 +166,7 @@ public class BbsAPINew {
     public static int getTop10FromWeb(List<Top10ArticleBase> top10List) {
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getTop10Url())
+                .newRequest(BbsUrlUtil.getTop10Url(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -247,7 +244,8 @@ public class BbsAPINew {
                                              int pageStr, List<ArticleDetail> articleDetailList) {
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getThemeArticleDetailUrl(boardStr, articleIdStr, pageStr))
+                .newRequest(BbsUrlUtil.getThemeArticleDetailUrl
+                        (boardStr, articleIdStr, pageStr, bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -613,11 +611,10 @@ public class BbsAPINew {
      * @param reid
      * @return
      */
-    public static int sendArticle(String board, String title, String content, String pid, String reid) {
+    public static int sendArticle(String board, String title,
+                                  String content, String pid, String reid) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            String url = BbsUrlUtil.sendArticleUrl(globalStateSource.getBbsCode(), board);
+            String url = BbsUrlUtil.sendArticleUrl(bbsCode, board);
             XHttp http = HttpClientHolder.getMainHttpClient();
             XHttpRequest request = http.newRequest(url)
                     .setMethod(XHttpRequest.HttpMethod.POST)
@@ -660,11 +657,9 @@ public class BbsAPINew {
 
     public static String getPid(String articleId, String board) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
             XHttp http = HttpClientHolder.getMainHttpClient();
             XHttpRequest request = http
-                    .newRequest(BbsUrlUtil.getPidUrl(globalStateSource.getBbsCode(), board, articleId))
+                    .newRequest(BbsUrlUtil.getPidUrl(bbsCode, board, articleId))
                     .setMethod(XHttpRequest.HttpMethod.GET);
             XHttpResponse response = http.execute(request);
             if (response == null)
@@ -693,11 +688,8 @@ public class BbsAPINew {
      * @return 返回图片在bbs上的有效url
      */
     public static String uploadImage(String board, File imgFile, String description) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         // HTTP-POST 请求上传图片
-        String code = globalStateSource.getBbsCode();
-        String getImgUrl = BbsUrlUtil.getUploadUrl(code);
+        String getImgUrl = BbsUrlUtil.getUploadUrl(bbsCode);
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest uploadRequest = http
                 .newRequest(getImgUrl)
@@ -728,7 +720,7 @@ public class BbsAPINew {
         String fileName = uploadResult.substring(uploadResult.indexOf("name=") + 5, uploadResult.indexOf("&exp"));
 
         // HTTP-GET请求获取图片url
-        String getImageOnBbsUrl = BbsUrlUtil.getBbsImageLocationUrl(code,
+        String getImageOnBbsUrl = BbsUrlUtil.getBbsImageLocationUrl(bbsCode,
                 board, fileNum, fileName, description, "text");
         XLog.d("UPLOAD", "HTTP-GET请求获取图片url:" + getImageOnBbsUrl);
         XHttpRequest getUrlRequest = http
@@ -770,7 +762,7 @@ public class BbsAPINew {
     public static int getZoneHotFromWeb(int sec, List<ArticleBase> articleBaseList){
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getZoneHotUrl(sec))
+                .newRequest(BbsUrlUtil.getZoneHotUrl(sec, bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -817,14 +809,14 @@ public class BbsAPINew {
         String url = null;
         String boardId = board.getBoardId();
         if (page <= 0) {
-            url = BbsUrlUtil.getBoardFirstPageUrl(boardId, true);// 获取版面首页
+            url = BbsUrlUtil.getBoardFirstPageUrl(boardId, true, bbsCode);// 获取版面首页
         } else {
             int no = board.getBoardEarliestNo();// 获取此版最早的帖子的id
             if (no == -1) {
-                url =BbsUrlUtil.getBoardFirstPageUrl(boardId, true);// 获取版面首页
+                url =BbsUrlUtil.getBoardFirstPageUrl(boardId, true, bbsCode);// 获取版面首页
             } else {
                 no  = no - 22;
-                url = BbsUrlUtil.getBoardArticleListUrl(boardId, no, true);
+                url = BbsUrlUtil.getBoardArticleListUrl(boardId, no, true, bbsCode);
             }
         }
         XLog.d("BBSAPI", "抓取版面" + boardId + "的帖子url:" + url);
@@ -934,12 +926,10 @@ public class BbsAPINew {
      * @return
      */
     public static int deleteArticle(String board, String articleId) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.deleteArticleUrl(globalStateSource.getBbsCode(), board, articleId))
+                .newRequest(BbsUrlUtil.deleteArticleUrl(bbsCode, board, articleId))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -978,10 +968,8 @@ public class BbsAPINew {
     public static int searchArticle(String author, String contain1, String contain2,
                                     String notcontain, String startDay, String endDay,
                                     List<ArticleBase> resultList) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         XHttp http = HttpClientHolder.getMainHttpClient();
-        XHttpRequest request = http.newRequest(BbsUrlUtil.searchArticleUrl())
+        XHttpRequest request = http.newRequest(BbsUrlUtil.searchArticleUrl(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.POST)
                 .addStringParam("flag", "1")
                 .addStringParam("user", author)
@@ -1090,12 +1078,10 @@ public class BbsAPINew {
      * @return
      */
     public static int getRssBoard(List<String> orderBoardList) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getRssBoardUrl(globalStateSource.getBbsCode()))
+                .newRequest(BbsUrlUtil.getRssBoardUrl(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1153,11 +1139,9 @@ public class BbsAPINew {
      * @return
      */
     public static int sendRssBoard(List<String> boardList) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.syncRssBoardUrl(globalStateSource.getBbsCode()))
+                .newRequest(BbsUrlUtil.syncRssBoardUrl(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.POST)
                 .addStringParam("confirm1", "1");
         for (String boardId : boardList)
@@ -1184,7 +1168,7 @@ public class BbsAPINew {
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getBbsUserInfoUrl(username))
+                .newRequest(BbsUrlUtil.getBbsUserInfoUrl(username, bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1249,12 +1233,10 @@ public class BbsAPINew {
      * @return
      */
     public static BbsUserBase getBbsUserInfoFromWeb(String username) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getBbsUserInfoUrl(username))
+                .newRequest(BbsUrlUtil.getBbsUserInfoUrl(username, bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1433,16 +1415,14 @@ public class BbsAPINew {
      * 从网页抓取好友
      * @return
      */
-    public static int getFriendsFromWeb(List<Friend> friendList) {
+    public static int getFriendsFromWeb(List<Friend> friendList, String ownerName) {
         if (friendList == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getFriendUrl(globalStateSource.getBbsCode()))
+                .newRequest(BbsUrlUtil.getFriendUrl(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1456,7 +1436,6 @@ public class BbsAPINew {
             if (! isTokenLoseEffectiveness(doc))
                 return StatusCode.BBS_TOKEN_LOSE_EFFECTIVE;
 
-            String username = globalStateSource.getCurrentUserName();
             Elements blocks = doc.select("tr");
             if (blocks.size() == 0)
                 return StatusCode.FAIL;
@@ -1472,7 +1451,7 @@ public class BbsAPINew {
                 Friend friend = new Friend();
                 friend.setUserInfo(userBase);
                 friend.setCustomName(friendCustomName);
-                friend.setOwnerName(username);
+                friend.setOwnerName(ownerName);
                 friendList.add(friend);// 添加到返回值中
             }
             return StatusCode.SUCCESS;
@@ -1494,14 +1473,11 @@ public class BbsAPINew {
             return StatusCode.FAIL;
 
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            String customName2 = URLEncoder.encode(customName, "gb2312");// 转为gb2312编码！
-            String code = globalStateSource.getBbsCode();
+            customName = URLEncoder.encode(customName, "gb2312");// 转为gb2312编码！
             // 发送请求
             XHttp http = HttpClientHolder.getMainHttpClient();
             XHttpRequest request = http
-                    .newRequest(BbsUrlUtil.addFriendUrl(code, username, customName2))
+                    .newRequest(BbsUrlUtil.addFriendUrl(bbsCode, username, customName))
                     .setMethod(XHttpRequest.HttpMethod.GET);
             XHttpResponse response = http.execute(request);
             if (response == null)
@@ -1536,13 +1512,10 @@ public class BbsAPINew {
         if (TextUtils.isEmpty(username))
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.deleteFriendUrl(code, username))
+                .newRequest(BbsUrlUtil.deleteFriendUrl(bbsCode, username))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1573,10 +1546,7 @@ public class BbsAPINew {
         if (resultList == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
-        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(code));
+        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(bbsCode));
     }
 
     /**
@@ -1589,10 +1559,7 @@ public class BbsAPINew {
         if (resultList == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
-        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(code, start));
+        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(bbsCode, start));
     }
 
     /**
@@ -1605,8 +1572,6 @@ public class BbsAPINew {
         if (resultList == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
@@ -1672,13 +1637,10 @@ public class BbsAPINew {
      * @return
      */
     public static int getMailDetail(String mailUrl, int num, Mail result) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getBbsMailDetailUrl(code, mailUrl, num))
+                .newRequest(BbsUrlUtil.getBbsMailDetailUrl(bbsCode, mailUrl, num))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1853,9 +1815,7 @@ public class BbsAPINew {
      * @return
      */
     public static int sendMail(String title, String content, String receiver) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String url = BbsUrlUtil.sendBbsMailUrl(globalStateSource.getBbsCode(), receiver);
+        String url = BbsUrlUtil.sendBbsMailUrl(bbsCode, receiver);
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
                 .newRequest(url)
@@ -1901,13 +1861,10 @@ public class BbsAPINew {
      * @return
      */
     public static int deleteMail(String mailId) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getBbsDeleteMailUrl(code, mailId))
+                .newRequest(BbsUrlUtil.getBbsDeleteMailUrl(bbsCode, mailId))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)
@@ -1943,7 +1900,7 @@ public class BbsAPINew {
         // 发送请求
         XHttp http = HttpClientHolder.getMainHttpClient();
         XHttpRequest request = http
-                .newRequest(BbsUrlUtil.getBbsStatusUrl())
+                .newRequest(BbsUrlUtil.getBbsStatusUrl(bbsCode))
                 .setMethod(XHttpRequest.HttpMethod.GET);
         XHttpResponse response = http.execute(request);
         if (response == null)

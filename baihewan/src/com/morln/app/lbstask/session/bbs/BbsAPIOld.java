@@ -58,6 +58,9 @@ import java.util.regex.Pattern;
  */
 public class BbsAPIOld {
 
+    private static String bbsCookie;
+    private static String bbsCode;
+
     private static DefaultHttpClient client = new DefaultHttpClient();
 
 
@@ -88,8 +91,6 @@ public class BbsAPIOld {
      */
     public static int login(String username, String password) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
             Random random = new Random();
             int code = random.nextInt(99999) % (90000) + 10000;
 
@@ -116,10 +117,9 @@ public class BbsAPIOld {
                 String[] tm2 = tm[0].split("N");
                 String _U_UID = tm2[1];
                 String _U_NUM = "" + String.valueOf(Integer.parseInt(tm2[0]) + 2);
-                globalStateSource.setCurrentUser(username, password);// 登陆成功，记住账户名和密码
-                globalStateSource.setLastUser(username, password);// 登陆成功，记录历史记录
-                globalStateSource.setBbsCookies("_U_KEY=" + _U_KEY + "; " + "_U_UID=" + _U_UID + "; " + "_U_NUM=" + _U_NUM + ";");
-                globalStateSource.setBbsCode(String.valueOf(code));
+                bbsCookie = "_U_KEY=" + _U_KEY + "; " + "_U_UID=" + _U_UID
+                        + "; " + "_U_NUM=" + _U_NUM + ";";
+                bbsCode = String.valueOf(code);
                 return StatusCode.LOGIN_SUCCESS;
             }
         } catch (IOException e) {
@@ -130,12 +130,11 @@ public class BbsAPIOld {
 
     /**
      * 注销登录
-     * @param code
      * @return
      */
-    public static int logout(String code) {
+    public static int logout() {
         try {
-            URL url = new URL(BbsUrlUtil.logoutUrl(code));
+            URL url = new URL(BbsUrlUtil.logoutUrl(bbsCode));
             HttpURLConnection connection = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
             XLog.d("BBSAPI","logout:"+doc.toString());
@@ -162,7 +161,7 @@ public class BbsAPIOld {
      */
     public static int getTop10FromWeb(List<Top10ArticleBase> top10List) {
         try {
-            URL url = new URL(BbsUrlUtil.getTop10Url());
+            URL url = new URL(BbsUrlUtil.getTop10Url(bbsCode));
             HttpURLConnection connection = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
 
@@ -236,7 +235,8 @@ public class BbsAPIOld {
     public static int getThemeArticleFromWeb(String boardStr, String articleIdStr,
                                              int pageStr, List<ArticleDetail> articleDetailList) {
         try {
-            URL url = new URL(BbsUrlUtil.getThemeArticleDetailUrl(boardStr, articleIdStr, pageStr));
+            URL url = new URL(BbsUrlUtil.getThemeArticleDetailUrl
+                    (boardStr, articleIdStr, pageStr, bbsCode));
             HttpURLConnection connection = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
 
@@ -602,12 +602,10 @@ public class BbsAPIOld {
      */
     public static int sendArticle(String board, String title, String content, String pid, String reid) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            String url = BbsUrlUtil.sendArticleUrl(globalStateSource.getBbsCode(), board);
+            String url = BbsUrlUtil.sendArticleUrl(bbsCode, board);
             HttpPost httpPost = new HttpPost(url);
 
-            httpPost.addHeader("Cookie", globalStateSource.getBbsCookies());// 设cookies
+            httpPost.addHeader("Cookie", bbsCookie);// 设cookies
             List<NameValuePair> params = new ArrayList <NameValuePair>();
             params.add(new BasicNameValuePair("title",title));
             params.add(new BasicNameValuePair("pid",pid));
@@ -647,9 +645,7 @@ public class BbsAPIOld {
 
     public static String getPid(String articleId, String board) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            URL url = new URL(BbsUrlUtil.getPidUrl(globalStateSource.getBbsCode(), board, articleId));
+            URL url = new URL(BbsUrlUtil.getPidUrl(bbsCode, board, articleId));
             HttpURLConnection conn = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
 
@@ -676,8 +672,6 @@ public class BbsAPIOld {
      * @return 返回图片在bbs上的有效url
      */
     public static String uploadImage(String board, File imgFile, String description) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         BasicHttpParams httpParameters = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParameters, 10000);
         HttpConnectionParams.setSoTimeout(httpParameters, 10000);
@@ -685,9 +679,7 @@ public class BbsAPIOld {
         client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
         // HTTP-POST 请求上传图片
-        String code = globalStateSource.getBbsCode();
-        String cookie = globalStateSource.getBbsCookies();
-        String getImgUrl = BbsUrlUtil.getUploadUrl(code);
+        String getImgUrl = BbsUrlUtil.getUploadUrl(bbsCode);
         HttpPost imgPost = new HttpPost(getImgUrl);
         MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         try {
@@ -700,7 +692,7 @@ public class BbsAPIOld {
         }
 
         imgPost.setEntity(reqEntity);
-        imgPost.addHeader("Cookie", cookie);
+        imgPost.addHeader("Cookie", bbsCode);
         imgPost.addHeader(reqEntity.getContentType());
         try {
             HttpResponse httpResponse = client.execute(imgPost);
@@ -712,11 +704,11 @@ public class BbsAPIOld {
                 String fileName = result.substring(result.indexOf("name=") + 5, result.indexOf("&exp"));
 
                 // HTTP-GET请求获取图片url
-                String getImageOnBbsUrl = BbsUrlUtil.getBbsImageLocationUrl(code,
+                String getImageOnBbsUrl = BbsUrlUtil.getBbsImageLocationUrl(bbsCode,
                         board, fileNum, fileName, description, "text");
                 XLog.d("UPLOAD", "HTTP-GET请求获取图片url:"+getImageOnBbsUrl);
                 HttpGet uploadGet = new HttpGet(getImageOnBbsUrl);
-                uploadGet.addHeader("Cookie", cookie);
+                uploadGet.addHeader("Cookie", bbsCookie);
                 httpResponse = client.execute(uploadGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     result = EntityUtils.toString(httpResponse.getEntity());
@@ -752,7 +744,7 @@ public class BbsAPIOld {
      */
     public static int getZoneHotFromWeb(int sec, List<ArticleBase> articleBaseList){
         try {
-            URL mUrl = new URL(BbsUrlUtil.getZoneHotUrl(sec));
+            URL mUrl = new URL(BbsUrlUtil.getZoneHotUrl(sec, bbsCode));
             HttpURLConnection conn = prepareGetRequestHead(mUrl);
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
 
@@ -797,14 +789,14 @@ public class BbsAPIOld {
             // 根据页数生成对应url
             URL url = null;
             if (page <= 0) {
-                url = new URL(BbsUrlUtil.getBoardFirstPageUrl(boardId, true));// 获取版面首页
+                url = new URL(BbsUrlUtil.getBoardFirstPageUrl(boardId, true, bbsCode));// 获取版面首页
             } else {
                 int no = board.getBoardEarliestNo();// 获取此版最早的帖子的id
                 if (no == -1) {
-                    url = new URL(BbsUrlUtil.getBoardFirstPageUrl(boardId, true));// 获取版面首页
+                    url = new URL(BbsUrlUtil.getBoardFirstPageUrl(boardId, true, bbsCode));// 获取版面首页
                 } else {
                     no  = no - 22;
-                    url = new URL(BbsUrlUtil.getBoardArticleListUrl(boardId, no, true));
+                    url = new URL(BbsUrlUtil.getBoardArticleListUrl(boardId, no, true, bbsCode));
                 }
             }
             XLog.d("BBSAPI", "抓取版面"+boardId+"的帖子url:"+url);
@@ -918,10 +910,8 @@ public class BbsAPIOld {
      * @return
      */
     public static int deleteArticle(String board, String articleId) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         try {
-            URL url = new URL(BbsUrlUtil.deleteArticleUrl(globalStateSource.getBbsCode(), board, articleId));
+            URL url = new URL(BbsUrlUtil.deleteArticleUrl(bbsCode, board, articleId));
             HttpURLConnection connection = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
 
@@ -960,9 +950,9 @@ public class BbsAPIOld {
         try {
             GlobalStateSource globalStateSource = (GlobalStateSource)
                     DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            HttpPost httpPost = new HttpPost(BbsUrlUtil.searchArticleUrl());
+            HttpPost httpPost = new HttpPost(BbsUrlUtil.searchArticleUrl(bbsCode));
 
-            httpPost.addHeader("Cookie", globalStateSource.getBbsCookies());// 设cookies
+            httpPost.addHeader("Cookie", bbsCookie);// 设cookies
             List<NameValuePair> params = new ArrayList <NameValuePair>();
             params.add(new BasicNameValuePair("flag", "1"));
             params.add(new BasicNameValuePair("user", author));
@@ -1065,11 +1055,7 @@ public class BbsAPIOld {
      */
     public static int getRssBoard(List<String> orderBoardList) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            String code = globalStateSource.getBbsCode();
-
-            URL url = new URL(BbsUrlUtil.getRssBoardUrl(code));
+            URL url = new URL(BbsUrlUtil.getRssBoardUrl(bbsCode));
             HttpURLConnection connection = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
 
@@ -1128,13 +1114,8 @@ public class BbsAPIOld {
      */
     public static int sendRssBoard(List<String> boardList) {
         try {
-            GlobalStateSource globalStateSource = (GlobalStateSource)
-                    DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-
-            String code = globalStateSource.getBbsCode();
-            String cookie = globalStateSource.getBbsCookies();
-            HttpPost httpPost = new HttpPost(BbsUrlUtil.syncRssBoardUrl(code));
-            httpPost.addHeader("Cookie", cookie);
+            HttpPost httpPost = new HttpPost(BbsUrlUtil.syncRssBoardUrl(bbsCode));
+            httpPost.addHeader("Cookie", bbsCookie);
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("confirm1", "1"));
@@ -1164,7 +1145,7 @@ public class BbsAPIOld {
      */
     public static int getSexOfUser(String username) {
         try {
-            URL url = new URL(BbsUrlUtil.getBbsUserInfoUrl(username));
+            URL url = new URL(BbsUrlUtil.getBbsUserInfoUrl(username, bbsCode));
             HttpURLConnection connection = prepareGetRequestHead(url);
 
             Document friendDoc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
@@ -1226,7 +1207,7 @@ public class BbsAPIOld {
      */
     public static BbsUserBase getBbsUserInfoFromWeb(String username) {
         try {
-            URL url = new URL(BbsUrlUtil.getBbsUserInfoUrl(username));
+            URL url = new URL(BbsUrlUtil.getBbsUserInfoUrl(username, bbsCode));
             HttpURLConnection connection = prepareGetRequestHead(url);
             Document friendDoc = Jsoup.parse(connection.getInputStream(), "gb2312", "");
             connection.disconnect();
@@ -1401,16 +1382,11 @@ public class BbsAPIOld {
      * 从网页抓取好友
      * @return
      */
-    public static int getFriendsFromWeb(List<Friend> friendList) {
+    public static int getFriendsFromWeb(List<Friend> friendList, String ownerName) {
         if (friendList == null)
             return StatusCode.FAIL;
-
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         try {
-            String code = globalStateSource.getBbsCode();
-            String username = globalStateSource.getCurrentUserName();
-            URL url = new URL(BbsUrlUtil.getFriendUrl(code));
+            URL url = new URL(BbsUrlUtil.getFriendUrl(bbsCode));
             HttpURLConnection conn = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
             XLog.d("BBSAPI", "抓好友：" + doc.toString());
@@ -1434,7 +1410,7 @@ public class BbsAPIOld {
                 Friend friend = new Friend();
                 friend.setUserInfo(userBase);
                 friend.setCustomName(friendCustomName);
-                friend.setOwnerName(username);
+                friend.setOwnerName(ownerName);
                 friendList.add(friend);// 添加到返回值中
             }
             return StatusCode.SUCCESS;
@@ -1455,12 +1431,9 @@ public class BbsAPIOld {
         if (username == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         try {
-            String code = globalStateSource.getBbsCode();
-            String customName2 = URLEncoder.encode(customName, "gb2312");// 转为gb2312编码！
-            URL url = new URL(BbsUrlUtil.addFriendUrl(code, username, customName2));
+            customName = URLEncoder.encode(customName, "gb2312");// 转为gb2312编码！
+            URL url = new URL(BbsUrlUtil.addFriendUrl(bbsCode, username, customName));
             XLog.d("BBSAPI", "加好友url："+url);
             HttpURLConnection conn = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
@@ -1492,11 +1465,8 @@ public class BbsAPIOld {
         if (username == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         try {
-            String code = globalStateSource.getBbsCode();
-            URL url = new URL(BbsUrlUtil.deleteFriendUrl(code, username));
+            URL url = new URL(BbsUrlUtil.deleteFriendUrl(bbsCode, username));
             HttpURLConnection conn = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
             XLog.d("BBSAPI", "删除好友："+doc.toString());
@@ -1522,10 +1492,7 @@ public class BbsAPIOld {
         if (resultList == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
-        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(code));
+        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(bbsCode));
     }
 
     /**
@@ -1538,10 +1505,7 @@ public class BbsAPIOld {
         if (resultList == null)
             return StatusCode.FAIL;
 
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-        String code = globalStateSource.getBbsCode();
-        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(code, start));
+        return getMailList(resultList, BbsUrlUtil.getBbsMailListUrl(bbsCode, start));
     }
 
     /**
@@ -1611,11 +1575,8 @@ public class BbsAPIOld {
      * @return
      */
     public static int getMailDetail(String mailUrl, int num, Mail result) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         try {
-            String code = globalStateSource.getBbsCode();
-            URL url = new URL(BbsUrlUtil.getBbsMailDetailUrl(code, mailUrl, num));
+            URL url = new URL(BbsUrlUtil.getBbsMailDetailUrl(bbsCode, mailUrl, num));
             HttpURLConnection conn = prepareGetRequestHead(url);
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
 
@@ -1791,10 +1752,10 @@ public class BbsAPIOld {
         try {
             GlobalStateSource globalStateSource = (GlobalStateSource)
                     DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
-            String url = BbsUrlUtil.sendBbsMailUrl(globalStateSource.getBbsCode(), receiver);
+            String url = BbsUrlUtil.sendBbsMailUrl(bbsCode, receiver);
             HttpPost httpPost = new HttpPost(url);
 
-            httpPost.addHeader("Cookie", globalStateSource.getBbsCookies());// 设cookies
+            httpPost.addHeader("Cookie", bbsCookie);// 设cookies
             List<NameValuePair> params = new ArrayList <NameValuePair>();
             params.add(new BasicNameValuePair("title",title));
             params.add(new BasicNameValuePair("userid",receiver));
@@ -1834,11 +1795,8 @@ public class BbsAPIOld {
      * @return
      */
     public static int deleteMail(String mailId) {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         try {
-            String code = globalStateSource.getBbsCode();
-            URL url = new URL(BbsUrlUtil.getBbsDeleteMailUrl(code, mailId));
+            URL url = new URL(BbsUrlUtil.getBbsDeleteMailUrl(bbsCode, mailId));
             HttpURLConnection conn = prepareGetRequestHead(url);
 
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
@@ -1868,7 +1826,7 @@ public class BbsAPIOld {
      */
     public static int getBbsStatus(BbsStatus bbsStatus) {
         try {
-            URL url = new URL(BbsUrlUtil.getBbsStatusUrl());
+            URL url = new URL(BbsUrlUtil.getBbsStatusUrl(bbsCode));
             HttpURLConnection conn = prepareGetRequestHead(url);
 
             Document doc = Jsoup.parse(conn.getInputStream(), "gb2312", "");
@@ -1920,12 +1878,10 @@ public class BbsAPIOld {
      * @throws java.io.IOException
      */
     private static HttpURLConnection prepareGetRequestHead(URL url) throws IOException {
-        GlobalStateSource globalStateSource = (GlobalStateSource)
-                DefaultDataRepo.getInstance().getSource(SourceName.GLOBAL_STATE);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(HttpClientHolder.getMainHttpClient().getConnectionTimeOut());
-        if (globalStateSource != null) {
-            conn.setRequestProperty("Cookie", globalStateSource.getBbsCookies());
+        if (!TextUtils.isEmpty(bbsCookie)) {
+            conn.setRequestProperty("Cookie", bbsCookie);
         }
         conn.setRequestMethod("GET");
         return conn;
