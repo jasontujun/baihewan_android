@@ -363,15 +363,18 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
                 holderImage.imageView.setOnClickListener(new ImageViewClickListener
                         (imgIndex, imgUrl, holderImage.imageView, article.getImgUrls()));
                 // 设置图片大小
+                holderImage.imageView.setAdjustViewBounds(true);
                 ViewGroup.LayoutParams params = holderImage.imageView.getLayoutParams();
                 if (TextUtils.isEmpty(localImg) ||
                         localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
-                    params.width = layer.screen().dp2px(100);
+                    holderImage.imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    params.width = ViewGroup.LayoutParams.FILL_PARENT;
                     params.height = layer.screen().dp2px(88);
                     holderImage.imageView.setLayoutParams(params);
                 } else {
-                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    holderImage.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    params.width = ViewGroup.LayoutParams.FILL_PARENT;
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     holderImage.imageView.setLayoutParams(params);
                 }
@@ -488,15 +491,18 @@ public class AArticle extends BaseAdapter implements AbsListView.OnScrollListene
             if (imageViewByTag != null) {
                 final String localImg = imageSource.getLocalImage(imgUrl);
                 // 设置图片大小
+                imageViewByTag.setAdjustViewBounds(true);
                 ViewGroup.LayoutParams params = imageViewByTag.getLayoutParams();
                 if (TextUtils.isEmpty(localImg) ||
                         localImg.equals(XImageLocalUrl.IMG_ERROR) ||
                         localImg.equals(XImageLocalUrl.IMG_LOADING)) {
-                    params.width = layer.screen().dp2px(100);
+                    imageViewByTag.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    params.width = ViewGroup.LayoutParams.FILL_PARENT;
                     params.height = layer.screen().dp2px(88);
                     imageViewByTag.setLayoutParams(params);
                 } else {
-                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    imageViewByTag.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    params.width = ViewGroup.LayoutParams.FILL_PARENT;
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     imageViewByTag.setLayoutParams(params);
                 }

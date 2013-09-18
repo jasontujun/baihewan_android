@@ -8,8 +8,6 @@ import com.morln.app.lbstask.session.StatusCode;
 import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.data.cache.XDataRepository;
 import com.xengine.android.data.db.XSQLiteHelper;
-import com.xengine.android.media.graphics.XAndroidScreen;
-import com.xengine.android.media.graphics.XScreen;
 import com.xengine.android.system.file.XAndroidFileMgr;
 import com.xengine.android.system.file.XFileMgr;
 
@@ -42,39 +40,38 @@ public class SystemMgr {
         fileMgr.setDir(XFileMgr.FILE_TYPE_TMP, "tmp", true);
         fileMgr.setDir(XFileMgr.FILE_TYPE_PHOTO, "photo", true);
         // 初始化网络模块
-        XScreen screen = new XAndroidScreen(context);
         HttpClientHolder.init(context, "baihewan");
-        DownloadMgrHolder.init(HttpClientHolder.getImageHttpClient(),
-                screen.getScreenWidth(), screen.getScreenHeight());
+        DownloadMgrHolder.init(HttpClientHolder.getImageHttpClient());
         UploadMgrHolder.init(HttpClientHolder.getImageHttpClient());
         // 初始化图片加载模块
+//        XAndroidImageProcessor.getInstance().init(
+//                ScreenHolder.getInstance().getScreenWidth(),
+//                ScreenHolder.getInstance().getScreenHeight(),
+//                fileMgr.getDir(XFileMgr.FILE_TYPE_TMP));
         MyImageViewLocalLoader.getInstance().init(
-                R.drawable.img_empty,
+                R.drawable.img_loading,
                 R.drawable.img_click_load,
                 R.drawable.img_loading,
                 R.drawable.img_load_fail
         );
         MyImageSwitcherLocalLoader.getInstance().init(
-                R.drawable.img_empty,
+                R.drawable.img_loading,
                 R.drawable.img_click_load,
                 R.drawable.img_loading,
                 R.drawable.img_load_fail
         );
         MyImageScrollLocalLoader.getInstance().init(
-                R.drawable.img_empty,
+                R.drawable.img_loading,
                 R.drawable.img_click_load,
                 R.drawable.img_loading,
                 R.drawable.img_load_fail
         );
         MyImageScrollRemoteLoader.getInstance().init(
-                R.drawable.img_empty,
+                R.drawable.img_loading,
                 R.drawable.img_click_load,
                 R.drawable.img_loading,
                 R.drawable.img_load_fail
         );
-
-        // 初始化手机功能管理器
-//        mMobileMgr = new XAndroidMobileMgr(this, screen.getScreenWidth(), screen.getScreenHeight());
     }
 
     /**

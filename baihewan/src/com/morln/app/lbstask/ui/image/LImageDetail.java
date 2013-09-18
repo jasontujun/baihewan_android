@@ -115,6 +115,7 @@ public class LImageDetail extends XBaseLayer implements
 
     @Override
     public int back() {
+        MyImageSwitcherLocalLoader.getInstance().clearLastBitmap();
         return XBackType.SELF_BACK;
     }
 
@@ -134,7 +135,7 @@ public class LImageDetail extends XBaseLayer implements
     public View makeView() {
         ImageView i = new ImageView(getContext());
         i.setBackgroundColor(0xFF000000);
-        i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        i.setScaleType(ImageView.ScaleType.CENTER_CROP);
         i.setLayoutParams(new ImageSwitcher.LayoutParams(Gallery.LayoutParams.MATCH_PARENT,
                 Gallery.LayoutParams.MATCH_PARENT));
         return i;

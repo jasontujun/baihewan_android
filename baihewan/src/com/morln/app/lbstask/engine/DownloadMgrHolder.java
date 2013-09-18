@@ -16,18 +16,13 @@ import com.xengine.android.session.http.XHttp;
  */
 public class DownloadMgrHolder {
 
-    private static int mScreenWidth;
-    private static int mScreenHeight;
     private static XHttp mHttpClient;
-
     private static XDownload mDownloadMgrInstance;
     private static XSerialDownloadMgr mSerialDownloadMgrInstance;
     private static XImageDownload mImageDownloadMgrInstance;
 
-    public static void init(XHttp httpClient, int sWidth, int sHeight) {
+    public static void init(XHttp httpClient) {
         mHttpClient = httpClient;
-        mScreenWidth = sWidth;
-        mScreenHeight = sHeight;
     }
 
     public static synchronized XDownload getDownloadMgr() {
@@ -44,8 +39,7 @@ public class DownloadMgrHolder {
 
     public static synchronized XImageDownload getImageDownloadMgr() {
         if (mImageDownloadMgrInstance == null)
-            mImageDownloadMgrInstance = new XHttpImageDownloadMgr(
-                    mHttpClient, mScreenWidth, mScreenHeight);
+            mImageDownloadMgrInstance = new XHttpImageDownloadMgr(mHttpClient);
         return mImageDownloadMgrInstance;
     }
 }
