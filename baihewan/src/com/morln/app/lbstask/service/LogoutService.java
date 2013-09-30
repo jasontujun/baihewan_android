@@ -70,7 +70,7 @@ public class LogoutService extends Service {
      * 启动轮询任务相关消息
      */
     private void startRequestBackService(Intent intent) {
-        if(!isRunning) {
+        if (!isRunning) {
             RequestMsgTask requestMsgTask = new RequestMsgTask();
             new Timer().schedule(requestMsgTask, 0);
             isRunning = true;

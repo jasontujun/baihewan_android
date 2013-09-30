@@ -134,7 +134,7 @@ public class GlobalStateSource implements XDataSource {
     }
 
     /**
-     * REVISED 注销时情况当前登录的用户信息
+     * REVISED 注销时清空当前登录的用户信息
      */
     public void removeCurrentUser() {
         SharedPreferences.Editor editor = pref.edit();
