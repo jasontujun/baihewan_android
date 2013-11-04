@@ -51,8 +51,8 @@ public class LoadingWordUtil {
         wordList.add("青梅枯萎，竹马老去，\n从此我爱上的人都很像你。");
         wordList.add("一霎风雨，我爱过你\n几度雨停，我爱自己");
         wordList.add("天真岁月不忍欺\n青春荒唐我不负你");
-        wordList.add("青春的黑夜挑灯流浪\n青春的爱情不回望" +
-                "\n不回想，不回答，不回忆，不回眸，回不了头");
+        wordList.add("青春的黑夜挑灯流浪\n青春的爱情不回望");
+        wordList.add("钢的琴，不锈的心");
     }
     
     public String getWord() {
