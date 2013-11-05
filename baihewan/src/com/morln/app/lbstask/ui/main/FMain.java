@@ -218,7 +218,7 @@ public class FMain extends XBaseFrame {
                             loginLayer = new LLogin(FMain.this);
                             addLayer(loginLayer);
                         }
-                        SystemMgr.initSystem(getContext());
+                        SystemMgr.getInstance().initSystem(getContext());
                         mainLayer = new LMain(FMain.this);
                     }
                     break;
@@ -398,7 +398,7 @@ public class FMain extends XBaseFrame {
             getContext().startService(intent);
         }
         // 退出前清空整个系统，如：临时文件，管理器等
-        SystemMgr.clearSystem();
+        SystemMgr.getInstance().clearSystem();
         exit();
     }
 

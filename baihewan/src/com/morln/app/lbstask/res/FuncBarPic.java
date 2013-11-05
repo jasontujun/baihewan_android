@@ -30,7 +30,7 @@ public class FuncBarPic {
     public static final String MAIL_BTN_PRESSED = DIR + "mailBtnPressed" + SUFFIX;
     public static final String ABOUT_BTN = DIR + "aboutBtn" + SUFFIX;
     public static final String ABOUT_BTN_PRESSED = DIR + "aboutBtnPressed" + SUFFIX;
-    
+
     // 右边栏
     public static final String SHADOW_RIGHT = DIR + "shadowRight" + SUFFIX;
 }

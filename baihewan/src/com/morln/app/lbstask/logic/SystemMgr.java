@@ -34,6 +34,8 @@ public class SystemMgr {
      * @param context
      */
     public void initEngine(Context context) {
+        // 初始化屏幕
+        ScreenHolder.init(context);
         // 初始化文件管理模块
         XFileMgr fileMgr = XAndroidFileMgr.getInstance();
         fileMgr.setRootName("baihewan");
@@ -83,7 +85,7 @@ public class SystemMgr {
      * 可以在loading界面延迟执行。
      * @param context
      */
-    public static void initSystem(Context context) {
+    public void initSystem(Context context) {
         clearSystem();
         initDB(context);
         initDataSources(context);
@@ -143,7 +145,7 @@ public class SystemMgr {
         repo.registerDataSource(new ArticleSource());
     }
 
-    public static void clearSystem() {
+    public void clearSystem() {
         // clear image cache
         MyImageScrollLocalLoader.getInstance().stopAndClear();
         MyImageScrollRemoteLoader.getInstance().stopAndClear();

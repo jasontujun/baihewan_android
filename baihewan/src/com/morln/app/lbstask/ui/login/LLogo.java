@@ -102,7 +102,7 @@ public class LLogo extends XBaseLayer {
                 startTiming();
 
                 // 初始化数据源、数据库等
-                SystemMgr.initSystem(getContext());
+                SystemMgr.getInstance().initSystem(getContext());
                 return null;
             }
             @Override

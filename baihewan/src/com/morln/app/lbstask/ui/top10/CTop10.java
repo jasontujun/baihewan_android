@@ -524,11 +524,6 @@ public class CTop10 extends XBaseComponent implements Linear<ArticleBase> {
          */
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
-            Object item = getItem(i);
-            if(item == null) {
-                return null;
-            }
-
             ViewHolder holder = null;
             if(convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.bbs_article_list_item, null);
@@ -549,6 +544,10 @@ public class CTop10 extends XBaseComponent implements Linear<ArticleBase> {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            Object item = getItem(i);
+            if(item == null) {
+                return null;
+            }
             final Top10ArticleBase article = (Top10ArticleBase) getItem(i);
             // 背景
             holder.frame.setOnClickListener(new View.OnClickListener() {
