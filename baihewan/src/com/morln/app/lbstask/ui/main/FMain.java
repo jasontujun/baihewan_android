@@ -30,12 +30,12 @@ import com.morln.app.lbstask.utils.DialogUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xengine.android.data.cache.DefaultDataRepo;
-import com.xengine.android.session.http.XNetworkUtil;
 import com.xengine.android.system.heartbeat.XAndroidHBM;
 import com.xengine.android.system.ui.XBackType;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
+import com.xengine.android.utils.XNetworkUtil;
 
 import java.util.List;
 

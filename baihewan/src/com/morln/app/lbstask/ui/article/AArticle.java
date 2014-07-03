@@ -27,7 +27,7 @@ import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.media.image.loader.XImageLocalUrl;
 import com.xengine.android.media.image.loader.XScrollRemoteLoader;
 import com.xengine.android.media.image.processor.XImageProcessor;
-import com.xengine.android.session.download.XSerialDownloadListener;
+import com.xengine.android.system.download.XSerialDownloadListener;
 import com.xengine.android.system.ui.XUILayer;
 import com.xengine.android.utils.XLog;
 

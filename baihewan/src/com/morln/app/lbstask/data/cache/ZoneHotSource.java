@@ -27,8 +27,8 @@ public class ZoneHotSource extends XBaseAdapterIdDataSource<ArticleBase> {
      */
     public List<String> getZoneList() {
         List<String> resultList = new ArrayList<String>();
-        for (int i = 0; i < itemList.size(); i++) {
-            String boardStr = itemList.get(i).getBoard();
+        for (int i = 0; i < mItemList.size(); i++) {
+            String boardStr = mItemList.get(i).getBoard();
             Board board = boardSource.getById(boardStr);
             if (board != null) {
                 String zone = board.getZoneBelong();
@@ -46,13 +46,13 @@ public class ZoneHotSource extends XBaseAdapterIdDataSource<ArticleBase> {
      */
     public List<ArticleBase> getBaseZone(String zone) {
         List<ArticleBase> resultList = new ArrayList<ArticleBase>();
-        for (int i =0; i<itemList.size(); i++) {
-            String boardStr = itemList.get(i).getBoard();
+        for (int i = 0; i < mItemList.size(); i++) {
+            String boardStr = mItemList.get(i).getBoard();
             Board board = boardSource.getById(boardStr);
             if (board != null) {
                 String z = board.getZoneBelong();
                 if (z != null && z.equals(zone))
-                    resultList.add(itemList.get(i));
+                    resultList.add(mItemList.get(i));
             }
         }
         return resultList;

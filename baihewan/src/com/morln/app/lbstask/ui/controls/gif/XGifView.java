@@ -3,11 +3,11 @@ package com.morln.app.lbstask.ui.controls.gif;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import com.xengine.android.utils.XSafeAsyncTask;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -190,14 +190,14 @@ public abstract class XGifView extends ImageView
         // 设置gif加载方式
         mLoadingType = type;
 
-        // 异步解析并加载
-        new XSafeAsyncTask<Void, Void, Void>() {
+        // TODO 异步解析并加载
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 mGifDecoder.startDecode(is);
                 return null;
             }
-        }.safeExecute(null);
+        }.execute(null);
     }
 
 

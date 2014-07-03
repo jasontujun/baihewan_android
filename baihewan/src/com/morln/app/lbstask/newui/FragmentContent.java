@@ -15,7 +15,7 @@ import com.morln.app.lbstask.newui.top10.FragmentTop10;
  * Time: 上午11:07
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentMiddle extends Fragment {
+public class FragmentContent extends Fragment {
 
     private int mSelectedMenuIndex;// 当前选中的左边标签
 

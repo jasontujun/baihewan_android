@@ -84,9 +84,9 @@ public class MailSource extends XBaseAdapterIdDataSource<Mail> {
 
     @Override
     public void replace(int index, Mail newItem) {
-        Mail oldMail = itemList.get(index);
+        Mail oldMail = mItemList.get(index);
         oldMail.resetImg();
-        itemList.set(index, newItem);
+        mItemList.set(index, newItem);
     }
 
     @Override

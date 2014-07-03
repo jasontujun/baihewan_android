@@ -37,6 +37,7 @@ public class AdapterLeftMenu extends BaseAdapter {
 
     public void setSelectedIndex(int index) {
         mSelectedIndex = index;
+        notifyDataSetChanged();
     }
 
     @Override

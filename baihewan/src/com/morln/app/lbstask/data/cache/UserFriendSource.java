@@ -29,7 +29,7 @@ public class UserFriendSource extends XBaseAdapterIdUsernameDBDataSource<Friend>
 
     @Override
     public void replace(int index, Friend newItem) {
-        Friend oldItem = itemList.get(index);
+        Friend oldItem = mItemList.get(index);
         oldItem.setUserInfo(newItem.getUserInfo());
     }
 

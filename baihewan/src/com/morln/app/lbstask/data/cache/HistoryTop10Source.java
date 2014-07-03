@@ -23,11 +23,11 @@ public class HistoryTop10Source extends XBaseAdapterIdDataSource<Top10ArticleBas
      */
     public List<Top10ArticleBase> getBaseDate(String date) {
         List<Top10ArticleBase> resultList = new ArrayList<Top10ArticleBase>();
-        for(int i =0; i<itemList.size(); i++) {
-            Date lastTime = itemList.get(i).getLastTime();
+        for (int i = 0; i < mItemList.size(); i++) {
+            Date lastTime = mItemList.get(i).getLastTime();
             String d = XStringUtil.date2calendarStr(lastTime);
             if(d != null && d.equals(date)) {
-                resultList.add(itemList.get(i));
+                resultList.add(mItemList.get(i));
             }
         }
         return resultList;
@@ -39,9 +39,9 @@ public class HistoryTop10Source extends XBaseAdapterIdDataSource<Top10ArticleBas
      * @return 如果有两个帖子是相同排名，则返回第一个。如果没有，则返回null
      */
     public Top10ArticleBase getBaseRank(int rank) {
-        for (int i = 0; i < itemList.size(); i++) {
-            if(itemList.get(i).getCurrentRank() == rank) {
-                return itemList.get(i);
+        for (int i = 0; i < mItemList.size(); i++) {
+            if(mItemList.get(i).getCurrentRank() == rank) {
+                return mItemList.get(i);
             }
         }
         return null;
@@ -53,8 +53,8 @@ public class HistoryTop10Source extends XBaseAdapterIdDataSource<Top10ArticleBas
      */
     public List<String> getHistoryDateList() {
         List<String> resultList = new ArrayList<String>();
-        for(int i = 0; i < itemList.size(); i++) {
-            Date lastTime = itemList.get(i).getLastTime();
+        for(int i = 0; i < mItemList.size(); i++) {
+            Date lastTime = mItemList.get(i).getLastTime();
             String date = XStringUtil.date2calendarStr(lastTime);
             if(!resultList.contains(date)) {
                 resultList.add(date);

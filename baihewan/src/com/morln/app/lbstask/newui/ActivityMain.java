@@ -4,10 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +16,7 @@ import com.morln.app.lbstask.newui.receiver.NetworkReceiver;
 import com.xengine.android.media.graphics.XScreen;
 
 /**
+ * 基础Activity。
  * Created with IntelliJ IDEA.
  * User: jasontujun
  * Date: 13-11-4
@@ -31,9 +29,15 @@ public class ActivityMain extends FragmentActivity {
     private long lastBackTime;// 上一次back键的时间
 
     private ViewPager mDragLayer;// 可拖动图层
-    private Fragment mLeftFragment;// 左边菜单栏
-    private Fragment mRightFragment;// 左边菜单栏
-    private FragmentMiddle mMiddleFragment;// 中间主界面
+    private Fragment mMenuFragment;// 左边菜单栏
+    private Fragment mFriendFragment;// 右边好友栏
+    private FragmentContent mContentFragment;// 中间主界面
+
+    private static final int NUM_FRAGMENTS = 3;// 三页式
+    private static final int FRAGMENT_MENU = 0;
+    private static final int FRAGMENT_CONTENT = 1;
+    private static final int FRAGMENT_FRIEND = 2;
+    private int mShowingIndex;// 当前显示的Fragment的索引
     private boolean mShowingMenu;// 是否显示左边栏
 
     private BroadcastReceiver mNetworkReceiver;
@@ -50,16 +54,18 @@ public class ActivityMain extends FragmentActivity {
         mDragLayer = new ViewPager(this);
         mDragLayer.setId(1);// TIP:手动创建的ViewPager必须设置id
         setContentView(mDragLayer);
-        mLeftFragment = new FragmentLeft();
-        mRightFragment = new FragmentRight();
-        mMiddleFragment = new FragmentMiddle();
+        mMenuFragment = new FragmentMenu();
+        mFriendFragment = new FragmentFriend();
+        mContentFragment = new FragmentContent();
         mDragLayer.setAdapter(new DragLayerAdapter(getSupportFragmentManager()));
         mDragLayer.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mShowingMenu = (position == 0);
+                mShowingIndex = position;
+                mShowingMenu = (mShowingIndex == FRAGMENT_MENU);
             }
         });
+        mShowingIndex = FRAGMENT_MENU;
         mShowingMenu = true;// 默认为弹出菜单按钮
     }
 
@@ -90,8 +96,8 @@ public class ActivityMain extends FragmentActivity {
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     getSupportFragmentManager().popBackStack();
                     return false;
-                } else if (!mShowingMenu) {
-                    mDragLayer.setCurrentItem(0);
+                } else if (mShowingIndex > FRAGMENT_MENU) {
+                    mDragLayer.setCurrentItem(mShowingIndex - 1);
                     return true;
                 } else {
                     long currentTime = System.currentTimeMillis();
@@ -106,9 +112,9 @@ public class ActivityMain extends FragmentActivity {
                 }
             case KeyEvent.KEYCODE_MENU:
                 if (!mShowingMenu)
-                    mDragLayer.setCurrentItem(0);
+                    mDragLayer.setCurrentItem(FRAGMENT_MENU);
                 else
-                    mDragLayer.setCurrentItem(1);
+                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
                 return true;
         }
         return false;
@@ -123,9 +129,9 @@ public class ActivityMain extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if (mShowingMenu)
-                    mDragLayer.setCurrentItem(1);
+                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
                 else
-                    mDragLayer.setCurrentItem(0);
+                    mDragLayer.setCurrentItem(FRAGMENT_MENU);
             }
         };
     }
@@ -135,30 +141,27 @@ public class ActivityMain extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // 切换成相应的Fragment界面
-                mMiddleFragment.selectMenu(i);
+                mContentFragment.selectMenu(i);
                 // 收起侧边栏
                 if (mShowingMenu)
-                    mDragLayer.setCurrentItem(1);
+                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
             }
         };
     }
-
 
     /**
      * 当前主题页面下添加子页面
      * @param fragment
      */
     public void addFragment(Fragment fragment) {
-        mMiddleFragment.addFragment(fragment);
+        mContentFragment.addFragment(fragment);
     }
 
 
     /**
      * 三页式容器的adapter
      */
-    private class DragLayerAdapter extends FragmentStatePagerAdapter {
-
-        private static final int NUM_PAGES = 3;
+    private class DragLayerAdapter extends FragmentPagerAdapter {
 
         private float mLeftWidthProportion;// 左边栏宽度比例
         private float mRightWidthProportion;// 右边栏宽度比例
@@ -175,24 +178,24 @@ public class ActivityMain extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0)
-                return mLeftFragment;
-            if (position == 2)
-                return mRightFragment;
+            if (position == FRAGMENT_MENU)
+                return mMenuFragment;
+            if (position == FRAGMENT_FRIEND)
+                return mFriendFragment;
             else
-                return mMiddleFragment;
+                return mContentFragment;
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return NUM_FRAGMENTS;
         }
 
         @Override
         public float getPageWidth(int position) {
-            if (position == 0)
+            if (position == FRAGMENT_MENU)
                 return mLeftWidthProportion;
-            else if (position == 2)
+            else if (position == FRAGMENT_FRIEND)
                 return mRightWidthProportion;
             else
                 return 1.f;

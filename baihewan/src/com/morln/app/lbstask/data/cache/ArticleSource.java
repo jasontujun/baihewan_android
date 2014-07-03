@@ -39,9 +39,9 @@ public class ArticleSource extends XBaseAdapterIdDataSource<ArticleDetail> {
 
     @Override
     public void replace(int index, ArticleDetail newItem) {
-        ArticleDetail oldArticle = itemList.get(index);
+        ArticleDetail oldArticle = mItemList.get(index);
         oldArticle.resetImg();
-        itemList.set(index, newItem);
+        mItemList.set(index, newItem);
     }
 
     @Override

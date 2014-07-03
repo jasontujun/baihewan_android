@@ -30,7 +30,7 @@ import java.util.List;
  * Time: 上午11:04
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentRight extends Fragment {
+public class FragmentFriend extends Fragment {
     private GlobalStateSource globalStateSource;
     private UserFriendSource friendSource;
 

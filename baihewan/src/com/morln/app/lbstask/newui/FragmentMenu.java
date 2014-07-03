@@ -18,20 +18,21 @@ import com.morln.app.lbstask.utils.DialogUtil;
 import com.xengine.android.data.cache.DefaultDataRepo;
 
 /**
+ * 菜单列表的Fragment
  * Created with IntelliJ IDEA.
  * User: jasontujun
  * Date: 13-11-4
  * Time: 上午11:04
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentLeft extends Fragment {
+public class FragmentMenu extends Fragment {
     private GlobalStateSource mGlobalStateSource;
-    private int mSelectedIndex;
 
     private TextView mUsernameView, mUserNameTip;
     private Button mTopBtn;
     private ListView mMenuList;
     private AdapterLeftMenu mMenuAdapter;
+    private AdapterView.OnItemClickListener mMenuItemListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +40,7 @@ public class FragmentLeft extends Fragment {
         mGlobalStateSource = (GlobalStateSource) DefaultDataRepo
                 .getInstance().getSource(SourceName.GLOBAL_STATE);
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.main_left_bar, container, false);
+        View rootView = inflater.inflate(R.layout.main_left_bar, container, false);
         mUsernameView = (TextView) rootView.findViewById(R.id.user_name);
         mUserNameTip = (TextView) rootView.findViewById(R.id.user_name_tip);
         mTopBtn = (Button) rootView.findViewById(R.id.top_btn);
@@ -72,36 +73,37 @@ public class FragmentLeft extends Fragment {
 
         // 初始化顶栏
         refreshTopFrame();
+        // 初始化菜单列表，选择第一个菜单项
         mMenuAdapter = new AdapterLeftMenu(getActivity(), 0);
         mMenuList.setAdapter(mMenuAdapter);
-        // 初始化时，选择第一个菜单项
-        selectItem(0);
+        // 设置点击监听
+        ActivityMain mainActivity = (ActivityMain) getActivity();
+        if (mainActivity != null) {
+            mMenuItemListener = mainActivity.getMenuItemClickListener();
+            mMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    mMenuAdapter.setSelectedIndex(i);
+                    mMenuItemListener.onItemClick(adapterView, view, i, l);
+                }
+            });
+        }
 
         return rootView;
-    }
-
-
-    /**
-     * 设置选择中的条目。
-     * TIP 由CFunctionBar的外部使用者调用！
-     * @param index
-     */
-    public void selectItem(int index) {
-        mMenuAdapter.setSelectedIndex(index);
     }
 
     /**
      * 刷新邮件提醒
      * @param newMailNumber
      */
-    public void refreshMailTip(int newMailNumber) {
+    private void refreshMailTip(int newMailNumber) {
         // TODO
     }
 
     /**
      * 刷新顶栏（用于游客登录后）
      */
-    public void refreshTopFrame() {
+    private void refreshTopFrame() {
         if (mGlobalStateSource.isLogin()) {
             mUsernameView.setText(mGlobalStateSource.getCurrentUserName());
             mUserNameTip.setText("的百荷湾");
@@ -111,7 +113,6 @@ public class FragmentLeft extends Fragment {
             mUserNameTip.setText("欢迎来到百荷湾");
             mTopBtn.setBackgroundResource(R.drawable.btn_login_gray);
         }
-//        this.getView().invalidate();
     }
 
     /**

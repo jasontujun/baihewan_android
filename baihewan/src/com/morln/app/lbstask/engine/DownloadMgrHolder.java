@@ -2,10 +2,10 @@ package com.morln.app.lbstask.engine;
 
 import com.xengine.android.media.image.download.XHttpImageDownloadMgr;
 import com.xengine.android.media.image.download.XImageDownload;
-import com.xengine.android.session.download.XDownload;
-import com.xengine.android.session.download.XHttpDownloadMgr;
-import com.xengine.android.session.download.XSerialDownloadMgr;
 import com.xengine.android.session.http.XHttp;
+import com.xengine.android.system.download.XDownload;
+import com.xengine.android.system.download.XHttpDownloadMgr;
+import com.xengine.android.system.download.XSerialDownloadMgr;
 
 /**
  * Created with IntelliJ IDEA.
