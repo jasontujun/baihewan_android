@@ -109,7 +109,7 @@ public class DUser implements XDialog {
 
 
                 String[] labelList = new String[] {"好友备注"};
-                DialogUtil.createInputDialog(uiLayer.getUIFrame(), labelList,
+                DialogUtil.createInputDialog(uiLayer.getUIFrame().getContext(), labelList,
                         new DialogUtil.InputListener() {
                             @Override
                             public void onInputFinished(List<String> words) {

@@ -357,12 +357,13 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
             holder.deleteFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DialogUtil.createConfirmDialog(parentLayer().getUIFrame(), new Runnable() {
-                        @Override
-                        public void run() {
-                            new DeleteMailTask(mail.getId()).execute(null);
-                        }
-                    }, null).show("删除站内信", "确定删除“"+mail.getTitle()+"”吗？");
+                    DialogUtil.createConfirmDialog(parentLayer().getUIFrame().getContext(),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    new DeleteMailTask(mail.getId()).execute();
+                                }
+                            }, null).show("删除站内信", "确定删除“"+mail.getTitle()+"”吗？");
                 }
             });
             // 标题
@@ -391,7 +392,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
         @Override
         protected void onPreExecute() {
             if (hasDialog) {
-                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
                 waitingDialog.setAsyncTask(this);
                 waitingDialog.show();
             }
@@ -496,7 +497,7 @@ public class CMail extends XBaseComponent implements Linear<Mail> {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

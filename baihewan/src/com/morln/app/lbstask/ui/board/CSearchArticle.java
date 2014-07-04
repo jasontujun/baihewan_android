@@ -331,7 +331,7 @@ public class CSearchArticle extends XBaseComponent implements Linear<ArticleBase
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

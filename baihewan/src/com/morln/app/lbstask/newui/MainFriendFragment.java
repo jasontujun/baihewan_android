@@ -1,5 +1,9 @@
 package com.morln.app.lbstask.newui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +19,7 @@ import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.data.cache.UserFriendSource;
 import com.morln.app.lbstask.data.model.Friend;
 import com.morln.app.lbstask.logic.BbsPersonMgr;
+import com.morln.app.lbstask.newui.login.LoginDialog;
 import com.morln.app.lbstask.session.StatusCode;
 import com.morln.app.lbstask.ui.controls.XListView;
 import com.xengine.android.data.cache.DefaultDataRepo;
@@ -24,13 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 好友列表Fragment
  * Created with IntelliJ IDEA.
  * User: jasontujun
  * Date: 13-11-4
  * Time: 上午11:04
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentFriend extends Fragment {
+public class MainFriendFragment extends Fragment {
     private GlobalStateSource globalStateSource;
     private UserFriendSource friendSource;
 
@@ -39,6 +45,8 @@ public class FragmentFriend extends Fragment {
     private TextView noLoginTip;
     private XListView friendListView;
     private FriendListAdapter friendListAdapter;
+
+    private BroadcastReceiver mReceiver;//处理外部的调用
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,8 +65,9 @@ public class FragmentFriend extends Fragment {
         noLoginTip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!globalStateSource.isLogin()) {
-//                    new DLogin(parentLayer(), true).show(); TODO
+                Context context = getActivity();
+                if (context != null && !globalStateSource.isLogin()) {
+                    new LoginDialog(context, true).show();
                 }
             }
         });
@@ -69,14 +78,15 @@ public class FragmentFriend extends Fragment {
         friendListView.setOnRefreshListener(new XListView.OnRefreshListener() { // 下拉刷新
             @Override
             public void onRefresh() {
-//                // TIP 登陆权限检测 TODO
-//                if (!globalStateSource.isLogin()) {
-//                    friendListView.onRefreshComplete();
-//                    new DLogin(parentLayer(), true).show();
-//                    return;
-//                }
-//                // 刷新列表
-//                new RefreshFriendTask().execute(null);
+                // TIP 登陆权限检测
+                Context context = getActivity();
+                if (context != null && !globalStateSource.isLogin()) {
+                    friendListView.onRefreshComplete();
+                    new LoginDialog(context, true).show();
+                    return;
+                }
+                // 刷新列表
+                new RefreshFriendTask().execute();
             }
         });
         friendListView.setOnXListScrollListener(new AbsListView.OnScrollListener() {
@@ -99,15 +109,15 @@ public class FragmentFriend extends Fragment {
         friendSource.registerDataChangeListener(friendListAdapter);
         friendListView.setAdapter(friendListAdapter);
 
-        addFriendBtn.setBackgroundResource(R.drawable.btn_friend_add);
         addFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                // TIP 登陆权限检测  TODO
-//                if (!globalStateSource.isLogin()) {
-//                    new DLogin(parentLayer(), true).show();
-//                    return;
-//                }
+                // TIP 登陆权限检测
+                Context context = getActivity();
+                if (context != null && !globalStateSource.isLogin()) {
+                    new LoginDialog(context, true).show();
+                    return;
+                }
 //
 //                // 添加好友
 //                String[] labelList = new String[]{"好友名称", "好友备注"};
@@ -136,14 +146,33 @@ public class FragmentFriend extends Fragment {
             }
         });
 
+        // 注册Receiver
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (UiMsg.ACTION_LOGIN_REFRESH.equals(intent.getAction())) {
+                    allRefresh();
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(UiMsg.ACTION_LOGIN_REFRESH);
+        getActivity().registerReceiver(mReceiver, intentFilter);
+
         allRefresh();
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (getActivity() != null && mReceiver != null)
+            getActivity().unregisterReceiver(mReceiver);
     }
 
     /**
      * 好友侧边栏整体刷新
      */
-    public void allRefresh() {
+    private void allRefresh() {
         friendListAdapter.refresh();
         friendListView.onRefreshComplete();
         if (globalStateSource.isLogin()) {
@@ -160,7 +189,7 @@ public class FragmentFriend extends Fragment {
     /**
      * 好友列表
      */
-    public class FriendListAdapter extends BaseAdapter
+    private class FriendListAdapter extends BaseAdapter
             implements XDataChangeListener<Friend> {
 
         private List<Friend> friendList;
@@ -251,7 +280,6 @@ public class FragmentFriend extends Fragment {
             holder.itemFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO
 //                    Handler handler1 = getLayerHandler();
 //                    Message msg = handler1.obtainMessage();
 //                    msg.what = BbsMsg.BBS_PERSON_INFO;
@@ -308,7 +336,6 @@ public class FragmentFriend extends Fragment {
      * 刷新好友的异步线程
      */
     private class RefreshFriendTask extends AsyncTask<Void, Void, Integer> {
-
         @Override
         protected Integer doInBackground(Void... para) {
             int resultCode1 = BbsPersonMgr.getInstance().getFriendsFromWeb();
@@ -325,16 +352,19 @@ public class FragmentFriend extends Fragment {
         protected void onPostExecute(Integer resultCode) {
             friendListView.onRefreshComplete();
 
+            Context context = getActivity();
+            if (context == null)
+                return;
             if (StatusCode.isSuccess(resultCode)) {
-                Toast.makeText(getActivity(), "刷新好友成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "刷新好友成功！", Toast.LENGTH_SHORT).show();
             } else {
                 switch (resultCode){
                     case StatusCode.BBS_TOKEN_LOSE_EFFECTIVE:
-//                        new DLogin(parentLayer(), true).show("由于长时间发呆，要重新登录哦"); // TODO
-                        Toast.makeText(getActivity(), "BBS登录失效,请重新登录！", Toast.LENGTH_SHORT).show();
+                        new LoginDialog(context, true).show("由于长时间发呆，要重新登录哦");
+                        Toast.makeText(context, "BBS登录失效,请重新登录！", Toast.LENGTH_SHORT).show();
                         break;
                     default:
-                        Toast.makeText(getActivity(), "刷新好友失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "刷新好友失败！", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -343,7 +373,9 @@ public class FragmentFriend extends Fragment {
         @Override
         protected void onCancelled() {
             friendListView.onRefreshComplete();
-            Toast.makeText(getActivity(), "刷新好友失败！", Toast.LENGTH_SHORT).show();
+            Context context = getActivity();
+            if (context != null)
+                Toast.makeText(context, "刷新好友失败！", Toast.LENGTH_SHORT).show();
         }
     }
 }

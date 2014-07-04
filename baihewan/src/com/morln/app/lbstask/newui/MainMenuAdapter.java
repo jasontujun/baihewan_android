@@ -15,7 +15,7 @@ import com.morln.app.lbstask.R;
  * Time: 下午5:43
  * To change this template use File | Settings | File Templates.
  */
-public class AdapterLeftMenu extends BaseAdapter {
+public class MainMenuAdapter extends BaseAdapter {
 
     private Context mContext;
     private int mSelectedIndex;
@@ -30,7 +30,7 @@ public class AdapterLeftMenu extends BaseAdapter {
             R.drawable.menu_profile_selected, R.drawable.menu_mail_selected,
             R.drawable.menu_setting_selected, R.drawable.menu_about_selected};
 
-    public AdapterLeftMenu(Context context, int selectedIndex) {
+    public MainMenuAdapter(Context context, int selectedIndex) {
         mContext = context;
         mSelectedIndex = selectedIndex;
     }

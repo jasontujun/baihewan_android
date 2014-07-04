@@ -14,7 +14,7 @@ import com.morln.app.lbstask.R;
  * Time: 下午2:12
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentTop10 extends Fragment {
+public class Top10Fragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

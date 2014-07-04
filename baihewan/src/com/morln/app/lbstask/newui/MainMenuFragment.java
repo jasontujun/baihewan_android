@@ -13,6 +13,7 @@ import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.data.model.Mail;
 import com.morln.app.lbstask.logic.BbsMailMgr;
 import com.morln.app.lbstask.logic.LoginMgr;
+import com.morln.app.lbstask.newui.login.LoginDialog;
 import com.morln.app.lbstask.session.StatusCode;
 import com.morln.app.lbstask.utils.DialogUtil;
 import com.xengine.android.data.cache.DefaultDataRepo;
@@ -25,13 +26,13 @@ import com.xengine.android.data.cache.DefaultDataRepo;
  * Time: 上午11:04
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentMenu extends Fragment {
+public class MainMenuFragment extends Fragment {
     private GlobalStateSource mGlobalStateSource;
 
     private TextView mUsernameView, mUserNameTip;
     private Button mTopBtn;
     private ListView mMenuList;
-    private AdapterLeftMenu mMenuAdapter;
+    private MainMenuAdapter mMenuAdapter;
     private AdapterView.OnItemClickListener mMenuItemListener;
 
     @Override
@@ -49,17 +50,19 @@ public class FragmentMenu extends Fragment {
         mTopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
-//                if (!mGlobalStateSource.isLogin()) {
-//                    new DLogin(parentLayer(), true).show();
-//                } else {
-//                    DialogUtil.createConfirmDialog(parentLayer().getUIFrame(), new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            new LogoutTask().execute(null);
-//                        }
-//                    }, null).show("确定注销？", null);
-//                }
+                if (getActivity() == null)
+                    return;
+                if (!mGlobalStateSource.isLogin()) {
+                    new LoginDialog(getActivity(), true).show();
+                } else {
+                    DialogUtil.createConfirmDialog(getActivity(),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    new LogoutTask().execute();
+                                }
+                            }, null).show("确定注销？", null);
+                }
             }
         });
 
@@ -67,27 +70,26 @@ public class FragmentMenu extends Fragment {
         BbsMailMgr.getInstance().registerNewMailListener(new Mail.NewMailListener() {
             @Override
             public void remind(int newMailNumber) {
-//                refreshMailTip(newMailNumber);
+                refreshMailTip(newMailNumber);
             }
         });
 
         // 初始化顶栏
         refreshTopFrame();
         // 初始化菜单列表，选择第一个菜单项
-        mMenuAdapter = new AdapterLeftMenu(getActivity(), 0);
+        mMenuAdapter = new MainMenuAdapter(getActivity(), 0);
         mMenuList.setAdapter(mMenuAdapter);
         // 设置点击监听
-        ActivityMain mainActivity = (ActivityMain) getActivity();
-        if (mainActivity != null) {
-            mMenuItemListener = mainActivity.getMenuItemClickListener();
-            mMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    mMenuAdapter.setSelectedIndex(i);
-                    mMenuItemListener.onItemClick(adapterView, view, i, l);
-                }
-            });
-        }
+        mMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mMenuAdapter.setSelectedIndex(i);
+                // 添加
+                MainActivity mainActivity = (MainActivity) getActivity();
+                if (mainActivity != null)
+                    mainActivity.selectMenuItem(i);
+            }
+        });
 
         return rootView;
     }

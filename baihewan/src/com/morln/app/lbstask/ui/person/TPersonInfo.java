@@ -32,7 +32,7 @@ public class TPersonInfo extends AsyncTask<Void, Void, BbsUserBase> {
     @Override
     protected void onPreExecute() {
         if(hasDialog) {
-            waitingDialog = DialogUtil.createWaitingDialog(uiFrame);
+            waitingDialog = DialogUtil.createWaitingDialog(uiFrame.getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

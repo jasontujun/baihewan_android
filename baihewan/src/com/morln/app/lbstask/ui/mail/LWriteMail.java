@@ -223,7 +223,7 @@ public class LWriteMail extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show("正在上传图片\n请稍后");
         }
@@ -264,7 +264,7 @@ public class LWriteMail extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

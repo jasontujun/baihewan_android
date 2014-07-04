@@ -358,7 +358,7 @@ public class LReadArticle extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }
@@ -398,7 +398,7 @@ public class LReadArticle extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }
@@ -435,7 +435,7 @@ public class LReadArticle extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

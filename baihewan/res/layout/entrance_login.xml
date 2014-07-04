@@ -30,7 +30,7 @@
                 android:layout_width="169dp"
                 android:layout_height="30dp"
                 android:layout_gravity="right"
-                android:src="@color/light_green"/>
+                android:src="@drawable/welcome_title"/>
 
         <!--内容-->
         <FrameLayout

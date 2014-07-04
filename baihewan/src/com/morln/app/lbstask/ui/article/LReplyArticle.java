@@ -227,7 +227,7 @@ public class LReplyArticle extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }
@@ -285,7 +285,7 @@ public class LReplyArticle extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show("正在上传图片\n请稍后");
         }

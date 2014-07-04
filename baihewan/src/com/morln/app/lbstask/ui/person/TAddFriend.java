@@ -33,7 +33,7 @@ public class TAddFriend extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected void onPreExecute() {
-        waitingDialog = DialogUtil.createWaitingDialog(uiLayer.getUIFrame());
+        waitingDialog = DialogUtil.createWaitingDialog(uiLayer.getUIFrame().getContext());
         waitingDialog.setAsyncTask(this);
         waitingDialog.show();
     }

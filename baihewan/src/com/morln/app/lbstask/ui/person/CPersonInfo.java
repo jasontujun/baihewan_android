@@ -135,11 +135,11 @@ public class CPersonInfo extends XBaseComponent {
         friendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogUtil.createConfirmDialog(parentLayer().getUIFrame(),
-                        new Runnable() {
+                DialogUtil.createConfirmDialog(parentLayer().getUIFrame().getContext(),
+                        new View.OnClickListener() {
                             @Override
-                            public void run() {
-                                new DeleteFriendTask(userId).execute(null);
+                            public void onClick(View view) {
+                                new DeleteFriendTask(userId).execute();
                             }
                         }, null).show("确定删除好友" + userId + "?", null);
             }
@@ -265,7 +265,7 @@ public class CPersonInfo extends XBaseComponent {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

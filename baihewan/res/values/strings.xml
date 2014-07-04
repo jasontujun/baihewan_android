@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">百荷湾</string>
+
+    <!--对话框-->
+    <string name="dialog_login_welcome">每个南大孩纸的心中\n都有一片百荷湾</string>
+    <string name="dialog_login_tip">你以为我会告诉你还没登陆吗?\n请输入账号和密码:</string>
+
 </resources>

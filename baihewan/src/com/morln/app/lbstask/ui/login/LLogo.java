@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.morln.app.lbstask.R;
 import com.morln.app.lbstask.data.cache.GlobalStateSource;
@@ -12,7 +11,6 @@ import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.data.cache.SystemSettingSource;
 import com.morln.app.lbstask.logic.SystemMgr;
 import com.morln.app.lbstask.res.MainMsg;
-import com.morln.app.lbstask.res.SystemPic;
 import com.morln.app.lbstask.utils.LoadingWordUtil;
 import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
@@ -49,10 +47,7 @@ public class LLogo extends XBaseLayer {
         this.initTask = initTask;
 
         setContentView(R.layout.entrance_logo);
-        ImageView title = (ImageView) findViewById(R.id.title);
         TextView word = (TextView) findViewById(R.id.loading_word);
-
-        setImageViewPic(title, SystemPic.TITLE);
 
         String loadingWord = LoadingWordUtil.getInstance().getWord();
         word.setText(loadingWord);

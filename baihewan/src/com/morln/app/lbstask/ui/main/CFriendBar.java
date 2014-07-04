@@ -139,7 +139,7 @@ public class CFriendBar extends XBaseComponent {
 
                 // 添加好友
                 String[] labelList = new String[]{"好友名称", "好友备注"};
-                DialogUtil.createInputDialog(parentLayer().getUIFrame(), labelList,
+                DialogUtil.createInputDialog(parentLayer().getUIFrame().getContext(), labelList,
                         new DialogUtil.InputListener() {
                             @Override
                             public void onInputFinished(List<String> words) {

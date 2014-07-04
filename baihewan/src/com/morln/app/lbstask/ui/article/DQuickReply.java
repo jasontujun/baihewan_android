@@ -119,7 +119,7 @@ public class DQuickReply implements XDialog {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(uiLayer.getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(uiLayer.getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

@@ -5,7 +5,7 @@ package com.morln.app.lbstask.data.cache;
  * Date: 12-4-9
  * Time: 下午9:43
  */
-public class SourceName {
+public interface SourceName {
     /**
      * 全局状态数据源
      */

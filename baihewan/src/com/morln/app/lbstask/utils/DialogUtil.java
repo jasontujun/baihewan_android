@@ -1,6 +1,7 @@
 package com.morln.app.lbstask.utils;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -12,10 +13,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.res.SystemPic;
+import com.morln.app.lbstask.engine.ScreenHolder;
 import com.xengine.android.system.ui.XBaseFrame;
 import com.xengine.android.system.ui.XUIFrame;
-import com.xengine.android.utils.XStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,25 +28,21 @@ import java.util.List;
  */
 public class DialogUtil {
 
-
-
     /**
      * 创建一个警示对话框
-     * @param uiFrame 窗口
      */
-    public static WarningDialog createWarningDialog(XUIFrame uiFrame) {
-        XBaseFrame activity = (XBaseFrame) uiFrame;
-        final Dialog dialog = new Dialog(activity, R.style.dialog);
+    public static WarningDialog createWarningDialog(Context context) {
+        if (context == null)
+            return null;
+        final Dialog dialog = new Dialog(context, R.style.dialog);
         dialog.setContentView(R.layout.system_warning_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
 
-        View frame = dialog.findViewById(R.id.dialog_frame);
         Button ok = (Button) dialog.findViewById(R.id.dialog_ok_btn);
         TextView title = (TextView) dialog.findViewById(R.id.dialog_title);
         TextView msg = (TextView) dialog.findViewById(R.id.dialog_msg);
 
-//        setScalableBg(uiFrame, frame);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,15 +56,15 @@ public class DialogUtil {
     /**
      * 创建一个等待的Dialog
      */
-    public static WaitingDialog createWaitingDialog(XUIFrame uiFrame) {
-        XBaseFrame activity = (XBaseFrame) uiFrame;
-        final Dialog dialog = new Dialog(activity, R.style.dialog);
+    public static WaitingDialog createWaitingDialog(Context context) {
+        if (context == null)
+            return null;
+        final Dialog dialog = new Dialog(context, R.style.dialog);
         dialog.setContentView(R.layout.system_waiting_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
 
         ImageView waiting = (ImageView) dialog.findViewById(R.id.waiting);
-        uiFrame.setImageViewPic(waiting, SystemPic.WAITING);
         waiting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,22 +73,20 @@ public class DialogUtil {
             }
         });
         TextView msg = (TextView) dialog.findViewById(R.id.msg);
-        Animation rotate = AnimationUtils.loadAnimation(uiFrame.getContext(), R.anim.system_waiting);
+        Animation rotate = AnimationUtils.loadAnimation(context, R.anim.system_waiting);
 
         return new WaitingDialog(waiting, msg, rotate, dialog);
     }
 
     /**
      * 创建一个含确认按钮的对话框
-     * by jasontujun
-     * @param uiFrame
-     * @param okBtnTask
-     * @return
      */
-    public static ConfirmDialog createConfirmDialog(
-            XUIFrame uiFrame, final Runnable okBtnTask, final Runnable cancelBtnTask) {
-        XBaseFrame activity = (XBaseFrame) uiFrame;
-        final Dialog dialog = new Dialog(activity, R.style.dialog);
+    public static ConfirmDialog createConfirmDialog(Context context,
+                                                    final View.OnClickListener okListener,
+                                                    final View.OnClickListener cancelListener) {
+        if (context == null)
+            return null;
+        final Dialog dialog = new Dialog(context, R.style.dialog);
         dialog.setContentView(R.layout.system_confirm_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
@@ -105,18 +99,16 @@ public class DialogUtil {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cancelBtnTask != null) {
-                    cancelBtnTask.run();
-                }
+                if (cancelListener != null)
+                    cancelListener.onClick(view);
                 dialog.dismiss();
             }
         });
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (okBtnTask != null) {
-                    okBtnTask.run();
-                }
+                if (okListener != null)
+                    okListener.onClick(view);
                 dialog.dismiss();
             }
         });
@@ -124,10 +116,13 @@ public class DialogUtil {
         return new ConfirmDialog(title, msg, dialog);
     }
 
-    public static InputDialog createInputDialog(final XUIFrame uiFrame, final String[] inputLabelList,
-                                                 final InputListener listener, final Runnable cancelBtnTask) {
-        XBaseFrame activity = (XBaseFrame) uiFrame;
-        final Dialog dialog = new Dialog(activity, R.style.dialog);
+    public static InputDialog createInputDialog(final Context context,
+                                                final String[] inputLabelList,
+                                                final InputListener inputListener,
+                                                final View.OnClickListener cancelListener) {
+        if (context == null)
+            return null;
+        final Dialog dialog = new Dialog(context, R.style.dialog);
         dialog.setContentView(R.layout.system_input_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
@@ -138,16 +133,16 @@ public class DialogUtil {
         Button cancelBtn = (Button) dialog.findViewById(R.id.dialog_close_btn);
 
         final List<EditText> inputControls = new ArrayList<EditText>();
-        for (int i = 0; i<inputLabelList.length; i++) {
-            EditText item = new EditText(activity);
+        for (String inputLabel : inputLabelList) {
+            EditText item = new EditText(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.FILL_PARENT, uiFrame.screen().dp2px(45));
-            params.setMargins(0,uiFrame.screen().dp2px(10),0,0);
+                    ViewGroup.LayoutParams.FILL_PARENT, ScreenHolder.getInstance().dp2px(45));
+            params.setMargins(0, ScreenHolder.getInstance().dp2px(10), 0, 0);
             item.setBackgroundResource(R.drawable.frame_input);
             item.setTextColor(Color.BLACK);
-            item.setHintTextColor(uiFrame.getContext().getResources().getColor(R.color.gray));
+            item.setHintTextColor(context.getResources().getColor(R.color.gray));
             item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            item.setHint(inputLabelList[i]);
+            item.setHint(inputLabel);
             inputListView.addView(item, params);
             inputControls.add(item);
         }
@@ -160,16 +155,16 @@ public class DialogUtil {
                     EditText inputControl = inputControls.get(i);
                     String result = inputControl.getText().toString();
                     if (TextUtils.isEmpty(result)) {
-                        Toast.makeText(uiFrame.getContext(),
-                                inputLabelList[i] + "不能为空！", Toast.LENGTH_SHORT).show();
-                        AnimationUtil.startShakeAnimation(inputControl, uiFrame.getContext());
+                        Toast.makeText(context, inputLabelList[i] + "不能为空！",
+                                Toast.LENGTH_SHORT).show();
+                        AnimationUtil.startShakeAnimation(inputControl, context);
                         return;
                     } else {
                         resultList.add(result);
                     }
                 }
-                if (listener != null) {
-                    listener.onInputFinished(resultList);
+                if (inputListener != null) {
+                    inputListener.onInputFinished(resultList);
                 }
                 dialog.dismiss();
             }
@@ -177,9 +172,8 @@ public class DialogUtil {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cancelBtnTask != null) {
-                    cancelBtnTask.run();
-                }
+                if (cancelListener != null)
+                    cancelListener.onClick(view);
                 dialog.dismiss();
             }
         });
@@ -188,10 +182,12 @@ public class DialogUtil {
     }
 
 
-    public static SelectDialog createSelectDialog(XUIFrame uiFrame,
-                                                  String[] itemList, final SelectListener listener) {
-        XBaseFrame activity = (XBaseFrame) uiFrame;
-        final Dialog dialog = new Dialog(activity, R.style.dialog);
+    public static SelectDialog createSelectDialog(Context context,
+                                                  String[] itemList,
+                                                  final SelectListener listener) {
+        if (context == null)
+            return null;
+        final Dialog dialog = new Dialog(context, R.style.dialog);
         dialog.setContentView(R.layout.system_select_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
@@ -201,14 +197,14 @@ public class DialogUtil {
 
         for (int i = 0; i<itemList.length; i++) {
             final int index = i;
-            TextView item = new TextView(uiFrame.getContext());
+            TextView item = new TextView(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, uiFrame.screen().dp2px(10), 0, 0);
+            params.setMargins(0, ScreenHolder.getInstance().dp2px(10), 0, 0);
             item.setPadding(10, 10, 10, 10);
             item.setText(itemList[i]);
             item.setTextSize(15);
-            item.setTextColor(uiFrame.getContext().getResources().getColor(R.color.light_green));
+            item.setTextColor(context.getResources().getColor(R.color.light_green));
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -240,13 +236,13 @@ public class DialogUtil {
         }
 
         public void show(String title, String msg) {
-            if (title == null || title.equals("")){
+            if (TextUtils.isEmpty(title)){
                 this.title.setVisibility(View.GONE);
             } else {
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(title);
             }
-            if (msg == null || msg.equals("")){
+            if (TextUtils.isEmpty(msg)){
                 this.msg.setVisibility(View.GONE);
             } else {
                 this.msg.setVisibility(View.VISIBLE);
@@ -320,13 +316,13 @@ public class DialogUtil {
         }
 
         public void show(String title, String msg) {
-            if (title == null || title.equals("")){
+            if (TextUtils.isEmpty(title)){
                 this.title.setVisibility(View.GONE);
             } else {
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(title);
             }
-            if (msg == null || msg.equals("")){
+            if (TextUtils.isEmpty(msg)){
                 this.msg.setVisibility(View.GONE);
             } else {
                 this.msg.setVisibility(View.VISIBLE);

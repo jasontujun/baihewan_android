@@ -12,7 +12,6 @@ import com.morln.app.lbstask.data.cache.GlobalStateSource;
 import com.morln.app.lbstask.data.cache.SourceName;
 import com.morln.app.lbstask.logic.LoginMgr;
 import com.morln.app.lbstask.res.MainMsg;
-import com.morln.app.lbstask.res.SystemPic;
 import com.morln.app.lbstask.utils.AnimationUtil;
 import com.xengine.android.data.cache.DefaultDataRepo;
 import com.xengine.android.system.ui.XBackType;
@@ -57,8 +56,6 @@ public class LLogin extends XBaseLayer {
         frame = (RelativeLayout) findViewById(R.id.bg);
         title = (ImageView) findViewById(R.id.title);
         FrameLayout content = (FrameLayout) findViewById(R.id.content_layout);
-
-        setImageViewPic(title, SystemPic.TITLE);
 
         initLoginLayer(content);
     }

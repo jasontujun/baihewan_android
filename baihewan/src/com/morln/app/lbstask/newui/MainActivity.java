@@ -23,7 +23,7 @@ import com.xengine.android.media.graphics.XScreen;
  * Time: 上午10:57
  * To change this template use File | Settings | File Templates.
  */
-public class ActivityMain extends FragmentActivity {
+public class MainActivity extends FragmentActivity {
 
     private static final int PRESS_BACK_INTERVAL = 1500; // back按键间隔，单位：毫秒
     private long lastBackTime;// 上一次back键的时间
@@ -31,7 +31,7 @@ public class ActivityMain extends FragmentActivity {
     private ViewPager mDragLayer;// 可拖动图层
     private Fragment mMenuFragment;// 左边菜单栏
     private Fragment mFriendFragment;// 右边好友栏
-    private FragmentContent mContentFragment;// 中间主界面
+    private MainContentFragment mContentFragment;// 中间主界面
 
     private static final int NUM_FRAGMENTS = 3;// 三页式
     private static final int FRAGMENT_MENU = 0;
@@ -54,9 +54,9 @@ public class ActivityMain extends FragmentActivity {
         mDragLayer = new ViewPager(this);
         mDragLayer.setId(1);// TIP:手动创建的ViewPager必须设置id
         setContentView(mDragLayer);
-        mMenuFragment = new FragmentMenu();
-        mFriendFragment = new FragmentFriend();
-        mContentFragment = new FragmentContent();
+        mMenuFragment = new MainMenuFragment();
+        mFriendFragment = new MainFriendFragment();
+        mContentFragment = new MainContentFragment();
         mDragLayer.setAdapter(new DragLayerAdapter(getSupportFragmentManager()));
         mDragLayer.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -120,33 +120,19 @@ public class ActivityMain extends FragmentActivity {
         return false;
     }
 
-    /**
-     * 获取对每个fragment子页面的菜单按钮监听
-     * @return
-     */
-    public View.OnClickListener getMenuBtnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mShowingMenu)
-                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
-                else
-                    mDragLayer.setCurrentItem(FRAGMENT_MENU);
-            }
-        };
+    public void pressMenuBtn() {
+        if (mShowingMenu)
+            mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
+        else
+            mDragLayer.setCurrentItem(FRAGMENT_MENU);
     }
 
-    public AdapterView.OnItemClickListener getMenuItemClickListener() {
-        return new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // 切换成相应的Fragment界面
-                mContentFragment.selectMenu(i);
-                // 收起侧边栏
-                if (mShowingMenu)
-                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
-            }
-        };
+    public void selectMenuItem(int i) {
+        // 切换成相应的Fragment界面
+        mContentFragment.selectMenu(i);
+        // 收起侧边栏
+        if (mShowingMenu)
+            mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
     }
 
     /**

@@ -24,7 +24,7 @@ public class NetworkReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION))
+        if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction()))
             return;
 
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

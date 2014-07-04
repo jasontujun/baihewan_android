@@ -19,7 +19,7 @@
                     android:layout_width="136.7dp"
                     android:layout_height="136.7dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/icon"/>
+                    android:background="@drawable/welcome_logo"/>
             <!--标题-->
             <ImageView
                     android:id="@+id/title"
@@ -27,7 +27,7 @@
                     android:layout_height="30dp"
                     android:layout_marginTop="40dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@color/light_green"/>
+                    android:src="@drawable/welcome_title"/>
 
             <!--版本号-->
             <LinearLayout

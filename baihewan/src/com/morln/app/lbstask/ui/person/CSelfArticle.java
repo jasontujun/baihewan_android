@@ -298,11 +298,11 @@ public class CSelfArticle extends XBaseComponent implements Linear<ArticleBase> 
                 holder.deleteFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DialogUtil.createConfirmDialog(parentLayer().getUIFrame(),
-                                new Runnable() {
+                        DialogUtil.createConfirmDialog(parentLayer().getUIFrame().getContext(),
+                                new View.OnClickListener() {
                                     @Override
-                                    public void run() {
-                                        new DeleteArticleTask(article.getBoard(), article.getId()).execute(null);
+                                    public void onClick(View view) {
+                                        new DeleteArticleTask(article.getBoard(), article.getId()).execute();
                                     }
                                 }, null).show("确定删除帖子？", null);
                     }
@@ -350,7 +350,7 @@ public class CSelfArticle extends XBaseComponent implements Linear<ArticleBase> 
         @Override
         protected void onPreExecute() {
             if(hasDialog) {
-                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
                 waitingDialog.setAsyncTask(this);
                 waitingDialog.show();
             }
@@ -403,7 +403,7 @@ public class CSelfArticle extends XBaseComponent implements Linear<ArticleBase> 
         
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

@@ -141,12 +141,13 @@ public class CFunctionBar extends XBaseComponent {
                 if (!globalStateSource.isLogin()) {
                     new DLogin(parentLayer(), true).show();
                 } else {
-                    DialogUtil.createConfirmDialog(parentLayer().getUIFrame(), new Runnable() {
-                        @Override
-                        public void run() {
-                            new LogoutTask().execute(null);
-                        }
-                    }, null).show("确定注销？", null);
+                    DialogUtil.createConfirmDialog(parentLayer().getUIFrame().getContext(),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    new LogoutTask().execute();
+                                }
+                            }, null).show("确定注销？", null);
                 }
             }
         });
@@ -471,7 +472,7 @@ public class CFunctionBar extends XBaseComponent {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show("注销中，请稍后……");
         }

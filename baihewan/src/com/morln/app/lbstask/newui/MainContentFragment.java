@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.morln.app.lbstask.R;
-import com.morln.app.lbstask.newui.top10.FragmentTop10;
+import com.morln.app.lbstask.newui.top10.Top10Fragment;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +15,7 @@ import com.morln.app.lbstask.newui.top10.FragmentTop10;
  * Time: 上午11:07
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentContent extends Fragment {
+public class MainContentFragment extends Fragment {
 
     private int mSelectedMenuIndex;// 当前选中的左边标签
 
@@ -47,7 +47,7 @@ public class FragmentContent extends Fragment {
             Bundle args = null;
             switch (mSelectedMenuIndex) {
                 case 0:
-                    fragment = new FragmentTop10();
+                    fragment = new Top10Fragment();
                     args = new Bundle();
                     args.putInt("tab", 0);
                     fragment.setArguments(args);

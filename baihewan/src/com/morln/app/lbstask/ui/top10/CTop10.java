@@ -280,7 +280,7 @@ public class CTop10 extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         protected void onPreExecute() {
             if(hasDialog) {
-                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
                 waitingDialog.setAsyncTask(this);
                 waitingDialog.show();
             }
@@ -363,7 +363,7 @@ public class CTop10 extends XBaseComponent implements Linear<ArticleBase> {
         @Override
         protected void onPreExecute() {
             if(hasDialog) {
-                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame());
+                waitingDialog = DialogUtil.createWaitingDialog(parentLayer().getUIFrame().getContext());
                 waitingDialog.setAsyncTask(this);
                 waitingDialog.show();
             }

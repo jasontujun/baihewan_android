@@ -25,7 +25,7 @@
         <meta-data android:value="China Telecom" android:name="UMENG_CHANNEL"/>
 
         <!--软键盘覆盖屏幕-->
-        <activity android:name=".newui.ActivityMain"
+        <activity android:name=".newui.MainActivity"
                   android:windowSoftInputMode="adjustPan"
                   android:launchMode="singleTask"
                   android:screenOrientation="portrait"

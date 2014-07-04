@@ -71,10 +71,10 @@ public class LoginMgr {
         // 登陆Bbs后，开始刷用户状态（邮件）
         BbsMailMgr.getInstance().startMailRemindTask();
 
-        // 登陆系统
-        int systemLoginResult = loginSystem(context, username, password);
-        if (!StatusCode.isSuccess(systemLoginResult))
-            return systemLoginResult;
+//        // 登陆系统
+//        int systemLoginResult = loginSystem(context, username, password);
+//        if (!StatusCode.isSuccess(systemLoginResult))
+//            return systemLoginResult;
 
         if (systemUserSource.getIndexById(username) == -1) {
             // 添加系统用户

@@ -252,7 +252,7 @@ public class LReadMail extends XBaseLayer {
 
         @Override
         protected void onPreExecute() {
-            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame());
+            waitingDialog = DialogUtil.createWaitingDialog(getUIFrame().getContext());
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }

@@ -1,34 +1,35 @@
-package com.morln.app.lbstask.ui.login;
+package com.morln.app.lbstask.newui.login;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import com.morln.app.lbstask.logic.LoginMgr;
-import com.morln.app.lbstask.utils.DialogUtil;
 import com.morln.app.lbstask.session.StatusCode;
-import com.xengine.android.system.ui.XUIFrame;
+import com.morln.app.lbstask.utils.DialogUtil;
 
 /**
- * Created by jasontujun.
- * Date: 12-9-22
- * Time: 上午1:19
+ * <pre>
+ * 登陆的异步任务。
+ * User: jasontujun
+ * Date: 14-7-4
+ * Time: 上午11:07
+ * </pre>
  */
-public class TLogin extends AsyncTask<Void, Void, Void> {
+public class LoginTask extends AsyncTask<Void, Void, Void> {
 
-    private XUIFrame uiFrame;
-
-    private boolean hasDialog;
     private DialogUtil.WaitingDialog waitingDialog;
 
     private int resultCode;
 
-    private LoginListener listener;
-
+    private Context context;
     private String username;
     private String password;
+    private LoginListener listener;
+    private boolean hasDialog;
 
-    public TLogin(XUIFrame uiFrame, String username, String password,
+    public LoginTask(Context context, String username, String password,
                   LoginListener listener, boolean hasDialog) {
-        this.uiFrame = uiFrame;
+        this.context = context;
         this.username = username;
         this.password = password;
         this.listener = listener;
@@ -38,7 +39,7 @@ public class TLogin extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         if(hasDialog) {
-            waitingDialog = DialogUtil.createWaitingDialog(uiFrame.getContext());
+            waitingDialog = DialogUtil.createWaitingDialog(context);
             waitingDialog.setAsyncTask(this);
             waitingDialog.show();
         }
@@ -46,7 +47,7 @@ public class TLogin extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... para) {
-        resultCode = LoginMgr.getInstance().login(uiFrame.getContext(), username, password);
+        resultCode = LoginMgr.getInstance().login(context, username, password);
         return null;
     }
 
@@ -54,20 +55,20 @@ public class TLogin extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void result) {
         if (StatusCode.isSuccess(resultCode)
                 || resultCode == StatusCode.SYSTEM_LOGIN_FAIL) {
-            Toast.makeText(uiFrame.getContext(), "登录成功！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
             if(listener != null) {
                 listener.onSucceeded(username, password);
             }
         } else {
             switch (resultCode) {
                 case StatusCode.HTTP_EXCEPTION:
-                    Toast.makeText(uiFrame.getContext(), "登陆失败，网络通信异常...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "登陆失败，网络通信异常...", Toast.LENGTH_SHORT).show();
                     break;
                 case StatusCode.LOGIN_BAD_REQUEST:
-                    Toast.makeText(uiFrame.getContext(), "账号名密码错误...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "账号名密码错误...", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Toast.makeText(uiFrame.getContext(), "登陆失败，请稍后重试...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "登陆失败，请稍后重试...", Toast.LENGTH_SHORT).show();
                     break;
             }
             if(listener != null) {
@@ -85,7 +86,7 @@ public class TLogin extends AsyncTask<Void, Void, Void> {
         if(hasDialog) {
             waitingDialog.dismiss();
         }
-        Toast.makeText(uiFrame.getContext(), "登陆失败，请稍后重试...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "登陆失败，请稍后重试...", Toast.LENGTH_SHORT).show();
         if(listener != null) {
             listener.onCanceled(username, password);
         }
