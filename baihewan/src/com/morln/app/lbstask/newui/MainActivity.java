@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity {
                     getSupportFragmentManager().popBackStack();
                     return false;
                 } else if (mShowingIndex > FRAGMENT_MENU) {
-                    mDragLayer.setCurrentItem(mShowingIndex - 1);
+                    mDragLayer.setCurrentItem(mShowingIndex - 1, true);
                     return true;
                 } else {
                     long currentTime = System.currentTimeMillis();
@@ -112,9 +112,9 @@ public class MainActivity extends FragmentActivity {
                 }
             case KeyEvent.KEYCODE_MENU:
                 if (!mShowingMenu)
-                    mDragLayer.setCurrentItem(FRAGMENT_MENU);
+                    mDragLayer.setCurrentItem(FRAGMENT_MENU, true);
                 else
-                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT);
+                    mDragLayer.setCurrentItem(FRAGMENT_CONTENT, true);
                 return true;
         }
         return false;

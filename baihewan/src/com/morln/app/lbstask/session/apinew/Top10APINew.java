@@ -236,7 +236,7 @@ public class Top10APINew {
 
         List<Integer> rankList2 = new ArrayList<Integer>();
         int[] rankList = sessionBean.getRankList();
-        for(int i = 0; i<rankList.length; i++) {
+        for (int i = 0; i<rankList.length; i++) {
             rankList2.add(rankList[i]);
         }
         localBean.setRankList(rankList2);
